@@ -19,3 +19,6 @@ Um Utilizador pode querer monitorizar 3 repos relacionados como um único projet
 
 
 queremos guardar histórico das vulnerabilidades para podermos ver ao longo do tempo como foram evoluindo ou apenas mostrar as vulnerabilidades atuais ?
+
+perceber se nos vamos focar apenas no dependabot e dependancy scaning ou se deviamos começar ja também a pensar no sast e secret scaning
+(que para o github apenas funciona gratuitamente para repos publicos)
