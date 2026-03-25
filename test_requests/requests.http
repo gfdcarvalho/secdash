@@ -1,0 +1,22 @@
+
+
+### GitHub - Dependabot Alerts
+GET https://api.github.com/repos/{{GITHUB_USER}}/{{GITHUB_REPO_DEPENDABOT}}/dependabot/alerts
+Authorization: Bearer {{GITHUB_TOKEN}}
+Accept: application/vnd.github+json
+
+
+### GitLab - Dependency Scanning Report
+GET https://gitlab.com/api/v4/projects/{{GITLAB_PROJECT_ID_DEPENDANCY}}/jobs/artifacts/main/raw/gl-dependency-scanning-report.json?job=dependency_scanning
+PRIVATE-TOKEN: {{GITLAB_TOKEN}}
+
+
+### GitHub - SAST (Code Scanning Alerts)
+GET https://api.github.com/repos/{{GITHUB_USER}}/{{GITHUB_REPO_SAST}}/code-scanning/alerts?state=open
+Authorization: Bearer {{GITHUB_TOKEN}}
+Accept: application/vnd.github+json
+
+
+### GitLab - SAST Report
+GET https://gitlab.com/api/v4/projects/{{GITLAB_PROJECT_ID_SAST}}/jobs/artifacts/main/raw/gl-sast-report.json?job=semgrep-sast
+PRIVATE-TOKEN: {{GITLAB_TOKEN}}

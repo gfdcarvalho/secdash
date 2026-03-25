@@ -22,3 +22,13 @@ queremos guardar histórico das vulnerabilidades para podermos ver ao longo do t
 
 perceber se nos vamos focar apenas no dependabot e dependancy scaning ou se deviamos começar ja também a pensar no sast e secret scaning
 (que para o github apenas funciona gratuitamente para repos publicos)
+
+
+
+não ciframos os githubs tokens por enquanto mas reportamos no relatorio !!! 
+
+
+guardamos apenas a ultima pesquisa das vulnerabilidades não vamos guardar historico das vulnerabilidades (porque as apis externas ja devem ter histórico)
+
+sim tratar do sast para alem do dependabot e dependancy scaning !!
+

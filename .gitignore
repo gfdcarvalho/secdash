@@ -38,3 +38,7 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+# HTTP Client - dont commit tokens
+test_requests/http-client.private.env.json
+test_requests/http-client.env.json
