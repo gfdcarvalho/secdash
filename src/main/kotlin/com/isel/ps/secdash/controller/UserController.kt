@@ -16,6 +16,7 @@ class UserController {
     fun registerUser(
         @RequestBody user: User
     ) {
+        println("${user.name}: ${user.email} ")
     }
 
     @PostMapping("/login")
