@@ -24,9 +24,9 @@ dependencies {
 	implementation("org.jdbi:jdbi3-core:3.37.1")
 	implementation("org.postgresql:postgresql:42.7.2")
 	implementation("org.jdbi:jdbi3-kotlin:3.47.0")
+	implementation("org.jdbi:jdbi3-postgres:3.47.0")
 //	implementation("org.jdbi:jdbi3-spring5:3.47.0")
 //	implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.47.0")
-//	implementation("org.jdbi:jdbi3-postgres:3.47.0")
 //	implementation("org.postgresql:postgresql:42.7.2")
 
 
