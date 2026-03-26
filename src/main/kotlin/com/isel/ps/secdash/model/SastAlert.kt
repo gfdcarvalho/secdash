@@ -1,7 +1,8 @@
 package com.isel.ps.secdash.model
 
 class SastAlert(
-    val id: Int,
+    val sid: Int,
+    val rid: Int,
     val state: SastState,
     val severity: SastSeverity,
     val scaner: String,

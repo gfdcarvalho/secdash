@@ -3,7 +3,6 @@ plugins {
 	kotlin("plugin.spring") version "2.2.21"
 	id("org.springframework.boot") version "4.0.3"
 	id("io.spring.dependency-management") version "1.1.7"
-	kotlin("plugin.jpa") version "2.2.21"
 }
 
 group = "com.isel.ps"
@@ -21,13 +20,19 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-//	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	// jdbi / postgres
+	implementation("org.jdbi:jdbi3-core:3.37.1")
+	implementation("org.postgresql:postgresql:42.7.2")
+	implementation("org.jdbi:jdbi3-kotlin:3.47.0")
+//	implementation("org.jdbi:jdbi3-spring5:3.47.0")
+//	implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.47.0")
+//	implementation("org.jdbi:jdbi3-postgres:3.47.0")
+//	implementation("org.postgresql:postgresql:42.7.2")
+
+
 
 	runtimeOnly("com.h2database:h2")
 
-
-	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-restclient")
 	//implementation("org.springframework.boot:spring-boot-starter-security")
 //	implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
@@ -37,9 +42,7 @@ dependencies {
 	implementation("tools.jackson.module:jackson-module-kotlin")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	//runtimeOnly("org.postgresql:postgresql")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-jdbc-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-jdbc-test")
+
 	testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-client-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
@@ -53,12 +56,6 @@ kotlin {
 	compilerOptions {
 		freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
 	}
-}
-
-allOpen {
-	annotation("jakarta.persistence.Entity")
-	annotation("jakarta.persistence.MappedSuperclass")
-	annotation("jakarta.persistence.Embeddable")
 }
 
 tasks.withType<Test> {
