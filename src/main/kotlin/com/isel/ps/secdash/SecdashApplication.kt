@@ -6,7 +6,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.postgresql.ds.PGSimpleDataSource
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
+private fun env(key: String): String { // don't like this but the .env file was not working properly
+	val envFile = java.io.File(".env")
+	if (envFile.exists()) {
+		val line = envFile.readLines().firstOrNull { it.startsWith("$key=") }
+		if (line != null) return line.substringAfter("=")
+	}
+	return System.getenv(key) ?: error("Missing environment variable: $key")
+}
 
 @SpringBootApplication
 class SecdashApplication{
@@ -14,9 +23,13 @@ class SecdashApplication{
 	fun jdbi(): Jdbi =
 		Jdbi.create(
 			PGSimpleDataSource().apply {
-				setURL(System.getenv("JDBC_DATABASE_URL"))
+				setURL(env("JDBC_DATABASE_URL"))
 			},
 		).configureWithAppRequirements()
+
+
+	@Bean
+	fun passwordEncoder() = BCryptPasswordEncoder()
 }
 
 fun main(args: Array<String>) {

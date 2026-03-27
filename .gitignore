@@ -45,3 +45,6 @@ out/
 # HTTP Client - dont commit tokens
 test_requests/http-client.private.env.json
 test_requests/http-client.env.json
+
+# Environment variables - dont commit credentials
+.env

@@ -21,7 +21,8 @@ repositories {
 
 dependencies {
 	// jdbi / postgres
-	implementation("org.jdbi:jdbi3-core:3.37.1")
+	implementation("org.jdbi:jdbi3-core:3.47.0")
+	implementation("io.github.cdimascio:dotenv-kotlin:6.4.1") // read .env
 	implementation("org.postgresql:postgresql:42.7.2")
 	implementation("org.jdbi:jdbi3-kotlin:3.47.0")
 	implementation("org.jdbi:jdbi3-postgres:3.47.0")
@@ -29,9 +30,8 @@ dependencies {
 //	implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.47.0")
 //	implementation("org.postgresql:postgresql:42.7.2")
 
-
-
-	runtimeOnly("com.h2database:h2")
+	// To get password encode
+	api("org.springframework.security:spring-security-core:6.5.5")
 
 	implementation("org.springframework.boot:spring-boot-starter-restclient")
 	//implementation("org.springframework.boot:spring-boot-starter-security")

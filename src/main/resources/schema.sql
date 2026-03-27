@@ -8,9 +8,10 @@ CREATE TYPE sast_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
 
 -- Users
 CREATE TABLE users (
-    uid        SERIAL PRIMARY KEY,
-    name       VARCHAR(255) NOT NULL,
-    email      VARCHAR(255) NOT NULL UNIQUE
+    uid                     SERIAL PRIMARY KEY,
+    name                    VARCHAR(255) NOT NULL,
+    password_validation     TEXT NOT NULL,
+    email                   VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Owners
@@ -56,7 +57,7 @@ CREATE TABLE vulnerabilities (
     cvss_score               DOUBLE PRECISION,
     cvss_vector              VARCHAR(255),
     platform                 platform               NOT NULL,
-    repository_id            INT                    NOT NULL REFERENCES repositories(rid),
+    rid            INT                    NOT NULL REFERENCES repositories(rid),
     detected_at              TIMESTAMP              NOT NULL,
     updated_at               TIMESTAMP              NOT NULL
 );
@@ -78,3 +79,7 @@ CREATE TABLE sast_alerts (
     file       VARCHAR(255)  NOT NULL,
     line       VARCHAR(50)   NOT NULL
 );
+
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'users';
