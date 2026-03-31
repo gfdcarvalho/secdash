@@ -80,6 +80,4 @@ CREATE TABLE sast_alerts (
     line       VARCHAR(50)   NOT NULL
 );
 
-SELECT column_name, data_type
-FROM information_schema.columns
-WHERE table_name = 'users';
+

@@ -10,6 +10,7 @@ import com.isel.ps.secdash.utils.Success
 import com.isel.ps.secdash.utils.success
 import com.sun.jndi.toolkit.url.Uri
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -34,18 +35,24 @@ class UserController(
                 ResponseEntity.created(URI.create("/users/me"))             // still need to think about this !
                     .body(UserCreationOutputDto(result.value))
 
-            is Failure -> when (result.value){  // Need a better solutions for the error responses
-                UserCreationError.UserAlreadyExists -> ResponseEntity.badRequest()
-                UserCreationError.InvalidCredentials -> ResponseEntity.badRequest()
+            is Failure ->
+                when (result.value){  // Need a better solutions for the error responses
+                UserCreationError.UserAlreadyExists -> ResponseEntity.badRequest().build<Unit>()
+                UserCreationError.InvalidCredentials -> ResponseEntity.badRequest().build<Unit>()
             }
 
-        } as ResponseEntity<*>
+        }
     }
 
-    @PostMapping("/login")
-    fun loginUser(){ // com google relembrar como se faz !!!!
+    @PostMapping("/login") // login com tokens
+    fun loginUser(){
 
     }
+
+    @GetMapping("/login-google")  // GONÇALO !!!
+
+
+    // login com o github
 
     @PostMapping("/logout")
     fun logoutUser(){}
