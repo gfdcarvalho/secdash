@@ -30,6 +30,9 @@ dependencies {
 //	implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.47.0")
 //	implementation("org.postgresql:postgresql:42.7.2")
 
+	// To use Kotlin specific date and time functions
+	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+
 	// To get password encode
 	api("org.springframework.security:spring-security-core:6.5.5")
 

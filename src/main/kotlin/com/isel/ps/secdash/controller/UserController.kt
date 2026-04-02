@@ -3,6 +3,7 @@ package com.isel.ps.secdash.controller
 import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserCreationDto
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
+import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserServices
 import com.isel.ps.secdash.utils.Failure
@@ -45,8 +46,18 @@ class UserController(
     }
 
     @PostMapping("/login") // login com tokens
-    fun loginUser(){
-
+    fun loginUser(
+        @RequestBody input: UserLoginDto
+    ): ResponseEntity<*> {
+        val result = userServices.login(input.username, input.password)
+        return when (result) {
+            is Success ->
+                // in the future handle cookie ...
+                ResponseEntity.status(200)
+                    .body(result.value)
+            is Failure ->
+                ResponseEntity.badRequest().build<Unit>() // still need to handle all error responses
+        }
     }
 
     @GetMapping("/login-google")  // GONÇALO !!!
