@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.controller
 
+
 import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserCreationDto
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
@@ -8,16 +9,16 @@ import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserServices
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
-import com.isel.ps.secdash.utils.success
-import com.sun.jndi.toolkit.url.Uri
+
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-
 
 @RestController
 @RequestMapping("/api/users")
@@ -60,7 +61,6 @@ class UserController(
         }
     }
 
-    @GetMapping("/login-google")  // GONÇALO !!!
 
 
     // login com o github
@@ -71,4 +71,39 @@ class UserController(
     @PostMapping("/me")
     fun me(){}
 
+    @GetMapping("/user")
+    fun user(@AuthenticationPrincipal principal: OAuth2User): Map<String, Any?> {
+        println(principal)
+        return mapOf(
+            "name" to principal.attributes["name"],
+            "email" to principal.attributes["email"]
+        )
+    }
+
 }
+/*
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.oauth2.core.user.OAuth2User
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+class UserController {
+
+   @GetMapping("/")
+   fun home(): String {
+       return "Hello, go to /user to login"
+   }
+
+   @GetMapping("/user")
+   fun user(@AuthenticationPrincipal principal: OAuth2User): Map<String, Any?> {
+       println(principal)
+       return mapOf(
+           "name" to principal.attributes["name"],
+           "email" to principal.attributes["email"]
+       )
+   }
+}
+
+ */

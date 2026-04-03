@@ -20,6 +20,10 @@ repositories {
 }
 
 dependencies {
+	// oauth
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
 	// jdbi / postgres
 	implementation("org.jdbi:jdbi3-core:3.47.0")
 	implementation("io.github.cdimascio:dotenv-kotlin:6.4.1") // read .env
@@ -34,7 +38,7 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 
 	// To get password encode
-	api("org.springframework.security:spring-security-core:6.5.5")
+	//api("org.springframework.security:spring-security-core:6.5.5")
 
 	implementation("org.springframework.boot:spring-boot-starter-restclient")
 	//implementation("org.springframework.boot:spring-boot-starter-security")
@@ -51,6 +55,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

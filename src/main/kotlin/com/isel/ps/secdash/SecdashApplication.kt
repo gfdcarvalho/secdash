@@ -1,15 +1,17 @@
 package com.isel.ps.secdash
 
 import com.isel.ps.secdash.model.users.Sha256TokenEncoder
-import kotlinx.datetime.Clock
 import com.isel.ps.secdash.model.users.UsersDomainConfig
 import com.isel.ps.secdash.utils.configureWithAppRequirements
+import kotlinx.datetime.Clock
 import org.jdbi.v3.core.Jdbi
+import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
-import org.postgresql.ds.PGSimpleDataSource
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.web.SecurityFilterChain
 import kotlin.time.Duration.Companion.hours
 
 
