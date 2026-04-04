@@ -2,8 +2,10 @@
 DROP TABLE IF EXISTS vulnerability_references;
 DROP TABLE IF EXISTS sast_alerts;
 DROP TABLE IF EXISTS vulnerabilities;
+DROP TABLE IF EXISTS user_repositories;
 DROP TABLE IF EXISTS repositories;
 DROP TABLE IF EXISTS owners;
+DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS users;
 
 -- Drop Enums

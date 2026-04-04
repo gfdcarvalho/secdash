@@ -2,7 +2,9 @@ package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.users.Token
 import com.isel.ps.secdash.model.users.TokenInfo
+import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserDomain
+import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.Success
@@ -23,6 +25,12 @@ sealed class UserLoginError {
 }
 
 typealias UserLoginResult = Either<UserLoginError, TokenInfo>
+
+sealed class UserGoogleLoginError {
+    data object InvalidCredentials : UserLoginError()
+}
+
+typealias UserGoogleLoginResult = Either<UserGoogleLoginError, UserOutputDto>
 
 @Service
 class UserServices(
@@ -55,13 +63,14 @@ class UserServices(
         username: String,
         password: String,
     ): UserLoginResult {
-        if (username.isBlank() || password.isBlank()) {
+        if (username.isNotBlank() || password.isNotBlank()) {
             failure(UserLoginError.InvalidCredentials)
         }
         return transactionManager.run {
             val userRepo = it.usersRepository
             val user = userRepo.getUserByUsername(username)
                 ?: return@run failure(UserLoginError.InvalidCredentials)
+            checkNotNull(user.passwordValidation) { return@run failure(UserLoginError.InvalidCredentials) }
             if (!userDomain.validatePassword(password, user.passwordValidation)) {
                 if (!userDomain.validatePassword(password, user.passwordValidation)) { // understand why this if inside if ????
                     return@run failure(UserLoginError.InvalidCredentials)
@@ -79,7 +88,27 @@ class UserServices(
             // add token to database
 
             Success(TokenInfo(newTokenValue))
+        }
 
+    }
+
+    fun storeGoogleUser(
+        username: String,
+        email: String,
+        googleId: String,
+    ): UserGoogleLoginResult {
+        if (username.isBlank() || email.isBlank() || googleId.isBlank()) {
+            failure(UserLoginError.InvalidCredentials)
+        }
+        return transactionManager.run {
+            val userRepo = it.usersRepository
+
+            val user: User? = userRepo.getUserByEmail(email)
+            if (user != null) {
+                success(user.toOutputDto())
+            }
+            val newUser = userRepo.createGoogleUser(username, email, googleId)
+            success(newUser.toOutputDto())
         }
 
     }

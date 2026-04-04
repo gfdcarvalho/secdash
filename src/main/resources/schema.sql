@@ -8,15 +8,26 @@ CREATE TYPE sast_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
 
 -- Users
 CREATE TABLE users (
-    uid                     SERIAL PRIMARY KEY,
+    uid                     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name                    VARCHAR(255) NOT NULL,
-    password_validation     TEXT NOT NULL,
-    email                   VARCHAR(255) NOT NULL UNIQUE
+    password_validation     TEXT,
+    email                   VARCHAR(255) NOT NULL UNIQUE,
+    google_id               VARCHAR(255) UNIQUE,
+    github_id               VARCHAR(255) UNIQUE,
+    github_access_token     VARCHAR(255) UNIQUE
+);
+
+-- tokens
+CREATE TABLE tokens (
+    token_validation VARCHAR(256) primary key,
+    user_id int references users(uid),
+    created_at bigint not null,
+    last_used_at bigint not null
 );
 
 -- Owners
 CREATE TABLE owners (
-    oid        SERIAL PRIMARY KEY,
+    oid        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name       VARCHAR(255) NOT NULL,
     url        VARCHAR(255) NOT NULL,
     avatar_url VARCHAR(255),
@@ -25,7 +36,7 @@ CREATE TABLE owners (
 
 -- Repositories
 CREATE TABLE repositories (
-    rid          SERIAL PRIMARY KEY,
+    rid          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name         VARCHAR(255) NOT NULL,
     external_id  VARCHAR(255) NOT NULL,
     platform     platform     NOT NULL,
@@ -41,7 +52,7 @@ CREATE TABLE repositories (
 
 -- Vulnerabilities
 CREATE TABLE vulnerabilities (
-    vid                      SERIAL PRIMARY KEY,
+    vid                      INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     external_id              VARCHAR(255)           NOT NULL,
     title                    VARCHAR(255)           NOT NULL,
     description              TEXT,
@@ -64,14 +75,21 @@ CREATE TABLE vulnerabilities (
 
 -- Vulnerability References
 CREATE TABLE vulnerability_references (
-    id      SERIAL PRIMARY KEY,
+    id      INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     vuln_id INT  NOT NULL REFERENCES vulnerabilities(vid),
     url     TEXT NOT NULL
 );
 
+-- User Repositories
+CREATE TABLE user_repositories (
+    uid INT NOT NULL REFERENCES users(uid),
+    rid INT NOT NULL REFERENCES repositories(rid),
+    PRIMARY KEY (uid, rid)
+);
+
 -- SAST Alerts
 CREATE TABLE sast_alerts (
-    sid        SERIAL PRIMARY KEY,
+    sid        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     rid        INT           NOT NULL REFERENCES repositories(rid),
     state      sast_state    NOT NULL,
     severity   sast_severity NOT NULL,

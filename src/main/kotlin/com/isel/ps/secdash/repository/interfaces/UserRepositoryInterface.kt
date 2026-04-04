@@ -11,5 +11,18 @@ interface UserRepositoryInterface {
         password: PasswordValidationInfo,
     ): Int // maybe we should create a dto for this return
 
+    fun createGoogleUser(
+        username: String,
+        email: String,
+        googleId: String,
+    ): User
+
     fun getUserByUsername(username: String): User?
+
+    fun getUserByEmail(email: String): User?
+
+    fun storeToken(
+        token: String,
+        maxTokens: Int,
+    )
 }

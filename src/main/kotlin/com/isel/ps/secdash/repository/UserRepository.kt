@@ -26,6 +26,21 @@ class UserRepository(
         return id
     }
 
+    override fun createGoogleUser(
+        username: String,
+        email: String,
+        googleId: String
+    ): User {
+        val user = handle.createUpdate("insert into users(name, email, google_id) values (:name, :email, :googleId)")
+            .bind("name", username)
+            .bind("email", email)
+            .bind("googleId", googleId)
+            .executeAndReturnGeneratedKeys()
+            .mapTo<User>() // this may fail needs testing !!!
+            .one()
+        return user
+    }
+
     override fun getUserByUsername(
         username: String
     ): User? {
@@ -34,5 +49,20 @@ class UserRepository(
             .mapTo<User>()
             .singleOrNull()
         return user
+    }
+
+    override fun getUserByEmail(email: String): User? {
+        val user = handle.createQuery("select * from users where email = :email")
+            .bind("email", email)
+            .mapTo<User>()
+            .singleOrNull()
+        return user
+    }
+
+    override fun storeToken(
+        token: String,
+        maxTokens: Int
+    ) {
+
     }
 }
