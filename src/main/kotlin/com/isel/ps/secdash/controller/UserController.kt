@@ -6,8 +6,6 @@ import com.isel.ps.secdash.model.users.UserCreationDto
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
 import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserServices
-import com.isel.ps.secdash.utils.Either.Left
-import com.isel.ps.secdash.utils.Either.Right
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity

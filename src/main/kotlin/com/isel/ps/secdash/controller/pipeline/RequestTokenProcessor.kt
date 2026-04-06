@@ -3,7 +3,6 @@ package com.isel.ps.secdash.controller.pipeline
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.TokenExternalInfo
 import com.isel.ps.secdash.service.AuthServices
-import com.isel.ps.secdash.service.UserServices
 import jakarta.servlet.http.Cookie
 import kotlinx.datetime.Clock
 import org.springframework.http.ResponseCookie

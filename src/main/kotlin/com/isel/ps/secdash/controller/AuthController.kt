@@ -1,11 +1,7 @@
 package com.isel.ps.secdash.controller
 
-import com.isel.ps.secdash.model.users.AuthenticatedUser
-import com.isel.ps.secdash.model.users.UserCreationDto
-import com.isel.ps.secdash.model.users.UserCreationOutputDto
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.service.AuthServices
-import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserGoogleLoginError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
@@ -17,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.net.URI
 
 @RestController
 @RequestMapping("/auth")

@@ -1,18 +1,11 @@
 package com.isel.ps.secdash.service
 
-import com.isel.ps.secdash.model.users.Token
-import com.isel.ps.secdash.model.users.TokenInfo
-import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserDomain
-import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
-import com.isel.ps.secdash.utils.Success
-import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
 import kotlinx.datetime.Clock
 import org.springframework.stereotype.Service
-import kotlin.run
 
 sealed class UserCreationError {
     data object UserAlreadyExists : UserCreationError()
