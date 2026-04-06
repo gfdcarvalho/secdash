@@ -14,7 +14,7 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/", "/login", "/error", "/users/**").permitAll()
+                    .requestMatchers("/", "/login", "/error", "/users/**", "/auth/**").permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2Login { }   // Google login enabled

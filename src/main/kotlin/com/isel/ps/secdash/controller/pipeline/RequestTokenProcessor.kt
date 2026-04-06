@@ -2,6 +2,7 @@ package com.isel.ps.secdash.controller.pipeline
 
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.TokenExternalInfo
+import com.isel.ps.secdash.service.AuthServices
 import com.isel.ps.secdash.service.UserServices
 import jakarta.servlet.http.Cookie
 import kotlinx.datetime.Clock
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class RequestTokenProcessor(
-    val userService: UserServices,
+    val authService: AuthServices,
 ) {
     fun processAuthorizationHeaderValue(authorizationValue: String?): AuthenticatedUser? {
         if (authorizationValue == null) {
@@ -24,7 +25,7 @@ class RequestTokenProcessor(
         if (parts[0].lowercase() != SCHEME) {
             return null
         }
-        return userService.getUserByToken(parts[1])?.let {
+        return authService.getUserByToken(parts[1])?.let {
             AuthenticatedUser(
                 it,
                 parts[1],
@@ -41,7 +42,7 @@ class RequestTokenProcessor(
             return null
         }
         val tokenValue = tokenCookies.single().value
-        return userService.getUserByToken(tokenValue)?.let {
+        return authService.getUserByToken(tokenValue)?.let {
             AuthenticatedUser(
                 it,
                 tokenValue,
