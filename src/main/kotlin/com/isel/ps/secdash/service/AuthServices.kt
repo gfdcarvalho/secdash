@@ -11,6 +11,7 @@ import com.isel.ps.secdash.utils.Success
 import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
 import kotlinx.datetime.Clock
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult.success
 import org.springframework.stereotype.Service
 
 sealed class UserLoginError {
@@ -24,6 +25,12 @@ sealed class UserGoogleLoginError {
 }
 
 typealias UserGoogleLoginResult = Either<UserGoogleLoginError, UserOutputDto>
+
+sealed class UserGithubLoginError {
+    data object InvalidCredentials : UserLoginError()
+}
+
+typealias UserGithubLoginResult = Either<UserGithubLoginError, UserOutputDto>
 
 @Service
 class AuthServices(
@@ -87,8 +94,27 @@ class AuthServices(
         googleId: String,
     ): UserGoogleLoginResult {
         if (username.isBlank() || email.isBlank() || googleId.isBlank()) {
-            failure(UserLoginError.InvalidCredentials)
+            failure(UserGoogleLoginError.InvalidCredentials)
         }
+        return success(storeExternalUser(username, email, googleId).toOutputDto())
+    }
+
+    fun storeGithubUser(
+        username: String,
+        email: String,
+        githubId: String,
+    ): UserGithubLoginResult {
+        if (username.isBlank() || githubId.isBlank()) {
+            failure(UserGithubLoginError.InvalidCredentials)
+        }
+        return success(storeExternalUser(username, email, githubId).toOutputDto())
+    }
+
+    fun storeExternalUser(
+        username: String,
+        email: String,
+        googleId: String,
+    ): User {
         return transactionManager.run {
             val userRepo = it.usersRepository
 
@@ -97,8 +123,7 @@ class AuthServices(
                 success(user.toOutputDto())
             }
             val newUser = userRepo.createGoogleUser(username, email, googleId)
-            success(newUser.toOutputDto())
+            newUser
         }
-
     }
 }
