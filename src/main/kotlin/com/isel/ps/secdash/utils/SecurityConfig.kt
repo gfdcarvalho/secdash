@@ -11,9 +11,10 @@ class SecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/", "/login", "/error").permitAll()
+                    .requestMatchers("/", "/login", "/error", "/users/**").permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2Login { }   // Google login enabled

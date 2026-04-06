@@ -12,6 +12,7 @@ import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
 import kotlinx.datetime.Clock
 import org.springframework.stereotype.Service
+import kotlin.run
 
 sealed class UserCreationError {
     data object UserAlreadyExists : UserCreationError()
@@ -86,10 +87,27 @@ class UserServices(
                     lastUsedAt = now,
                 )
             // add token to database
+            userRepo.storeToken(newToken, userDomain.maxNumberOfTokensPerUser)
 
             Success(TokenInfo(newTokenValue))
         }
+    }
 
+    fun getUserByToken( token: String): User? {
+        if (!userDomain.canBeToken(token)) {
+            return null
+        }
+        return transactionManager.run {
+            val usersRepository = it.usersRepository
+            val tokenValidationInfo = userDomain.createTokenValidationInformation(token)
+            val userAndToken = usersRepository.getTokenByTokenValidationInfo(tokenValidationInfo)
+            if (userAndToken != null && userDomain.isTokenTimeValid(clock, userAndToken.second)) {
+                usersRepository.updateTokenLastUsed(userAndToken.second, clock.now())
+                userAndToken.first
+            } else {
+                null
+            }
+        }
     }
 
     fun storeGoogleUser(

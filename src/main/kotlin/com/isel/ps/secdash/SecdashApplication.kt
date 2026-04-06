@@ -1,5 +1,7 @@
 package com.isel.ps.secdash
 
+import com.isel.ps.secdash.controller.pipeline.AuthenticatedUserArgumentResolver
+import com.isel.ps.secdash.controller.pipeline.AuthenticationInterceptor
 import com.isel.ps.secdash.model.users.Sha256TokenEncoder
 import com.isel.ps.secdash.model.users.UsersDomainConfig
 import com.isel.ps.secdash.utils.configureWithAppRequirements
@@ -9,9 +11,13 @@ import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.method.support.HandlerMethodArgumentResolver
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import kotlin.time.Duration.Companion.hours
 
 
@@ -52,6 +58,20 @@ class SecdashApplication{
 			tokenRollingTtl = 1.hours,
 			maxTokensPerUser = 3,
 		)
+
+	@Configuration
+	class PipelineConfiguration(
+		val authenticationInterceptor: AuthenticationInterceptor,
+		val authenticatedUserArgumentResolver: AuthenticatedUserArgumentResolver,
+	) : WebMvcConfigurer {
+		override fun addInterceptors(registry: InterceptorRegistry) {
+			registry.addInterceptor(authenticationInterceptor)
+		}
+
+		override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
+			resolvers.add(authenticatedUserArgumentResolver)
+		}
+	}
 }
 
 fun main(args: Array<String>) {

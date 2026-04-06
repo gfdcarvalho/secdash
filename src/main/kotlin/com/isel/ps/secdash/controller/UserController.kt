@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.controller
 
 
+import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserCreationDto
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 class UserController(
     private val userServices: UserServices
 ) {
@@ -75,11 +76,14 @@ class UserController(
     fun logoutUser() {
     }
 
-    @PostMapping("/me")
-    fun me() {
+    @GetMapping("/me")
+    fun me(
+        user: AuthenticatedUser,
+    ) {
+        println("user: ${user.user} ${user.token}")
     }
 
-    @GetMapping("/user")
+    @GetMapping("/login/google")
     fun user(
         @AuthenticationPrincipal principal: OidcUser
     ): ResponseEntity<*> {
@@ -98,6 +102,8 @@ class UserController(
                 }
         }
     }
+
+
 
 }
 /*
