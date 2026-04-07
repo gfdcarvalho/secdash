@@ -1,5 +1,7 @@
 package com.isel.ps.secdash.model
 
+import com.isel.ps.secdash.model.repositories.Repository
+
 class SastAlert(
     val sid: Int,
     val repository: Repository,

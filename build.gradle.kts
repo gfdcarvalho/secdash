@@ -49,6 +49,7 @@ dependencies {
 	implementation("tools.jackson.module:jackson-module-kotlin")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	//runtimeOnly("org.postgresql:postgresql")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-oauth2-client-test")

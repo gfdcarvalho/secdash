@@ -1,7 +1,11 @@
 package com.isel.ps.secdash.restclient
 
+import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
+import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.users.TokenInfo
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
+import org.springframework.web.client.body
 
 @Service
 class GithubRestClient {
@@ -14,9 +18,20 @@ class GithubRestClient {
             .header("Authorization", "Bearer $accessToken")
             .header("Accept", "application/vnd.github+json")
             .retrieve()
-            .body(Array<GithubEmail>::class.java)
+            .body<Array<GithubEmail>>()
 
         return emails?.firstOrNull { it.primary && it.verified }?.email
+    }
+
+    fun getRepositoriesByOwner(owner: String): List<GithubRepositoryDto>? {
+        val  repos = restClient.get()
+            .uri("https://api.github.com/users/$owner/repos")
+            //.header("Authorization", "Bearer $owner")
+            .header("Accept", "application/vnd.github+json")
+            .retrieve()
+            .body<Array<GithubRepositoryDto>>()
+
+        return repos?.toList()
     }
 
     private data class GithubEmail(

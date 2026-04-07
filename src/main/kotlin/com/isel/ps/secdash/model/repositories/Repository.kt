@@ -1,7 +1,8 @@
-package com.isel.ps.secdash.model
+package com.isel.ps.secdash.model.repositories
 
+import com.isel.ps.secdash.model.Owner
+import com.isel.ps.secdash.model.Platform
 import java.util.Date
-
 
 class Repository(
     val rid: Int,

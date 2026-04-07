@@ -36,3 +36,6 @@
 - `UserController`: base path changed from `/api/users` to `/users`; `/me` endpoint corrected from `@PostMapping` to `@GetMapping` and wired to receive `AuthenticatedUser`.
 - Split of `UserController` and `UserServices` into additional `AuthController` and `AuthServices`
 - authentication through GitHub 
+- 
+## April 7, 2026
+- Implemented Controller, Services and DTO to get Github repositories by owner
