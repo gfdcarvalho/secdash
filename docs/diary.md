@@ -35,3 +35,4 @@
 - `SecurityConfig` fixed: CSRF disabled (REST API uses token-based auth) and `/users/**` added to `permitAll()` so Spring Security does not intercept routes before the custom interceptor.
 - `UserController`: base path changed from `/api/users` to `/users`; `/me` endpoint corrected from `@PostMapping` to `@GetMapping` and wired to receive `AuthenticatedUser`.
 - Split of `UserController` and `UserServices` into additional `AuthController` and `AuthServices`
+- authentication through GitHub 

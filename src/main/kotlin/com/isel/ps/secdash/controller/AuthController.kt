@@ -84,7 +84,8 @@ class AuthController(
         val result = authServices.storeGithubUser(
             username = username,
             email = email,
-            githubId = githubId
+            githubId = githubId,
+            accessToken = accessToken,
         )
         return when (result) {
             is Success ->

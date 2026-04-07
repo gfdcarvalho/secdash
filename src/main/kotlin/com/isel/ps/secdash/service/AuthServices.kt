@@ -1,11 +1,14 @@
 package com.isel.ps.secdash.service
 
+import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.Token
 import com.isel.ps.secdash.model.users.TokenInfo
 import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserDomain
 import com.isel.ps.secdash.model.users.UserOutputDto
+import com.isel.ps.secdash.repository.UserRepository
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
+import com.isel.ps.secdash.repository.interfaces.UserRepositoryInterface
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.Success
 import com.isel.ps.secdash.utils.failure
@@ -24,13 +27,13 @@ sealed class UserGoogleLoginError {
     data object InvalidCredentials : UserLoginError()
 }
 
-typealias UserGoogleLoginResult = Either<UserGoogleLoginError, UserOutputDto>
+typealias UserGoogleLoginResult = Either<UserGoogleLoginError, TokenInfo>
 
 sealed class UserGithubLoginError {
     data object InvalidCredentials : UserLoginError()
 }
 
-typealias UserGithubLoginResult = Either<UserGithubLoginError, UserOutputDto>
+typealias UserGithubLoginResult = Either<UserGithubLoginError, TokenInfo>
 
 @Service
 class AuthServices(
@@ -51,27 +54,20 @@ class AuthServices(
                 ?: return@run failure(UserLoginError.InvalidCredentials)
             checkNotNull(user.passwordValidation) { return@run failure(UserLoginError.InvalidCredentials) }
             if (!userDomain.validatePassword(password, user.passwordValidation)) {
-                if (!userDomain.validatePassword(password, user.passwordValidation)) { // understand why this if inside if ????
+                if (!userDomain.validatePassword(
+                        password,
+                        user.passwordValidation
+                    )
+                ) { // understand why this if inside if ????
                     return@run failure(UserLoginError.InvalidCredentials)
                 }
             }
-            val newTokenValue = userDomain.generateTokenValue()
-            val now = clock.now()
-            val newToken =
-                Token(
-                    userDomain.createTokenValidationInformation(newTokenValue),
-                    user.uid,
-                    createdAt = now,
-                    lastUsedAt = now,
-                )
-            // add token to database
-            userRepo.storeToken(newToken, userDomain.maxNumberOfTokensPerUser)
-
-            Success(TokenInfo(newTokenValue))
+            val tokenInfo = createToken(userRepo, user.uid)
+            Success(tokenInfo)
         }
     }
 
-    fun getUserByToken( token: String): User? {
+    fun getUserByToken(token: String): User? {
         if (!userDomain.canBeToken(token)) {
             return null
         }
@@ -96,34 +92,86 @@ class AuthServices(
         if (username.isBlank() || email.isBlank() || googleId.isBlank()) {
             failure(UserGoogleLoginError.InvalidCredentials)
         }
-        return success(storeExternalUser(username, email, googleId).toOutputDto())
+        return transactionManager.run {
+            val userRepo = it.usersRepository
+            val user = storeExternalUser(userRepo, username, email)
+            storeUserAuthentication(userRepo,user.uid, AuthProvider.GOOGLE, googleId)
+            val tokenInfo = createToken(userRepo, user.uid)
+            Success(tokenInfo)
+        }
     }
 
     fun storeGithubUser(
         username: String,
         email: String,
         githubId: String,
+        accessToken: String,
     ): UserGithubLoginResult {
         if (username.isBlank() || githubId.isBlank()) {
             failure(UserGithubLoginError.InvalidCredentials)
         }
-        return success(storeExternalUser(username, email, githubId).toOutputDto())
-    }
-
-    fun storeExternalUser(
-        username: String,
-        email: String,
-        googleId: String,
-    ): User {
         return transactionManager.run {
             val userRepo = it.usersRepository
-
-            val user: User? = userRepo.getUserByEmail(email)
-            if (user != null) {
-                success(user.toOutputDto())
-            }
-            val newUser = userRepo.createGoogleUser(username, email, googleId)
-            newUser
+            val user = storeExternalUser(userRepo, username, email)
+            storeUserAuthentication(userRepo, user.uid, AuthProvider.GITHUB, githubId)
+            storeUserAuthorization(userRepo, user.uid, AuthProvider.GITHUB, accessToken)
+            val tokenInfo = createToken(userRepo, user.uid)
+            success(tokenInfo)
         }
+    }
+
+    private fun storeUserAuthorization(
+        userRepo: UserRepository,
+        userId: Int,
+        authProvider: AuthProvider,
+        accessToken: String,
+    ) { // this function will be used by GitHub and gitlab either on the login process or the authorization process
+        val userAuthorization = userRepo.getAccessToken(userId, authProvider)
+        if (userAuthorization == null) {
+            userRepo.storeUserAuthorization(userId, authProvider, accessToken)
+        }
+    }
+
+    private fun storeUserAuthentication(
+        userRepo: UserRepository,
+        userId: Int,
+        authProvider: AuthProvider,
+        providerId: String
+    ) { // this function will be used by all external login methods (google, GitHub, gitlab)
+        val userProvider = userRepo.getUserProviderId(userId, authProvider)
+        if (userProvider == null) {
+            userRepo.storeUserAuthentication(userId, authProvider, providerId)
+        }
+    }
+
+    private fun storeExternalUser(
+        userRepo: UserRepository,
+        username: String,
+        email: String,
+    ): User { // this function will be used by all external login methods (google, GitHub, gitlab)
+        val user: User? = userRepo.getUserByEmail(email)
+        if (user != null) {
+            return user
+        }
+        val newUser = userRepo.storeExternalUser(username, email)
+        return newUser
+    }
+
+    private fun createToken(
+        userRepo: UserRepositoryInterface,
+        userId: Int
+    ): TokenInfo { // this function is used by all login methods (internal and external) to return our internal token
+        val newTokenValue = userDomain.generateTokenValue()
+        val now = clock.now()
+        val newToken =
+            Token(
+                userDomain.createTokenValidationInformation(newTokenValue),
+                userId,
+                createdAt = now,
+                lastUsedAt = now,
+            )
+        // add token to database
+        userRepo.storeToken(newToken, userDomain.maxNumberOfTokensPerUser)
+        return TokenInfo(newTokenValue)
     }
 }

@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS vulnerabilities;
 DROP TABLE IF EXISTS user_repositories;
 DROP TABLE IF EXISTS repositories;
 DROP TABLE IF EXISTS owners;
+DROP TABLE IF EXISTS user_oauth_tokens;
+DROP TABLE IF EXISTS user_identities;
 DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS users;
 
@@ -15,3 +17,4 @@ DROP TYPE IF EXISTS vulnerability_state;
 DROP TYPE IF EXISTS vulnerability_severity;
 DROP TYPE IF EXISTS visibility;
 DROP TYPE IF EXISTS platform;
+DROP TYPE IF EXISTS auth_provider;

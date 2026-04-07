@@ -1,4 +1,4 @@
-@token = cCNF2nzun3VEuITACaH9a2PgVCohgCdJ4fj_qkElAUU=
+@token = Dnel-1BUdlaqTl8EZX3ssFeZ5gYmBNdLhKR-fzaa74k=
 @token2 =
 
 ###
@@ -6,9 +6,9 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "teste53",
+  "username": "teste1",
   "password": "teste1",
-  "email": "email35"
+  "email": "email1"
 }
 
 
@@ -17,7 +17,7 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "teste53",
+  "username": "teste1",
   "password": "teste1"
 }
 

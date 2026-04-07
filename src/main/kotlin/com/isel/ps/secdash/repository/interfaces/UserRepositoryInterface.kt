@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.repository.interfaces
 
+import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.PasswordValidationInfo
 import com.isel.ps.secdash.model.users.Token
 import com.isel.ps.secdash.model.users.TokenInfo
@@ -28,11 +29,32 @@ interface UserRepositoryInterface {
         now: Instant,
     )
 
-    fun createGoogleUser(
+    fun storeExternalUser(
         username: String,
         email: String,
-        googleId: String,
     ): User
+
+    fun storeUserAuthentication(
+        userId: Int,
+        authProvider: AuthProvider,
+        providerId: String,
+    )
+
+    fun getUserProviderId(
+        userId: Int,
+        authProvider: AuthProvider
+    ): String?
+
+    fun getAccessToken(
+        userId: Int,
+        authProvider: AuthProvider
+    ): String? // maybe we should have a data class for this return
+
+    fun storeUserAuthorization(
+        userId: Int,
+        authProvider: AuthProvider,
+        accessToken: String
+    )
 
     fun getUserByUsername(username: String): User?
 

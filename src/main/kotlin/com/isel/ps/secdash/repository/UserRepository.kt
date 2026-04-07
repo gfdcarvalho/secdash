@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.repository
 
+import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.PasswordValidationInfo
 import com.isel.ps.secdash.model.users.Token
 import com.isel.ps.secdash.model.users.TokenInfo
@@ -95,19 +96,69 @@ class UserRepository(
             .execute()
     }
 
-    override fun createGoogleUser(
+    override fun storeExternalUser(
         username: String,
         email: String,
-        googleId: String
     ): User {
-        val user = handle.createUpdate("insert into users(name, email, google_id) values (:name, :email, :googleId)")
+        val user = handle.createUpdate("insert into users(name, email) values (:name, :email)")
             .bind("name", username)
             .bind("email", email)
-            .bind("googleId", googleId)
             .executeAndReturnGeneratedKeys()
             .mapTo<User>() // this may fail needs testing !!!
             .one()
         return user
+    }
+
+    override fun storeUserAuthentication(userId: Int, authProvider: AuthProvider, providerId: String) { // the provider cast might fail !!
+        handle.createUpdate(
+            """
+                insert into user_authentication(user_id, provider, provider_id) 
+                values (:user_id, :provider::auth_provider, :provider_id) 
+            """.trimIndent()
+        )
+            .bind("user_id", userId)
+            .bind("provider", authProvider.name)
+            .bind("provider_id", providerId)
+            .execute()
+    }
+
+    override fun storeUserAuthorization(userId: Int, authProvider: AuthProvider, accessToken: String) {
+        handle.createUpdate(
+            """
+                insert into user_authorization(user_id, provider, access_token)
+                values (:user_id, :provider::auth_provider, :access_token)
+            """.trimIndent()
+        )
+            .bind("user_id", userId)
+            .bind("provider", authProvider.name)
+            .bind("access_token", accessToken)
+            .execute()
+    }
+
+    override fun getUserProviderId(userId: Int, authProvider: AuthProvider): String? {
+        val providerId = handle.createQuery(
+            """
+                select provider_id from user_authentication where user_id = :user_id and provider = :provider::auth_provider
+            """.trimIndent()
+        )
+            .bind("user_id", userId)
+            .bind("provider", authProvider.name)
+            .mapTo<String>()
+            .singleOrNull()
+        return providerId
+    }
+
+    override fun getAccessToken(userId: Int, authProvider: AuthProvider): String? {
+        val accessToken = handle.createQuery(
+            """
+                select access_token from user_authorization where user_id = :user_id and provider = :provider::auth_provider
+            """.trimIndent()
+        )
+            .bind("user_id", userId)
+            .bind("provider", authProvider.name)
+            .mapTo<String>()
+            .singleOrNull()
+        return accessToken
     }
 
     override fun getUserByUsername(

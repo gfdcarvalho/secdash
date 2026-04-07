@@ -5,24 +5,39 @@ CREATE TYPE vulnerability_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW',
 CREATE TYPE vulnerability_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
 CREATE TYPE sast_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW');
 CREATE TYPE sast_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
+CREATE TYPE auth_provider AS ENUM ('GOOGLE', 'GITHUB', 'GITLAB');
 
 -- Users
 CREATE TABLE users (
     uid                     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name                    VARCHAR(255) NOT NULL,
     password_validation     TEXT,
-    email                   VARCHAR(255) NOT NULL UNIQUE,
-    google_id               VARCHAR(255) UNIQUE,
-    github_id               VARCHAR(255) UNIQUE,
-    github_access_token     VARCHAR(255) UNIQUE
+    email                   VARCHAR(255) NOT NULL UNIQUE
+);
+
+-- user_identities (authentication)
+CREATE TABLE user_authentication (
+    user_id     INT           NOT NULL REFERENCES users(uid),
+    provider    auth_provider NOT NULL,
+    provider_id VARCHAR       NOT NULL,
+    PRIMARY KEY (user_id, provider),
+    UNIQUE      (provider, provider_id)
+);
+
+-- user_oauth_tokens (authorization)
+CREATE TABLE user_authorization (
+    user_id      INT           NOT NULL REFERENCES users(uid),
+    provider     auth_provider NOT NULL,
+    access_token TEXT          NOT NULL,
+    PRIMARY KEY  (user_id, provider)
 );
 
 -- tokens
 CREATE TABLE tokens (
-    token_validation VARCHAR(256) primary key,
-    user_id int references users(uid),
-    created_at bigint not null,
-    last_used_at bigint not null
+    token_validation    VARCHAR(256) primary key,
+    user_id             int references users(uid),
+    created_at          bigint not null,
+    last_used_at        bigint not null
 );
 
 -- Owners
@@ -68,7 +83,7 @@ CREATE TABLE vulnerabilities (
     cvss_score               DOUBLE PRECISION,
     cvss_vector              VARCHAR(255),
     platform                 platform               NOT NULL,
-    rid            INT                    NOT NULL REFERENCES repositories(rid),
+    rid                      INT                    NOT NULL REFERENCES repositories(rid),
     detected_at              TIMESTAMP              NOT NULL,
     updated_at               TIMESTAMP              NOT NULL
 );
