@@ -16,7 +16,7 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/", "/login", "/error", "/users/**", "/auth/**").permitAll()
+                    .requestMatchers("/", "/login", "/error", "/users/**", "/auth/**", "/github/repositories").permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2Login { oauth2 ->

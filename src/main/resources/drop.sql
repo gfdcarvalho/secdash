@@ -5,8 +5,8 @@ DROP TABLE IF EXISTS vulnerabilities;
 DROP TABLE IF EXISTS user_repositories;
 DROP TABLE IF EXISTS repositories;
 DROP TABLE IF EXISTS owners;
-DROP TABLE IF EXISTS user_oauth_tokens;
-DROP TABLE IF EXISTS user_identities;
+DROP TABLE IF EXISTS user_authorization;
+DROP TABLE IF EXISTS user_authentication;
 DROP TABLE IF EXISTS tokens;
 DROP TABLE IF EXISTS users;
 

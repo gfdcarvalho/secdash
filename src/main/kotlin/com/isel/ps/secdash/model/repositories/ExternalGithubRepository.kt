@@ -1,7 +1,10 @@
 package com.isel.ps.secdash.model.repositories
 
 import com.isel.ps.secdash.model.Platform
-import java.util.Date
+import java.sql.Date
+import java.time.Instant
+
+//import java.util.Date
 
 data class ExternalGithubRepository(
     val name: String,
@@ -11,14 +14,15 @@ data class ExternalGithubRepository(
     val htmlUrl: String,
     val description: String?,
     val issuesCount: Int,
-    val createdAt: Date,
-    val updatedAt: Date,
+    val createdAt: Instant,
+    val updatedAt: Instant,
     val forksCount: Int,
     val visibility: Repository.Visibility,
 )
 
 
 data class ExternalOwner(
+    val externalId: String,
     val name : String,
     val url : String,
     val avatarUrl: String,

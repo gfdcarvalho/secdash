@@ -2,9 +2,9 @@ package com.isel.ps.secdash.model.repositories
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.isel.ps.secdash.model.Platform
+import java.sql.Date
 import java.time.Instant
 
-import java.util.Date
 
 data class GithubRepositoryDto(
     val id: Long,
@@ -26,8 +26,8 @@ data class GithubRepositoryDto(
         htmlUrl = htmlUrl,
         description = description ?: "",
         issuesCount = openIssuesCount,
-        createdAt = Date.from(Instant.parse(createdAt)),
-        updatedAt = Date.from(Instant.parse(updatedAt)),
+        createdAt = Instant.parse(createdAt),
+        updatedAt = Instant.parse(updatedAt),
         forksCount = forksCount,
         visibility = when (visibility) {
             "private" -> Repository.Visibility.PRIVATE
@@ -38,12 +38,14 @@ data class GithubRepositoryDto(
 }
 
 data class GithubOwnerDto(
+    @JsonProperty("id") val externalId: Long,
     val login: String,
-    val id: Long,
+//    val id: Long,
     @JsonProperty("avatar_url") val avatarUrl: String,
     @JsonProperty("html_url") val htmlUrl: String,
 ) {
     fun toExternalOwner() = ExternalOwner(
+        externalId = externalId.toString(),
         name = login,
         url = htmlUrl,
         avatarUrl = avatarUrl,

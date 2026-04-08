@@ -1,5 +1,5 @@
 -- Enums
-CREATE TYPE platform AS ENUM ('GITHUB', 'GITLABS');
+CREATE TYPE platform AS ENUM ('GITHUB', 'GITLAB');
 CREATE TYPE visibility AS ENUM ('PUBLIC', 'PRIVATE', 'INTERNAL');
 CREATE TYPE vulnerability_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN');
 CREATE TYPE vulnerability_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
@@ -21,7 +21,7 @@ CREATE TABLE user_authentication (
     provider    auth_provider NOT NULL,
     provider_id VARCHAR       NOT NULL,
     PRIMARY KEY (user_id, provider),
-    UNIQUE      (provider, provider_id)
+    UNIQUE      (provider, provider_id) -- dangerous!!
 );
 
 -- user_oauth_tokens (authorization)
@@ -42,11 +42,13 @@ CREATE TABLE tokens (
 
 -- Owners
 CREATE TABLE owners (
-    oid        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name       VARCHAR(255) NOT NULL,
-    url        VARCHAR(255) NOT NULL,
-    avatar_url VARCHAR(255),
-    platform   platform     NOT NULL
+    oid             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    external_id     VARCHAR(255),
+    name            VARCHAR(255) NOT NULL,
+    url             VARCHAR(255) NOT NULL,
+    avatar_url      VARCHAR(255),
+    platform        platform     NOT NULL,
+    UNIQUE (name, platform)
 );
 
 -- Repositories
@@ -59,10 +61,11 @@ CREATE TABLE repositories (
     html_url     VARCHAR(255) NOT NULL,
     description  TEXT,
     issues_count INT          NOT NULL DEFAULT 0,
-    created_at   TIMESTAMP    NOT NULL,
-    updated_at   TIMESTAMP    NOT NULL,
+    created_at   TIMESTAMPTZ    NOT NULL,
+    updated_at   TIMESTAMPTZ    NOT NULL,
     forks_count  INT          NOT NULL DEFAULT 0,
-    visibility   visibility   NOT NULL
+    visibility   visibility   NOT NULL,
+    UNIQUE  (external_id, platform)
 );
 
 -- Vulnerabilities

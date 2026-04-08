@@ -1,5 +1,6 @@
 @token = Dnel-1BUdlaqTl8EZX3ssFeZ5gYmBNdLhKR-fzaa74k=
-@token2 =
+@token2 = I8BlSUjQlMY4kXq1xg7fNv_RqmFGcm4PELar9gNJCcQ=
+
 
 ###
 POST http://localhost:8080/users/register
@@ -24,3 +25,13 @@ Content-Type: application/json
 ###
 GET http://localhost:8080/users/me
 Authorization: Bearer {{token}}
+
+
+###
+POST http://localhost:8080/github/repositories
+Authorization: Bearer {{token2}}
+Content-Type: application/json
+
+{
+  "name": "RodrigoVitorino/secdash-sast-test"
+}

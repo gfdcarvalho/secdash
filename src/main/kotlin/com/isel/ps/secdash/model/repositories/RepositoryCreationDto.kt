@@ -1,7 +1,11 @@
 package com.isel.ps.secdash.model.repositories
 
 import com.isel.ps.secdash.model.Platform
-import java.util.Date
+import java.sql.Date
+import java.time.Instant
+
+//import java.util.Date
+
 
 data class RepositoryCreationDto(
     val name: String,
@@ -10,8 +14,8 @@ data class RepositoryCreationDto(
     val htmlUrl: String? = null,
     val description: String? = " ",
     val issuesCount: Int? = null,
-    val createdAt: Date? = null, // talvez tenha que ser ‘String’
-    val updatedAt: Date? = null,
+    val createdAt: String = " ",
+    val updatedAt: String = " ",
     val forksCount: Int? = null,
     val visibility: Repository.Visibility? = null,
 ) {
@@ -23,8 +27,8 @@ data class RepositoryCreationDto(
         platform = Platform.GITHUB,
         description = description,
         issuesCount = issuesCount ?: error("issuesCount is required"),
-        createdAt = createdAt ?: error("createdAt is required"),
-        updatedAt = updatedAt ?: error("updatedAt is required"),
+        createdAt = Instant.parse(createdAt) ?: error("createdAt is required"),
+        updatedAt = Instant.parse(updatedAt) ?: error("updatedAt is required"),
         forksCount = forksCount ?: error("forksCount is required"),
         visibility = visibility ?: error("visibility is required"),
     )
