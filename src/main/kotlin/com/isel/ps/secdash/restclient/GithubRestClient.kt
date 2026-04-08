@@ -35,6 +35,16 @@ class GithubRestClient {
         return repos?.map { it.toExternalGithubRepository() }
     }
 
+    fun getRepositoryByName(fullName: String, accessToken: String): ExternalGithubRepository? {
+        val repo = restClient.get()
+            .uri("https://api.github.com/repos/$fullName")
+            .header("Authorization", "Bearer $accessToken")
+            .header("Accept", "application/vnd.github+json")
+            .retrieve()
+            .body<GithubRepositoryDto>()
+        return repo?.toExternalGithubRepository()
+    }
+
     private data class GithubEmail(
         val email: String,
         val primary: Boolean,

@@ -8,7 +8,7 @@ data class RepositoryCreationDto(
     val externalId: String? = null,
     val externalOwner: ExternalOwner? = null,
     val htmlUrl: String? = null,
-    val description: String? = null,
+    val description: String? = " ",
     val issuesCount: Int? = null,
     val createdAt: Date? = null, // talvez tenha que ser ‘String’
     val updatedAt: Date? = null,
@@ -28,5 +28,10 @@ data class RepositoryCreationDto(
         forksCount = forksCount ?: error("forksCount is required"),
         visibility = visibility ?: error("visibility is required"),
     )
+
+    /**
+     * returns true if all the necessary fields of the data class are filled
+     */
+    fun isComplete() = listOf( externalId, externalOwner, htmlUrl, issuesCount, createdAt, updatedAt, forksCount, visibility ).all { it != null } // we need to have tests for this !
 }
 

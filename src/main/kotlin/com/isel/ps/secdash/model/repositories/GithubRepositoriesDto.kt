@@ -8,7 +8,7 @@ import java.util.Date
 
 data class GithubRepositoryDto(
     val id: Long,
-    val name: String,
+    @JsonProperty("full_name") val name: String,
     @JsonProperty("html_url") val htmlUrl: String,
     val description: String?,
     @JsonProperty("open_issues_count") val openIssuesCount: Int,
