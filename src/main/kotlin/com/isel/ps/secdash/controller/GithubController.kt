@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.GithubServices
 import com.isel.ps.secdash.service.UserGoogleLoginError
@@ -9,6 +10,8 @@ import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -43,6 +46,17 @@ class GithubController(
         }
         */
     }
+
+    @PostMapping("/repositories")
+    fun addRepository(
+        user: AuthenticatedUser,
+        @RequestBody repo: RepositoryCreationDto,
+    ): ResponseEntity<*> {
+        val result = githubServices.addRepository(repo, user.user.uid)
+        return ResponseEntity.status(201)
+            .body(result)
+    }
+
 
     @GetMapping("/vulnerabilities")
     fun getVulnerabilities() {}

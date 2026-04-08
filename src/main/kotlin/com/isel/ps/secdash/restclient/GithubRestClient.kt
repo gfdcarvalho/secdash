@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.restclient
 
+import com.isel.ps.secdash.model.repositories.ExternalGithubRepository
 import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.users.TokenInfo
@@ -23,7 +24,7 @@ class GithubRestClient {
         return emails?.firstOrNull { it.primary && it.verified }?.email
     }
 
-    fun getRepositoriesByOwner(owner: String): List<GithubRepositoryDto>? {
+    fun getRepositoriesByOwner(owner: String): List<ExternalGithubRepository>? {
         val  repos = restClient.get()
             .uri("https://api.github.com/users/$owner/repos")
             //.header("Authorization", "Bearer $owner")
@@ -31,7 +32,7 @@ class GithubRestClient {
             .retrieve()
             .body<Array<GithubRepositoryDto>>()
 
-        return repos?.toList()
+        return repos?.map { it.toExternalGithubRepository() }
     }
 
     private data class GithubEmail(

@@ -1,7 +1,6 @@
 package com.isel.ps.secdash.model.repositories
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.isel.ps.secdash.model.Owner
 import com.isel.ps.secdash.model.Platform
 import java.time.Instant
 
@@ -19,12 +18,11 @@ data class GithubRepositoryDto(
     val visibility: String,
     val owner: GithubOwnerDto,
 ) {
-    fun toDomain() = Repository(
-        rid = 0, // gerado pela DB
+    fun toExternalGithubRepository() = ExternalGithubRepository(
         name = name,
         externalId = id.toString(),
         platform = Platform.GITHUB,
-        owner = owner.toDomain(),
+        externalOwner = owner.toExternalOwner(),
         htmlUrl = htmlUrl,
         description = description ?: "",
         issuesCount = openIssuesCount,
@@ -45,8 +43,7 @@ data class GithubOwnerDto(
     @JsonProperty("avatar_url") val avatarUrl: String,
     @JsonProperty("html_url") val htmlUrl: String,
 ) {
-    fun toDomain() = Owner(
-        oid = 0, // gerado pela DB
+    fun toExternalOwner() = ExternalOwner(
         name = login,
         url = htmlUrl,
         avatarUrl = avatarUrl,

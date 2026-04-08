@@ -24,7 +24,7 @@ sealed class UserLoginError {
 typealias UserLoginResult = Either<UserLoginError, TokenInfo>
 
 sealed class UserGoogleLoginError {
-    data object InvalidCredentials : UserLoginError()
+    data object InvalidCredentials : UserGoogleLoginError()
 }
 
 typealias UserGoogleLoginResult = Either<UserGoogleLoginError, TokenInfo>
@@ -45,8 +45,8 @@ class AuthServices(
         username: String,
         password: String,
     ): UserLoginResult {
-        if (username.isNotBlank() || password.isNotBlank()) {
-            failure(UserLoginError.InvalidCredentials)
+        if (username.isNotBlank() && password.isNotBlank()) {
+            return failure(UserLoginError.InvalidCredentials)
         }
         return transactionManager.run {
             val userRepo = it.usersRepository
