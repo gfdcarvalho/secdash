@@ -1,5 +1,5 @@
 @token = Dnel-1BUdlaqTl8EZX3ssFeZ5gYmBNdLhKR-fzaa74k=
-@token2 = b9RxjwT5jl3VPqHHzm9QlXT6GxnJjPv3ADUpkHqa9lI=
+@token2 = z7wHFxN1u8lNVks5L0emF5lPnIHRaobKjveKU3L8Uu0=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ### user profile
 GET http://localhost:8080/users/me
-Authorization: Bearer {{token}}
+Authorization: Bearer {{token2}}
 
 
 ### add repository

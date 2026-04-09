@@ -1,13 +1,18 @@
 package com.isel.ps.secdash.controller
 
+import com.isel.ps.secdash.controller.pipeline.RequestTokenProcessor
+import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserLoginDto
+import com.isel.ps.secdash.model.users.UserTokenOutputModel
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.service.AuthServices
 import com.isel.ps.secdash.service.UserGithubLoginError
 import com.isel.ps.secdash.service.UserGoogleLoginError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
+import jakarta.servlet.http.HttpServletRequest
+import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
@@ -19,12 +24,14 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import kotlin.toString
 
 @RestController
 @RequestMapping("/auth")
 class AuthController(
     private val authServices: AuthServices,
-    private val githubRestClient: GithubRestClient
+    private val githubRestClient: GithubRestClient,
+    private val requestTokenProcessor: RequestTokenProcessor
 ) {
 
     @PostMapping("/login") // login com tokens
@@ -33,17 +40,18 @@ class AuthController(
     ): ResponseEntity<*> {
         val result = authServices.login(input.username, input.password)
         return when (result) {
-            is Success ->
-                // in the future handle cookie ...
+            is Success -> {
+                val responseCookie = requestTokenProcessor.createCookie(result.value)
                 ResponseEntity.status(200)
-                    .body(result.value)
-
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(UserTokenOutputModel(result.value.token))
+            }
             is Failure ->
                 ResponseEntity.badRequest().build<Unit>() // still need to handle all error responses
         }
     }
 
-    // login com o github
+    // login com o GitHub
     @PostMapping("/logout")
     fun logoutUser() {
     }
@@ -58,9 +66,12 @@ class AuthController(
             googleId = principal.subject // googleId
         )
         return when (result) {
-            is Success ->
+            is Success ->{
+                val responseCookie = requestTokenProcessor.createCookie(result.value)
                 ResponseEntity.status(200)
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                     .body(result.value)
+            }
             is Failure ->
                 when (result.value) {
                     UserGoogleLoginError.InvalidCredentials-> ResponseEntity.badRequest().build<Unit>()
@@ -86,11 +97,14 @@ class AuthController(
             username = username,
             email = email,
             githubId = githubId,
-            accessToken = accessToken,
         )
         return when (result) {
-            is Success ->
-                ResponseEntity.status(200).body(result.value)
+            is Success ->{
+                val responseCookie = requestTokenProcessor.createCookie(result.value)
+                ResponseEntity.status(200)
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(result.value)
+            }
             is Failure ->
                 when (result.value) {
                     UserGithubLoginError.InvalidCredentials -> ResponseEntity.badRequest().build<Unit>()
@@ -100,11 +114,18 @@ class AuthController(
 
     @GetMapping("/authorize/github")
     fun githubAuthorize(
-        user: AuthenticatedUser
-
+        @AuthenticationPrincipal principal: OAuth2User,
+        @RegisteredOAuth2AuthorizedClient("github-api") authorizedClient: OAuth2AuthorizedClient,
+        request: HttpServletRequest
     ): ResponseEntity<*> {
-        TODO()
+        val user = requestTokenProcessor.processCookies(request.cookies)
+            ?: return ResponseEntity.status(401).build<Unit>() // precisamos de resolver o tratamento de erros
+        val accessToken = authorizedClient.accessToken.tokenValue
+        authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
+        return ResponseEntity.status(200).body(user.user) // just for testing
     }
+
+
 
 
 }
