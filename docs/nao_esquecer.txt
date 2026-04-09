@@ -5,3 +5,5 @@ fazer tratamento de erros no github services
 
 fazer tratamento de erros das chamadas as api's externas
 
+acho que precisamos de um repositoriesRepository... para fazer ações dos repositorios tipo ir bucsar um repo com base no id ... etc
+

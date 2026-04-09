@@ -5,8 +5,8 @@ import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel
-import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.service.AuthServices
+import com.isel.ps.secdash.service.GithubServices
 import com.isel.ps.secdash.service.UserGithubLoginError
 import com.isel.ps.secdash.service.UserGoogleLoginError
 import com.isel.ps.secdash.utils.Failure
@@ -30,7 +30,7 @@ import kotlin.toString
 @RequestMapping("/auth")
 class AuthController(
     private val authServices: AuthServices,
-    private val githubRestClient: GithubRestClient,
+    private val githubServices: GithubServices,
     private val requestTokenProcessor: RequestTokenProcessor
 ) {
 
@@ -88,7 +88,7 @@ class AuthController(
         val githubId = principal.getAttribute<Int>("id")?.toString()
             ?: return ResponseEntity.badRequest().build<Unit>()
         val email = principal.getAttribute<String>("email")
-            ?: githubRestClient.fetchGithubEmail(accessToken)
+            ?: githubServices.fetchGithubEmail(accessToken)
             ?: return ResponseEntity.badRequest().build<Unit>()
         val username = principal.getAttribute<String>("login")
             ?: return ResponseEntity.badRequest().build<Unit>()

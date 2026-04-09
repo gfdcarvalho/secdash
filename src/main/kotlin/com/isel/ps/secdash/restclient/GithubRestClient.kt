@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.restclient
 
+import com.isel.ps.secdash.model.Vulnerability
 import com.isel.ps.secdash.model.repositories.ExternalGithubRepository
 import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
 import org.springframework.stereotype.Service
@@ -41,6 +42,19 @@ class GithubRestClient {
             .retrieve()
             .body<GithubRepositoryDto>()
         return repo?.toExternalGithubRepository()
+    }
+
+    fun getDependabot(
+        fullName: String,
+        accessToken: String,
+    ): List<Vulnerability>? {
+        val vulnerabilities = restClient.get()
+            .uri("https://api.github.com/repos/$fullName/dependabot/alerts")
+            .header("Authorization", "Bearer $accessToken")
+            .header("Accept", "application/vnd.github+json")
+            .retrieve()
+            .body<Array<Vulnerability>>()
+        return vulnerabilities?.toList()
     }
 
     private data class GithubEmail(

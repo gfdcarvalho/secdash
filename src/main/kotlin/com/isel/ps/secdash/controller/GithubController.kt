@@ -62,8 +62,10 @@ class GithubController(
     fun getVulnerabilities(
         user: AuthenticatedUser,
         @PathVariable rid: Int
-    ) {
-        TODO()
+    ): ResponseEntity<*> {
+        val result = githubServices.getDependabot(user.user.uid, rid)
+        return ResponseEntity.status(200)
+            .body(result)
     }
 
     @GetMapping("/sast")

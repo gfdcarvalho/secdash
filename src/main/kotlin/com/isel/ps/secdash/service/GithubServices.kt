@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.AuthProvider
+import com.isel.ps.secdash.model.Vulnerability
 import com.isel.ps.secdash.model.repositories.ExternalGithubRepository
 import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
 import com.isel.ps.secdash.model.repositories.Repository
@@ -20,13 +21,21 @@ sealed class AddRepositoryError {
 
 typealias AddRepositoryResult = Either<AddRepositoryError, Repository> // not sure what to return here ?
 
+sealed class DependabotError {
+    data object Unauthorized : DependabotError()
+    data object NotFound : DependabotError()
+}
+
+typealias DependabotResult = Either<DependabotError, List<Vulnerability>> // isto provavelmente não vai ser vulnerability vai ser algo tipo ExternalVulnerability ou ent temos de ver o schema...
+
 
 @Service
 class GithubServices(
     private val transactionManager: TransactionManager,
+    private val githubClient: GithubRestClient,
 ) {
 
-    private val githubClient: GithubRestClient = GithubRestClient()
+    fun fetchGithubEmail(accessToken: String): String? = githubClient.fetchGithubEmail(accessToken)
 
     fun getRepositoriesByOwner(owner: String): List<ExternalGithubRepository>? {
         return githubClient.getRepositoriesByOwner(owner)
@@ -54,5 +63,20 @@ class GithubServices(
             success(repository)
         }
 
+    }
+
+    fun getDependabot(
+        userId: Int,
+        rid: Int,
+    ): DependabotResult {
+        return transactionManager.run {
+            val userRepo = it.usersRepository
+            val githubRepo = it.githubRepository
+            if (!userRepo.userHasAccessToRepository(userId, rid)) return@run failure(DependabotError.Unauthorized)
+            val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(DependabotError.Unauthorized)
+            val fullName = TODO() // precisamos de um repoRepository !!!
+            val vulnerability = githubClient.getDependabot(fullName, accessToken)
+            success(TODO())
+        }
     }
 }

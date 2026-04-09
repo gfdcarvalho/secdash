@@ -57,6 +57,11 @@ interface UserRepositoryInterface {
         accessToken: String
     )
 
+    fun userHasAccessToRepository(
+        userId: Int,
+        rid: Int
+    ): Boolean
+
     fun getUserByUsername(username: String): User?
 
     fun getUserByEmail(email: String): User?
