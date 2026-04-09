@@ -18,9 +18,9 @@ class GithubRepository(
         repository: ExternalGithubRepository
     ): Repository {
         val owner = insertOwner(repository.externalOwner)
-        val repositoryDto = insertRepository(repository, owner.oid)
-        insertIntoUserRepositories(repositoryDto.rid, userId)
-        return repositoryDto.toDomainRepository(owner)
+        val repositorySqlDto = insertRepository(repository, owner.oid)
+        insertIntoUserRepositories(repositorySqlDto.rid, userId)
+        return repositorySqlDto.toDomainRepository(owner)
     }
 
     private fun insertIntoUserRepositories(
