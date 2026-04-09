@@ -36,6 +36,16 @@
 - `UserController`: base path changed from `/api/users` to `/users`; `/me` endpoint corrected from `@PostMapping` to `@GetMapping` and wired to receive `AuthenticatedUser`.
 - Split of `UserController` and `UserServices` into additional `AuthController` and `AuthServices`
 - authentication through GitHub 
-- 
-## April 7, 2026
+
+
+### April 7, 2026
 - Implemented Controller, Services and DTO to get Github repositories by owner
+
+### April 8, 2026
+- Added `POST /github/repositories` endpoint to add a repository to the database, wired through `GithubController`, `GithubServices`, and `GithubRepository`.
+- Implemented `storeRepository` in `GithubRepository`: inserts the owner (using `ON CONFLICT (name, platform) DO NOTHING` to avoid duplicates) and then inserts the repository with a reference to the owner.
+- Added `RepositoryCreationDto` to receive the repository data from the client, and extended `ExternalGithubRepository` with additional fields needed for storage.
+- Extended `GithubRestClient` with a method to fetch a single repository by owner and name from the GitHub API.
+- Added a `UNIQUE (name, platform)` constraint to the `owners` table and `UNIQUE (external_id, platform)` to the `repositories` table in the schema to support upsert logic.
+- Schema updated: `created_at` and `updated_at` in `repositories` changed to `TIMESTAMPTZ`; `platform` enum corrected from `GITLABS` to `GITLAB`.
+- `SecurityConfig` updated: added `/github/repositories` to `permitAll()` to allow token-authenticated requests to pass through Spring Security.
