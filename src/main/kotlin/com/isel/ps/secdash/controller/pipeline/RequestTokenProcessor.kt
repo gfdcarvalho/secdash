@@ -50,7 +50,7 @@ class RequestTokenProcessor(
     }
 
     fun createCookie(tokenExternalInfo: TokenExternalInfo): ResponseCookie {
-        return ResponseCookie.from(TOKEN_COOKIE_NAME, tokenExternalInfo.tokenValue)
+        return ResponseCookie.from(TOKEN_COOKIE_NAME, tokenExternalInfo.token)
             .httpOnly(true)
             .secure(true)
             .sameSite("Strict")

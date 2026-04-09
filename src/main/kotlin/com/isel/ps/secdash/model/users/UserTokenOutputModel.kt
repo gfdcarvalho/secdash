@@ -1,5 +1,5 @@
 package com.isel.ps.secdash.model.users
 
-data class TokenInfo(
+data class UserTokenOutputModel(
     val token: String,
 )

@@ -4,7 +4,7 @@ import java.security.MessageDigest
 import java.util.Base64
 
 class Sha256TokenEncoder {
-    fun createValidationInformation(token: String): TokenInfo = TokenInfo(hash(token))
+    fun createValidationInformation(token: String): TokenValidationInfo = TokenValidationInfo(hash(token))
 
     private fun hash(input: String): String {
         val messageDigest = MessageDigest.getInstance("SHA256")

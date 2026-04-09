@@ -3,13 +3,13 @@ package com.isel.ps.secdash.repository
 import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.PasswordValidationInfo
 import com.isel.ps.secdash.model.users.Token
-import com.isel.ps.secdash.model.users.TokenInfo
+import com.isel.ps.secdash.model.users.TokenExternalInfo
+import com.isel.ps.secdash.model.users.TokenValidationInfo
 import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.repository.interfaces.UserRepositoryInterface
 import kotlinx.datetime.Instant
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
-import org.slf4j.LoggerFactory
 
 
 class UserRepository(
@@ -59,13 +59,13 @@ class UserRepository(
             """.trimIndent(),
         )
             .bind("user_id", token.userId)
-            .bind("token_validation", token.tokenInfo.token)
+            .bind("token_validation", token.tokenValidationInfo.validationInfo)
             .bind("created_at", token.createdAt.epochSeconds)
             .bind("last_used_at", token.lastUsedAt.epochSeconds)
             .execute()
     }
 
-    override fun getTokenByTokenValidationInfo(tokenInfo: TokenInfo): Pair<User, Token>? =
+    override fun getTokenByTokenValidationInfo(tokenValidationInfo: TokenValidationInfo): Pair<User, Token>? =
         handle.createQuery(
             """
                 select uid, name, email, password_validation, token_validation, created_at, last_used_at
@@ -75,7 +75,7 @@ class UserRepository(
                 where token_validation = :validation_information
             """,
             )
-            .bind("validation_information", tokenInfo.token)
+            .bind("validation_information", tokenValidationInfo.validationInfo)
             .mapTo<UserAndTokenModel>()
             .singleOrNull()
             ?.userAndToken
@@ -92,7 +92,7 @@ class UserRepository(
             """.trimIndent(),
         )
             .bind("last_used_at", now.epochSeconds)
-            .bind("validation_information", token.tokenInfo.token)
+            .bind("validation_information", token.tokenValidationInfo.validationInfo)
             .execute()
     }
 
@@ -185,7 +185,7 @@ class UserRepository(
         val name: String,
         val email: String,
         val passwordValidation: String?,
-        val tokenValidation: TokenInfo,
+        val tokenValidation: TokenValidationInfo,
         val createdAt: Long,
         val lastUsedAt: Long,
     ) {

@@ -34,6 +34,7 @@ class SecurityConfig {
             val token = authentication as OAuth2AuthenticationToken
             val redirectUrl = when (token.authorizedClientRegistrationId) {
                 "github" -> "/auth/login/github"
+                "github-api" -> "/auth/authorize/github"
                 "google" -> "/auth/login/google"
                 else -> "/"
             }

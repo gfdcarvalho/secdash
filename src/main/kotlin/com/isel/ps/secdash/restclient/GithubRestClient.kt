@@ -2,8 +2,6 @@ package com.isel.ps.secdash.restclient
 
 import com.isel.ps.secdash.model.repositories.ExternalGithubRepository
 import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
-import com.isel.ps.secdash.model.repositories.Repository
-import com.isel.ps.secdash.model.users.TokenInfo
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body

@@ -2,10 +2,9 @@ package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.Token
-import com.isel.ps.secdash.model.users.TokenInfo
+import com.isel.ps.secdash.model.users.TokenExternalInfo
 import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserDomain
-import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.repository.UserRepository
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.repository.interfaces.UserRepositoryInterface
@@ -14,26 +13,25 @@ import com.isel.ps.secdash.utils.Success
 import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
 import kotlinx.datetime.Clock
-import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult.success
 import org.springframework.stereotype.Service
 
 sealed class UserLoginError {
     data object InvalidCredentials : UserLoginError()
 }
 
-typealias UserLoginResult = Either<UserLoginError, TokenInfo>
+typealias UserLoginResult = Either<UserLoginError, TokenExternalInfo>
 
 sealed class UserGoogleLoginError {
     data object InvalidCredentials : UserGoogleLoginError()
 }
 
-typealias UserGoogleLoginResult = Either<UserGoogleLoginError, TokenInfo>
+typealias UserGoogleLoginResult = Either<UserGoogleLoginError, TokenExternalInfo>
 
 sealed class UserGithubLoginError {
     data object InvalidCredentials : UserLoginError()
 }
 
-typealias UserGithubLoginResult = Either<UserGithubLoginError, TokenInfo>
+typealias UserGithubLoginResult = Either<UserGithubLoginError, TokenExternalInfo>
 
 @Service
 class AuthServices(
@@ -105,7 +103,6 @@ class AuthServices(
         username: String,
         email: String,
         githubId: String,
-        accessToken: String,
     ): UserGithubLoginResult {
         if (username.isBlank() || githubId.isBlank()) {
             failure(UserGithubLoginError.InvalidCredentials)
@@ -114,7 +111,6 @@ class AuthServices(
             val userRepo = it.usersRepository
             val user = storeExternalUser(userRepo, username, email)
             storeUserAuthentication(userRepo, user.uid, AuthProvider.GITHUB, githubId)
-            storeUserAuthorization(userRepo, user.uid, AuthProvider.GITHUB, accessToken)
             val tokenInfo = createToken(userRepo, user.uid)
             success(tokenInfo)
         }
@@ -160,7 +156,7 @@ class AuthServices(
     private fun createToken(
         userRepo: UserRepositoryInterface,
         userId: Int
-    ): TokenInfo { // this function is used by all login methods (internal and external) to return our internal token
+    ): TokenExternalInfo { // this function is used by all login methods (internal and external) to return our internal token
         val newTokenValue = userDomain.generateTokenValue()
         val now = clock.now()
         val newToken =
@@ -172,6 +168,9 @@ class AuthServices(
             )
         // add token to database
         userRepo.storeToken(newToken, userDomain.maxNumberOfTokensPerUser)
-        return TokenInfo(newTokenValue)
+        return TokenExternalInfo(
+            token = newTokenValue,
+            tokenExpiration = userDomain.getTokenExpiration(newToken),
+        )
     }
 }

@@ -1,12 +1,11 @@
 package com.isel.ps.secdash.model.users
 
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import java.security.SecureRandom
 import java.util.Base64
-import kotlin.compareTo
-import kotlin.text.compareTo
 
 @Component
 class UserDomain(
@@ -39,7 +38,7 @@ class UserDomain(
         validationInfo,
     )
 
-    fun createTokenValidationInformation(token: String): TokenInfo = tokenEncoder.createValidationInformation(token)
+    fun createTokenValidationInformation(token: String): TokenValidationInfo = tokenEncoder.createValidationInformation(token)
 
     fun isTokenTimeValid(
         clock: Clock,
@@ -49,6 +48,16 @@ class UserDomain(
         return token.createdAt <= now &&
                 (now - token.createdAt) <= config.tokenTtl &&
                 (now - token.lastUsedAt) <= config.tokenRollingTtl
+    }
+
+    fun getTokenExpiration(token: Token): Instant {
+        val absoluteExpiration = token.createdAt + config.tokenTtl
+        val rollingExpiration = token.lastUsedAt + config.tokenRollingTtl
+        return if (absoluteExpiration < rollingExpiration) {
+            absoluteExpiration
+        } else {
+            rollingExpiration
+        }
     }
 
     val maxNumberOfTokensPerUser = config.maxTokensPerUser
