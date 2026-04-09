@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.controller
 
+import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.service.AuthServices
@@ -95,6 +96,14 @@ class AuthController(
                     UserGithubLoginError.InvalidCredentials -> ResponseEntity.badRequest().build<Unit>()
                 }
         }
+    }
+
+    @GetMapping("/authorize/github")
+    fun githubAuthorize(
+        user: AuthenticatedUser
+
+    ): ResponseEntity<*> {
+        TODO()
     }
 
 

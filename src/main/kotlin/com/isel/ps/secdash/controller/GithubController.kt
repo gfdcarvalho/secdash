@@ -58,8 +58,13 @@ class GithubController(
     }
 
 
-    @GetMapping("/vulnerabilities")
-    fun getVulnerabilities() {}
+    @GetMapping("/github/repositories/{rid}/dependabot")
+    fun getVulnerabilities(
+        user: AuthenticatedUser,
+        @PathVariable rid: Int
+    ) {
+        TODO()
+    }
 
     @GetMapping("/sast")
     fun getSast() {}

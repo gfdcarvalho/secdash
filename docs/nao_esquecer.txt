@@ -1,4 +1,7 @@
 
+tratar dos erros enviados nas respostas no controller
 
-tabela para github e para gitlab que talvez guarde tokens?
-ligadas aos utilizadores ?
+fazer tratamento de erros no github services
+
+fazer tratamento de erros das chamadas as api's externas
+

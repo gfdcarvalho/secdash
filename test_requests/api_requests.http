@@ -1,8 +1,13 @@
 @token = Dnel-1BUdlaqTl8EZX3ssFeZ5gYmBNdLhKR-fzaa74k=
-@token2 = I8BlSUjQlMY4kXq1xg7fNv_RqmFGcm4PELar9gNJCcQ=
+@token2 = ticqp7t4qp8nZ6oFPP7RynTUlHPvOS3bBWgUqu-dRtU=
 
 
-###
+// http://localhost:8080/oauth2/authorization/github   login with github
+// http://localhost:8080/oauth2/authorization/google   login with google
+// http://localhost:8080/oauth2/authorization/github-api   authorize with github for api access
+
+
+### internal register
 POST http://localhost:8080/users/register
 Content-Type: application/json
 
@@ -13,7 +18,7 @@ Content-Type: application/json
 }
 
 
-###
+### internal login
 POST http://localhost:8080/auth/login
 Content-Type: application/json
 
@@ -22,16 +27,25 @@ Content-Type: application/json
   "password": "teste1"
 }
 
-###
+### user profile
 GET http://localhost:8080/users/me
 Authorization: Bearer {{token}}
 
 
-###
+### add repository
 POST http://localhost:8080/github/repositories
 Authorization: Bearer {{token2}}
 Content-Type: application/json
 
 {
   "name": "RodrigoVitorino/secdash-sast-test"
+}
+
+### add another repository
+POST http://localhost:8080/github/repositories
+Authorization: Bearer {{token2}}
+Content-Type: application/json
+
+{
+  "name": "RodrigoVitorino/SecDash-test"
 }
