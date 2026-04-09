@@ -127,6 +127,7 @@ class UserRepository(
             """
                 insert into user_authorization(user_id, provider, access_token)
                 values (:user_id, :provider::auth_provider, :access_token)
+                on conflict (user_id, provider) do update set access_token = :access_token
             """.trimIndent()
         )
             .bind("user_id", userId)

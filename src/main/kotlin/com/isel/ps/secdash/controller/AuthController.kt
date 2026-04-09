@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.controller.pipeline.RequestTokenProcessor
+import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel
@@ -10,6 +11,7 @@ import com.isel.ps.secdash.service.UserGithubLoginError
 import com.isel.ps.secdash.service.UserGoogleLoginError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -112,13 +114,18 @@ class AuthController(
 
     @GetMapping("/authorize/github")
     fun githubAuthorize(
-        user: AuthenticatedUser,
         @AuthenticationPrincipal principal: OAuth2User,
-        @RegisteredOAuth2AuthorizedClient("github-api") authorizedClient: OAuth2AuthorizedClient
+        @RegisteredOAuth2AuthorizedClient("github-api") authorizedClient: OAuth2AuthorizedClient,
+        request: HttpServletRequest
     ): ResponseEntity<*> {
-        println(user)
-        return ResponseEntity.status(200).build<Unit>()
+        val user = requestTokenProcessor.processCookies(request.cookies)
+            ?: return ResponseEntity.status(401).build<Unit>() // precisamos de resolver o tratamento de erros
+        val accessToken = authorizedClient.accessToken.tokenValue
+        authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
+        return ResponseEntity.status(200).body(user.user) // just for testing
     }
+
+
 
 
 }

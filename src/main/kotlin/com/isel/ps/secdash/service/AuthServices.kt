@@ -116,15 +116,14 @@ class AuthServices(
         }
     }
 
-    private fun storeUserAuthorization(
-        userRepo: UserRepository,
+    fun storeUserAuthorization(
         userId: Int,
         authProvider: AuthProvider,
         accessToken: String,
     ) { // this function will be used by GitHub and gitlab either on the login process or the authorization process
-        val userAuthorization = userRepo.getAccessToken(userId, authProvider)
-        if (userAuthorization == null) {
-            userRepo.storeUserAuthorization(userId, authProvider, accessToken)
+        transactionManager.run {
+            val usersRepo = it.usersRepository
+            usersRepo.storeUserAuthorization(userId, authProvider, accessToken)
         }
     }
 
