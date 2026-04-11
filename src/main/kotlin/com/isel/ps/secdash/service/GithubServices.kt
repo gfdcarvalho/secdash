@@ -1,11 +1,10 @@
 package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.AuthProvider
-import com.isel.ps.secdash.model.Vulnerability
 import com.isel.ps.secdash.model.repositories.ExternalGithubRepository
-import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
+import com.isel.ps.secdash.model.vulnerability.RepositoryVulnerabilities
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.utils.Either
@@ -24,9 +23,10 @@ typealias AddRepositoryResult = Either<AddRepositoryError, Repository> // not su
 sealed class DependabotError {
     data object Unauthorized : DependabotError()
     data object NotFound : DependabotError()
+    data object RepositoryNotFound : DependabotError()
 }
 
-typealias DependabotResult = Either<DependabotError, List<Vulnerability>> // isto provavelmente não vai ser vulnerability vai ser algo tipo ExternalVulnerability ou ent temos de ver o schema...
+typealias DependabotResult = Either<DependabotError, RepositoryVulnerabilities>
 
 
 @Service
@@ -71,12 +71,12 @@ class GithubServices(
     ): DependabotResult {
         return transactionManager.run {
             val userRepo = it.usersRepository
-            val githubRepo = it.githubRepository
-            if (!userRepo.userHasAccessToRepository(userId, rid)) return@run failure(DependabotError.Unauthorized)
+            val repositoriesRepo = it.repositoriesRepository
+            if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(DependabotError.Unauthorized)
             val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(DependabotError.Unauthorized)
-            val fullName = TODO() // precisamos de um repoRepository !!!
-            val vulnerability = githubClient.getDependabot(fullName, accessToken)
-            success(TODO())
+            val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(DependabotError.RepositoryNotFound)
+            val vulnerabilities = githubClient.getDependabot(fullName, accessToken)
+            success(RepositoryVulnerabilities(rid, vulnerabilities))
         }
     }
 }

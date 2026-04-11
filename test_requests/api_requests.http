@@ -1,10 +1,12 @@
 @token = Dnel-1BUdlaqTl8EZX3ssFeZ5gYmBNdLhKR-fzaa74k=
-@token2 = z7wHFxN1u8lNVks5L0emF5lPnIHRaobKjveKU3L8Uu0=
+@token2 = vsMqHioDlI2NSPO3Uv0Xn4uaspBgQQ6mq05Lz_NbqD0=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
 // http://localhost:8080/oauth2/authorization/google   login with google
 // http://localhost:8080/oauth2/authorization/github-api   authorize with github for api access
+
+// http://localhost:8080/github/repositories/{rid}/dependabot
 
 
 ### internal register

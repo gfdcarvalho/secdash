@@ -122,7 +122,7 @@ class AuthController(
             ?: return ResponseEntity.status(401).build<Unit>() // precisamos de resolver o tratamento de erros
         val accessToken = authorizedClient.accessToken.tokenValue
         authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
-        return ResponseEntity.status(200).body(user.user) // just for testing
+        return ResponseEntity.status(200).body(user.user) // just for testing ( password validation is in user)
     }
 
 

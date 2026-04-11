@@ -180,18 +180,6 @@ class UserRepository(
         return user
     }
 
-    override fun userHasAccessToRepository(userId: Int, rid: Int): Boolean {
-        val resultRid = handle.createQuery(
-            "SELECT rid FROM user_repositories WHERE uid = :userId AND rid = :rid"
-        )
-            .bind("userId", userId)
-            .bind("rid", rid)
-            .mapTo<Int>()
-            .singleOrNull()
-        return resultRid != null
-    }
-
-
     private data class UserAndTokenModel(
         val uid: Int,
         val name: String,

@@ -58,8 +58,8 @@ class GithubController(
     }
 
 
-    @GetMapping("/github/repositories/{rid}/dependabot")
-    fun getVulnerabilities(
+    @GetMapping("/repositories/{rid}/dependabot")
+    fun getDependabot(
         user: AuthenticatedUser,
         @PathVariable rid: Int
     ): ResponseEntity<*> {
