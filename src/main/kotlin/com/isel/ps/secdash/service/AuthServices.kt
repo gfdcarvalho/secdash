@@ -21,17 +21,14 @@ sealed class UserLoginError {
 
 typealias UserLoginResult = Either<UserLoginError, TokenExternalInfo>
 
-sealed class UserGoogleLoginError {
-    data object InvalidCredentials : UserGoogleLoginError()
+
+sealed class ExternalUserLoginError {
+    data object InvalidCredentials : ExternalUserLoginError()
 }
 
-typealias UserGoogleLoginResult = Either<UserGoogleLoginError, TokenExternalInfo>
+typealias ExternalUserLoginResult = Either<ExternalUserLoginError, TokenExternalInfo>
 
-sealed class UserGithubLoginError {
-    data object InvalidCredentials : UserLoginError()
-}
 
-typealias UserGithubLoginResult = Either<UserGithubLoginError, TokenExternalInfo>
 
 @Service
 class AuthServices(
@@ -82,35 +79,19 @@ class AuthServices(
         }
     }
 
-    fun storeGoogleUser(
+    fun storeExternalLoginUser(
         username: String,
         email: String,
-        googleId: String,
-    ): UserGoogleLoginResult {
-        if (username.isBlank() || email.isBlank() || googleId.isBlank()) {
-            failure(UserGoogleLoginError.InvalidCredentials)
+        externalId: String,
+        authProvider: AuthProvider,
+    ): ExternalUserLoginResult {
+        if (username.isBlank() && email.isBlank() && externalId.isBlank()) {
+            failure(ExternalUserLoginError.InvalidCredentials)
         }
         return transactionManager.run {
             val userRepo = it.usersRepository
             val user = storeExternalUser(userRepo, username, email)
-            storeUserAuthentication(userRepo,user.uid, AuthProvider.GOOGLE, googleId)
-            val tokenInfo = createToken(userRepo, user.uid)
-            Success(tokenInfo)
-        }
-    }
-
-    fun storeGithubUser(
-        username: String,
-        email: String,
-        githubId: String,
-    ): UserGithubLoginResult {
-        if (username.isBlank() || githubId.isBlank()) {
-            failure(UserGithubLoginError.InvalidCredentials)
-        }
-        return transactionManager.run {
-            val userRepo = it.usersRepository
-            val user = storeExternalUser(userRepo, username, email)
-            storeUserAuthentication(userRepo, user.uid, AuthProvider.GITHUB, githubId)
+            storeUserAuthentication(userRepo, user.uid, authProvider, externalId)
             val tokenInfo = createToken(userRepo, user.uid)
             success(tokenInfo)
         }
@@ -127,12 +108,15 @@ class AuthServices(
         }
     }
 
+    /**
+     * this function will be used by all external login methods (google, GitHub, gitlab)
+     */
     private fun storeUserAuthentication(
         userRepo: UserRepository,
         userId: Int,
         authProvider: AuthProvider,
         providerId: String
-    ) { // this function will be used by all external login methods (google, GitHub, gitlab)
+    ) {
         val userProvider = userRepo.getUserProviderId(userId, authProvider)
         if (userProvider == null) {
             userRepo.storeUserAuthentication(userId, authProvider, providerId)

@@ -4,6 +4,7 @@
 
 // http://localhost:8080/oauth2/authorization/github   login with github
 // http://localhost:8080/oauth2/authorization/google   login with google
+// http://localhost:8080/oauth2/authorization/gitlab   login with gitlab
 // http://localhost:8080/oauth2/authorization/github-api   authorize with github for api access
 
 // http://localhost:8080/github/repositories/{rid}/dependabot

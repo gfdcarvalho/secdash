@@ -36,6 +36,8 @@ class SecurityConfig {
                 "github" -> "/auth/login/github"
                 "github-api" -> "/auth/authorize/github"
                 "google" -> "/auth/login/google"
+                "gitlab" -> "/auth/login/gitlab"
+                "gitlab-api" -> "/auth/authorize/gitlab"
                 else -> "/"
             }
             response.sendRedirect(redirectUrl)

@@ -4,7 +4,6 @@ import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.GithubServices
-import com.isel.ps.secdash.service.UserGoogleLoginError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity
