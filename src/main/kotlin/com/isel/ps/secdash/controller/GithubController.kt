@@ -67,8 +67,15 @@ class GithubController(
             .body(result)
     }
 
-    @GetMapping("/sast")
-    fun getSast() {}
+    @GetMapping("/repositories/{rid}/sast")
+    fun getSast(
+        user: AuthenticatedUser,
+        @PathVariable rid: Int
+    ): ResponseEntity<*> {
+        val result = githubServices.getSastAlerts(user.user.uid, rid)
+        return ResponseEntity.status(200)
+            .body(result)
+    }
 
 
 

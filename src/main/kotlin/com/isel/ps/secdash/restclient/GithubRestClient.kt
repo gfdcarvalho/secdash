@@ -4,6 +4,8 @@ import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
 import com.isel.ps.secdash.model.vulnerability.GithubDependabotAlertDto
 import com.isel.ps.secdash.model.repositories.ExternalGithubRepository
 import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
+import com.isel.ps.secdash.model.sast.ExternalSastAlerts
+import com.isel.ps.secdash.model.sast.GithubSastAlertsDto
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
@@ -56,6 +58,19 @@ class GithubRestClient {
             .retrieve()
             .body<Array<GithubDependabotAlertDto>>()
         return alerts?.map { it.toExternalVulnerability() } ?: emptyList()
+    }
+
+    fun getSastAlerts(
+        fullName: String,
+        accessToken: String,
+    ): List<ExternalSastAlerts> {
+        val alerts = restClient.get()
+            .uri("https://api.github.com/repos/$fullName/code-scanning/alerts")
+            .header("Authorization", "Bearer $accessToken")
+            .header("Accept", "application/vnd.github+json")
+            .retrieve()
+            .body<Array<GithubSastAlertsDto>>()
+        return alerts?.map { it.toExternalSastAlerts() } ?: emptyList()
     }
 
     private data class GithubEmail(

@@ -1,4 +1,4 @@
-package com.isel.ps.secdash.model
+package com.isel.ps.secdash.model.sast
 
 import com.isel.ps.secdash.model.repositories.Repository
 

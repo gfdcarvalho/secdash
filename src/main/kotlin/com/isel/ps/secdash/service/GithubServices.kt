@@ -4,6 +4,8 @@ import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.repositories.ExternalGithubRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
+import com.isel.ps.secdash.model.sast.ExternalSastAlerts
+import com.isel.ps.secdash.model.sast.RepositorySast
 import com.isel.ps.secdash.model.vulnerability.RepositoryVulnerabilities
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.restclient.GithubRestClient
@@ -28,6 +30,13 @@ sealed class DependabotError {
 
 typealias DependabotResult = Either<DependabotError, RepositoryVulnerabilities>
 
+sealed class SastError {
+    data object Unauthorized : SastError()
+    data object NotFound : SastError()
+    data object RepositoryNotFound : SastError()
+}
+
+typealias SastResult = Either<SastError, RepositorySast>
 
 @Service
 class GithubServices(
@@ -77,6 +86,21 @@ class GithubServices(
             val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(DependabotError.RepositoryNotFound)
             val vulnerabilities = githubClient.getDependabot(fullName, accessToken)
             success(RepositoryVulnerabilities(rid, vulnerabilities))
+        }
+    }
+
+    fun getSastAlerts(
+        userId: Int,
+        rid: Int,
+    ): SastResult {
+        return transactionManager.run {
+            val userRepo = it.usersRepository
+            val repositoriesRepo = it.repositoriesRepository
+            if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(SastError.Unauthorized)
+            val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(SastError.Unauthorized)
+            val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(SastError.RepositoryNotFound)
+            val externalSastAlerts = githubClient.getSastAlerts(fullName, accessToken)
+            success(RepositorySast(rid, externalSastAlerts))
         }
     }
 }
