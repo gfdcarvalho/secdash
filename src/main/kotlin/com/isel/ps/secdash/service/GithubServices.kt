@@ -52,6 +52,7 @@ class GithubServices(
         return transactionManager.run {
             val repositoriesRepo = it.repositoriesRepository
             val usersRepo = it.usersRepository
+            if (repositoriesRepo.userAlreadyHasRepo(userId, repo.name)) return@run failure(AddRepositoryError.RepositoryAlreadyAdded)// not sure if this is the best place to check this !!!
             val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(
                 AddRepositoryError.UserAuthorizationRequired // maybe we should ask for permission instead of returning error !!!
             )

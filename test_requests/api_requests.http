@@ -1,5 +1,5 @@
 @token = 010JEJzW_2Gk_TFiNpvCQJBWlJ93cXHbDRsfkNjxWZA=
-@token2 = cMBDDBKllXPjbOB9Kf0LSpUXFYe0jXsHpsZW7BKleG4=
+@token2 = 3K6ZGIzUPh0TmEbA8_GFP5c7Wp47vWmhynfqoq_ovL4=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -9,6 +9,8 @@
 
 // http://localhost:8080/github/repositories/{rid}/dependabot
 
+
+// http://localhost:8080/github/repos/RodrigoVitorino
 
 ### internal register
 POST http://localhost:8080/users/register
@@ -53,11 +55,11 @@ Content-Type: application/json
   "name": "RodrigoVitorino/SecDash-test"
 }
 
-}
+
 
 ### add gitlab repository
 POST http://localhost:8080/gitlab/repositories
-Authorization: Bearer {{token}}
+Authorization: Bearer {{token2}}
 Content-Type: application/json
 
 {

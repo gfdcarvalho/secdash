@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.restclient
 
+import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.GitlabRepositoryDto
 import org.springframework.stereotype.Service

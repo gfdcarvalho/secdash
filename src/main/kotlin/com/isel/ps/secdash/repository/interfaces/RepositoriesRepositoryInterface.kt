@@ -16,4 +16,6 @@ interface RepositoriesRepositoryInterface {
         userId: Int,
         repository: ExternalRepository,
     ): Repository
+
+    fun userAlreadyHasRepo(userId: Int, repoName: String): Boolean
 }

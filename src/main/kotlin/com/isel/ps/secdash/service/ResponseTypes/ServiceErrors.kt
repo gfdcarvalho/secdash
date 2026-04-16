@@ -9,6 +9,7 @@ sealed class AddRepositoryError {
     data object ExternalIdIsRequired : AddRepositoryError()
     data object RepositoryNotFound : AddRepositoryError()
     data object UserAuthorizationRequired : AddRepositoryError() //
+    data object RepositoryAlreadyAdded : AddRepositoryError()
 }
 
 typealias AddRepositoryResult = Either<AddRepositoryError, Repository> // not sure what to return here ?

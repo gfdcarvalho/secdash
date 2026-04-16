@@ -19,7 +19,7 @@ data class GitlabRepositoryDto(
     fun toExternalRepository() = ExternalRepository(
         name = name,
         externalId = id.toString(),
-        platform = Platform.GITHUB,
+        platform = Platform.GITLAB,
         externalOwner = namespace.toExternalOwner(),
         htmlUrl = htmlUrl,
         description = description ?: "",
