@@ -2,7 +2,7 @@ package com.isel.ps.secdash.restclient
 
 import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
 import com.isel.ps.secdash.model.vulnerability.GithubDependabotAlertDto
-import com.isel.ps.secdash.model.repositories.ExternalGithubRepository
+import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
 import com.isel.ps.secdash.model.sast.ExternalSastAlerts
 import com.isel.ps.secdash.model.sast.GithubSastAlertsDto
@@ -26,7 +26,7 @@ class GithubRestClient {
         return emails?.firstOrNull { it.primary && it.verified }?.email
     }
 
-    fun getRepositoriesByOwner(owner: String): List<ExternalGithubRepository>? {
+    fun getRepositoriesByOwner(owner: String): List<ExternalRepository>? {
         val  repos = restClient.get()
             .uri("https://api.github.com/users/$owner/repos")
             //.header("Authorization", "Bearer $owner")
@@ -37,7 +37,7 @@ class GithubRestClient {
         return repos?.map { it.toExternalGithubRepository() }
     }
 
-    fun getRepositoryByName(fullName: String, accessToken: String): ExternalGithubRepository? {
+    fun getRepositoryByName(fullName: String, accessToken: String): ExternalRepository? {
         val repo = restClient.get()
             .uri("https://api.github.com/repos/$fullName")
             .header("Authorization", "Bearer $accessToken")

@@ -4,27 +4,26 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.isel.ps.secdash.model.Platform
 import java.time.Instant
 
-
-data class GithubRepositoryDto(
+data class GitlabRepositoryDto(
     val id: Long,
-    @JsonProperty("full_name") val name: String,
-    @JsonProperty("html_url") val htmlUrl: String,
+    @JsonProperty("name_with_namespace") val name: String,
+    @JsonProperty("web_url") val htmlUrl: String,
     val description: String?,
-    @JsonProperty("open_issues_count") val openIssuesCount: Int,
+    //@JsonProperty("open_issues_count") val openIssuesCount: Int,
     @JsonProperty("created_at") val createdAt: String,
-    @JsonProperty("updated_at") val updatedAt: String,
+    @JsonProperty("last_activity_at") val updatedAt: String,
     @JsonProperty("forks_count") val forksCount: Int,
     val visibility: String,
-    val owner: GithubOwnerDto,
+    val namespace: GitLabNamespaceDto,
 ) {
-    fun toExternalGithubRepository() = ExternalRepository(
+    fun toExternalRepository() = ExternalRepository(
         name = name,
         externalId = id.toString(),
         platform = Platform.GITHUB,
-        externalOwner = owner.toExternalOwner(),
+        externalOwner = namespace.toExternalOwner(),
         htmlUrl = htmlUrl,
         description = description ?: "",
-        issuesCount = openIssuesCount,
+        issuesCount = 0, // DANGER!!!
         createdAt = Instant.parse(createdAt),
         updatedAt = Instant.parse(updatedAt),
         forksCount = forksCount,
@@ -36,18 +35,19 @@ data class GithubRepositoryDto(
     )
 }
 
-data class GithubOwnerDto(
+data class GitLabNamespaceDto(
     @JsonProperty("id") val externalId: Long,
-    val login: String,
-//    val id: Long,
+    val name: String,
     @JsonProperty("avatar_url") val avatarUrl: String,
-    @JsonProperty("html_url") val htmlUrl: String,
+    @JsonProperty("web_url") val htmlUrl: String,
 ) {
     fun toExternalOwner() = ExternalOwner(
         externalId = externalId.toString(),
-        name = login,
+        name = name,
         url = htmlUrl,
         avatarUrl = avatarUrl,
-        platform = Platform.GITHUB
+        platform = Platform.GITLAB
     )
 }
+
+

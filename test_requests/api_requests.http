@@ -1,5 +1,5 @@
-@token = Dnel-1BUdlaqTl8EZX3ssFeZ5gYmBNdLhKR-fzaa74k=
-@token2 = 42d1kLrW2Udwhqy6touGXeZ31nDktQUfRBJYRNYOIc4=
+@token = 010JEJzW_2Gk_TFiNpvCQJBWlJ93cXHbDRsfkNjxWZA=
+@token2 = cMBDDBKllXPjbOB9Kf0LSpUXFYe0jXsHpsZW7BKleG4=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -51,4 +51,15 @@ Content-Type: application/json
 
 {
   "name": "RodrigoVitorino/SecDash-test"
+}
+
+}
+
+### add gitlab repository
+POST http://localhost:8080/gitlab/repositories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "externalId": "80515032"
 }

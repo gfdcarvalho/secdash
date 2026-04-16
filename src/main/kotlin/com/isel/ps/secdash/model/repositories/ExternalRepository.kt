@@ -1,12 +1,11 @@
 package com.isel.ps.secdash.model.repositories
 
 import com.isel.ps.secdash.model.Platform
-import java.sql.Date
 import java.time.Instant
 
 //import java.util.Date
 
-data class ExternalGithubRepository(
+data class ExternalRepository(
     val name: String,
     val externalId: String,
     val platform: Platform,

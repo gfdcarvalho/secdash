@@ -1,4 +1,5 @@
-
+### Gitlab Repo
+GET https://gitlab.com/api/v4/users/RodrigoVitorino/projects
 
 ### GitHub - Dependabot Alerts
 GET https://api.github.com/repos/{{GITHUB_USER}}/{{GITHUB_REPO_DEPENDABOT}}/dependabot/alerts
@@ -8,7 +9,7 @@ Accept: application/vnd.github+json
 >> test_requests/vulnerability-response-github.json
 
 ### GitLab - Dependency Scanning Report
-GET https://gitlab.com/api/v4/projects/{{GITLAB_PROJECT_ID_DEPENDANCY}}/jobs/artifacts/main/raw/gl-dependency-scanning-report.json?job=dependency_scanning
+GET https://gitlab.com/api/v4/projects/{{GITLAB_PROJECT_ID_DEPENDENCY}}/jobs/artifacts/main/raw/gl-dependency-scanning-report.json?job=dependency_scanning
 PRIVATE-TOKEN: {{GITLAB_TOKEN}}
 
 >> test_requests/vulnerability-response-gitlab.json
