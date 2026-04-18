@@ -1,8 +1,10 @@
 package com.isel.ps.secdash.restclient
 
-import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.GitlabRepositoryDto
+import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
+import com.isel.ps.secdash.model.vulnerability.GitlabDependencyScanDto
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
@@ -39,6 +41,17 @@ class GitLabRestClient {
             .toEntity(List::class.java)
 
         return response.headers["X-Total"]?.first()?.toInt() ?: 0
+    }
+
+    fun getDependencyScan(externalId: String, accessToken: String): List<ExternalVulnerability> {
+        val response = restClient.get()
+            .uri("https://gitlab.com/api/v4/projects/$externalId/jobs/artifacts/main/raw/gl-dependency-scanning-report.json?job=dependency_scanning")
+            .header("Authorization", "Bearer $accessToken")
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body<Array<GitlabDependencyScanDto>>()
+
+        return response?.map { it.toExternalVulnerability() } ?: emptyList()
     }
 
 }

@@ -1,5 +1,5 @@
 @token = 010JEJzW_2Gk_TFiNpvCQJBWlJ93cXHbDRsfkNjxWZA=
-@token2 = 3K6ZGIzUPh0TmEbA8_GFP5c7Wp47vWmhynfqoq_ovL4=
+@token2 = 7dKlFUxV_8zY_sI6T6-7JJ2cbHxv5NljI2x-MdV77jk=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -63,5 +63,5 @@ Authorization: Bearer {{token2}}
 Content-Type: application/json
 
 {
-  "externalId": "80515032"
+  "externalId": "80319756"
 }

@@ -38,7 +38,7 @@ data class GitlabRepositoryDto(
 data class GitLabNamespaceDto(
     @JsonProperty("id") val externalId: Long,
     val name: String,
-    @JsonProperty("avatar_url") val avatarUrl: String,
+    @JsonProperty("avatar_url") val avatarUrl: String?,
     @JsonProperty("web_url") val htmlUrl: String,
 ) {
     fun toExternalOwner() = ExternalOwner(

@@ -46,12 +46,11 @@ class GitlabController(
     @GetMapping("/repositories/{rid}/dependency-scanning")
     fun getVulnerabilities(
         user: AuthenticatedUser,
-        @PathVariable("rid") rid: Int
+        @PathVariable rid: Int
     ): ResponseEntity<*> {
-        //val result = gitLabService.getDependabot(user.user.uid, rid)
-        //return ResponseEntity.status(200)
-            //.body(result)
-        TODO()
+        val result = gitlabServices.getDependencyScan(user.user.uid, rid)
+        return ResponseEntity.status(200)
+            .body(result)
     }
 
     @GetMapping("/sast")

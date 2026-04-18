@@ -24,6 +24,6 @@ data class ExternalOwner(
     val externalId: String,
     val name : String,
     val url : String,
-    val avatarUrl: String,
+    val avatarUrl: String?,
     val platform: Platform
 )

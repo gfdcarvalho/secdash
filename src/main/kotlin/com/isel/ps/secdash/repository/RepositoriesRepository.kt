@@ -136,4 +136,18 @@ class RepositoriesRepository(
             .one()
         return owner
     }
+
+    override fun getExternalId(rid: Int): String? {
+        val externalId = handle.createQuery(
+        """
+            select external_id from repositories
+            where rid = :rid
+        """.trimIndent()
+        )
+            .bind("rid", rid)
+            .mapTo<String>()
+            .singleOrNull()
+
+        return externalId
+    }
 }
