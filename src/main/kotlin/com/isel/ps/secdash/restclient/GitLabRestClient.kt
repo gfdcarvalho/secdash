@@ -1,10 +1,12 @@
 package com.isel.ps.secdash.restclient
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.GitlabRepositoryDto
 import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
 import com.isel.ps.secdash.model.vulnerability.GitlabDependencyScanDto
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
@@ -12,6 +14,8 @@ import org.springframework.web.client.body
 @Service
 class GitLabRestClient {
     private val restClient = RestClient.create()
+    private val objectMapper = jacksonObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun getRepositoriesByOwner(owner: String): List<ExternalRepository>? {
         val repos = restClient.get()
@@ -44,14 +48,15 @@ class GitLabRestClient {
     }
 
     fun getDependencyScan(externalId: String, accessToken: String): List<ExternalVulnerability> {
-        val response = restClient.get()
+        val raw = restClient.get()
             .uri("https://gitlab.com/api/v4/projects/$externalId/jobs/artifacts/main/raw/gl-dependency-scanning-report.json?job=dependency_scanning")
             .header("Authorization", "Bearer $accessToken")
-            .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .body<Array<GitlabDependencyScanDto>>()
+            .body<String>()
+            ?: return emptyList()
 
-        return response?.map { it.toExternalVulnerability() } ?: emptyList()
+        val response = objectMapper.readValue<GitlabDependencyScanDto>(raw)
+        return response.toExternalVulnerabilities()
     }
 
 }

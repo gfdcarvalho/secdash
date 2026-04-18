@@ -1,5 +1,5 @@
 @token = 010JEJzW_2Gk_TFiNpvCQJBWlJ93cXHbDRsfkNjxWZA=
-@token2 = 7dKlFUxV_8zY_sI6T6-7JJ2cbHxv5NljI2x-MdV77jk=
+@token2 = A_dhZPOt1z3jwT6BUyeNTIOGH55bwmMTdwo2QRAXUWg=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -8,8 +8,6 @@
 // http://localhost:8080/oauth2/authorization/github-api   authorize with github for api access
 
 // http://localhost:8080/github/repositories/{rid}/dependabot
-
-
 // http://localhost:8080/github/repos/RodrigoVitorino
 
 ### internal register
