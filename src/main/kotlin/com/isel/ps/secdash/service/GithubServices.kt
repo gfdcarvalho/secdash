@@ -10,6 +10,8 @@ import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryResult
+import com.isel.ps.secdash.service.ResponseTypes.SastError
+import com.isel.ps.secdash.service.ResponseTypes.SastResult
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
@@ -23,13 +25,6 @@ sealed class DependabotError {
 
 typealias DependabotResult = Either<DependabotError, RepositoryVulnerabilities>
 
-sealed class SastError {
-    data object Unauthorized : SastError()
-    data object NotFound : SastError()
-    data object RepositoryNotFound : SastError()
-}
-
-typealias SastResult = Either<SastError, RepositorySast>
 
 @Service
 class GithubServices(
@@ -75,9 +70,9 @@ class GithubServices(
         return transactionManager.run {
             val userRepo = it.usersRepository
             val repositoriesRepo = it.repositoriesRepository
+            val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(DependabotError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(DependabotError.Unauthorized)
             val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(DependabotError.Unauthorized)
-            val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(DependabotError.RepositoryNotFound)
             val vulnerabilities = githubClient.getDependabot(fullName, accessToken)
             success(RepositoryVulnerabilities(rid, vulnerabilities))
         }
@@ -90,9 +85,9 @@ class GithubServices(
         return transactionManager.run {
             val userRepo = it.usersRepository
             val repositoriesRepo = it.repositoriesRepository
+            val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(SastError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(SastError.Unauthorized)
             val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(SastError.Unauthorized)
-            val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(SastError.RepositoryNotFound)
             val externalSastAlerts = githubClient.getSastAlerts(fullName, accessToken)
             success(RepositorySast(rid, externalSastAlerts))
         }

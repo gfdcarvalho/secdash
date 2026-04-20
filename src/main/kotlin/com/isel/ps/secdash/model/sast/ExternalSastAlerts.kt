@@ -16,8 +16,8 @@ data class ExternalSastAlerts(
     val message: String?,
     val htmlUrl: String,
     val platform: Platform,
-    val detectedAt: Instant,
-    val updatedAt: Instant,
+    val detectedAt: Instant?,
+    val updatedAt: Instant?,
 ) {
     enum class SastAlertState { OPEN, FIXED, DISMISSED }
     enum class SastSeverity { CRITICAL, HIGH, MEDIUM, LOW, UNKNOWN }

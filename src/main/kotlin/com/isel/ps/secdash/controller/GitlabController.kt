@@ -53,8 +53,15 @@ class GitlabController(
             .body(result)
     }
 
-    @GetMapping("/sast")
-    fun getSast(){}
+    @GetMapping("/repositories/{rid}/sast")
+    fun getSast(
+        user: AuthenticatedUser,
+        @PathVariable rid: Int,
+    ): ResponseEntity<*> {
+        val result = gitlabServices.getSast(user.user.uid, rid)
+        return ResponseEntity.status(200)
+            .body(result)
+    }
 
 
 }

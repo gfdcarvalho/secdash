@@ -19,5 +19,7 @@ interface RepositoriesRepositoryInterface {
 
     fun userAlreadyHasRepo(userId: Int, repoName: String): Boolean
 
+    fun userAlreadyHasRepoByExternalId( userId: Int, externalId: String): Boolean
+
     fun getExternalId(rid: Int): String?
 }

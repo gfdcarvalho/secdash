@@ -1,5 +1,5 @@
 @token = 010JEJzW_2Gk_TFiNpvCQJBWlJ93cXHbDRsfkNjxWZA=
-@token2 = A_dhZPOt1z3jwT6BUyeNTIOGH55bwmMTdwo2QRAXUWg=
+@token2 = hITpdq5oy97oak22uOCLL6zzYMq4OJC2t_kwXrQ2nyU=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -62,4 +62,14 @@ Content-Type: application/json
 
 {
   "externalId": "80319756"
+}
+
+
+### add another gitlab repo
+POST http://localhost:8080/gitlab/repositories
+Authorization: Bearer {{token2}}
+Content-Type: application/json
+
+{
+  "externalId": "80515032"
 }

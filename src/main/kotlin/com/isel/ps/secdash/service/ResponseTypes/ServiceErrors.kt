@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.service.ResponseTypes
 
 import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.sast.RepositorySast
 import com.isel.ps.secdash.utils.Either
 
 sealed class AddRepositoryError {
@@ -13,3 +14,11 @@ sealed class AddRepositoryError {
 }
 
 typealias AddRepositoryResult = Either<AddRepositoryError, Repository> // not sure what to return here ?
+
+sealed class SastError {
+    data object Unauthorized : SastError()
+    data object NotFound : SastError()
+    data object RepositoryNotFound : SastError()
+}
+
+typealias SastResult = Either<SastError, RepositorySast>

@@ -49,6 +49,21 @@ class RepositoriesRepository(
         return resultRid != null
     }
 
+    override fun userAlreadyHasRepoByExternalId(userId: Int, externalId: String): Boolean {
+        val resultRid = handle.createQuery(
+            """
+            SELECT r.rid FROM repositories r
+            JOIN user_repositories ur ON r.rid = ur.rid
+            WHERE ur.uid = :userId AND r.external_id = :externalId
+            """.trimIndent()
+        )
+            .bind("userId", userId)
+            .bind("externalId", externalId)
+            .mapTo<Int>()
+            .singleOrNull()
+        return resultRid != null
+    }
+
     override fun storeRepository(
         userId: Int,
         repository: ExternalRepository
