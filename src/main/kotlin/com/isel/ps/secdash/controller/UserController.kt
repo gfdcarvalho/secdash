@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.controller
 
 
+import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserCreationDto
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
@@ -38,8 +39,8 @@ class UserController(
 
             is Failure ->
                 when (result.value) {  // Need a better solutions for the error responses
-                    UserCreationError.UserAlreadyExists -> ResponseEntity.badRequest().build<Unit>()
-                    UserCreationError.InvalidCredentials -> ResponseEntity.badRequest().build<Unit>()
+                    UserCreationError.UserAlreadyExists -> Problem.response(400, Problem.userAlreadyExists)
+                    UserCreationError.InvalidCredentials -> Problem.response(400, Problem.invalidCredentials)
                 }
 
         }

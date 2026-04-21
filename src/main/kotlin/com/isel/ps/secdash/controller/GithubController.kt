@@ -1,9 +1,13 @@
 package com.isel.ps.secdash.controller
 
+import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.users.AuthenticatedUser
+import com.isel.ps.secdash.service.DependabotError
 import com.isel.ps.secdash.service.GithubServices
+import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
+import com.isel.ps.secdash.service.ResponseTypes.SastError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity
@@ -52,8 +56,19 @@ class GithubController(
         @RequestBody repo: RepositoryCreationDto,
     ): ResponseEntity<*> {
         val result = githubServices.addRepository(repo, user.user.uid)
-        return ResponseEntity.status(201)
-            .body(result)
+        return when (result) {
+            is Success ->
+                ResponseEntity.status(200).body(result)
+            is Failure ->
+                when (result.value) {
+                    AddRepositoryError.RepositoryAlreadyAdded -> Problem.response(400, Problem.repositoryAlreadyAdded)
+                    AddRepositoryError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                    AddRepositoryError.NameIsRequired -> Problem.response(400, Problem.nameIsRequired)
+                    AddRepositoryError.InvalidExternalId -> Problem.response(400, Problem.invalidExternalId)
+                    AddRepositoryError.UserAuthorizationRequired -> Problem.response(401, Problem.userAuthorizationRequired)
+                    AddRepositoryError.ExternalIdIsRequired -> Problem.response(400, Problem.externalIdIsRequired)
+                }
+        }
     }
 
 
@@ -63,8 +78,16 @@ class GithubController(
         @PathVariable rid: Int
     ): ResponseEntity<*> {
         val result = githubServices.getDependabot(user.user.uid, rid)
-        return ResponseEntity.status(200)
-            .body(result)
+        return when (result) {
+            is Success ->
+                ResponseEntity.status(200).body(result)
+            is Failure ->
+                when (result.value) {
+                    DependabotError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                    DependabotError.NotFound -> Problem.response(404, Problem.notFound)
+                    DependabotError.Unauthorized -> Problem.response(401, Problem.unauthorized)
+                }
+        }
     }
 
     @GetMapping("/repositories/{rid}/sast")
@@ -73,8 +96,16 @@ class GithubController(
         @PathVariable rid: Int
     ): ResponseEntity<*> {
         val result = githubServices.getSastAlerts(user.user.uid, rid)
-        return ResponseEntity.status(200)
-            .body(result)
+        return when (result) {
+            is Success ->
+                ResponseEntity.status(200).body(result)
+            is Failure ->
+                when (result.value) {
+                    SastError.Unauthorized -> Problem.response(401, Problem.unauthorized)
+                    SastError.NotFound -> Problem.response(404, Problem.notFound)
+                    SastError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                }
+        }
     }
 
 

@@ -1,8 +1,14 @@
 package com.isel.ps.secdash.controller
 
+import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.users.AuthenticatedUser
+import com.isel.ps.secdash.service.DependencyScanError
 import com.isel.ps.secdash.service.GitlabServices
+import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
+import com.isel.ps.secdash.service.ResponseTypes.SastError
+import com.isel.ps.secdash.utils.Failure
+import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -38,8 +44,19 @@ class GitlabController(
         @RequestBody repo: RepositoryCreationDto,
     ): ResponseEntity<*> {
         val result = gitlabServices.addRepository(repo, user.user.uid)
-        return ResponseEntity.status(201)
-            .body(result)
+        return when (result) {
+            is Success -> ResponseEntity.status(200).body(result)
+            is Failure -> {
+                when (result.value) {
+                    AddRepositoryError.RepositoryAlreadyAdded -> Problem.response(400, Problem.repositoryAlreadyAdded)
+                    AddRepositoryError.ExternalIdIsRequired -> Problem.response(400, Problem.externalIdIsRequired)
+                    AddRepositoryError.InvalidExternalId -> Problem.response(400, Problem.invalidExternalId)
+                    AddRepositoryError.NameIsRequired -> Problem.response(400, Problem.nameIsRequired)
+                    AddRepositoryError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                    AddRepositoryError.UserAuthorizationRequired -> Problem.response(401, Problem.userAuthorizationRequired)
+                }
+            }
+        }
     }
 
 
@@ -49,8 +66,15 @@ class GitlabController(
         @PathVariable rid: Int
     ): ResponseEntity<*> {
         val result = gitlabServices.getDependencyScan(user.user.uid, rid)
-        return ResponseEntity.status(200)
-            .body(result)
+        return when (result) {
+            is Success -> ResponseEntity.status(200).body(result)
+            is Failure ->
+                when (result.value) {
+                    DependencyScanError.NotFound -> Problem.response(404, Problem.notFound)
+                    DependencyScanError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                    DependencyScanError.Unauthorized -> Problem.response( 401, Problem.unauthorized)
+                }
+        }
     }
 
     @GetMapping("/repositories/{rid}/sast")
@@ -59,9 +83,16 @@ class GitlabController(
         @PathVariable rid: Int,
     ): ResponseEntity<*> {
         val result = gitlabServices.getSast(user.user.uid, rid)
-        return ResponseEntity.status(200)
-            .body(result)
+        return when (result) {
+            is Success ->
+                ResponseEntity.status(200).body(result)
+
+            is Failure ->
+                when (result.value) {
+                    SastError.Unauthorized -> Problem.response(401, Problem.unauthorized)
+                    SastError.NotFound -> Problem.response(404, Problem.notFound)
+                    SastError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                }
+        }
     }
-
-
 }

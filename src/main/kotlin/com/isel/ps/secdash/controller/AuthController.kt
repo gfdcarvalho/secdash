@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.controller
 
+import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.controller.pipeline.RequestTokenProcessor
 import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.UserLoginDto
@@ -8,6 +9,7 @@ import com.isel.ps.secdash.service.AuthServices
 import com.isel.ps.secdash.service.ExternalUserLoginError
 import com.isel.ps.secdash.service.ExternalUserLoginResult
 import com.isel.ps.secdash.service.GithubServices
+import com.isel.ps.secdash.service.UserLoginError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import jakarta.servlet.http.HttpServletRequest
@@ -45,7 +47,9 @@ class AuthController(
                     .body(UserTokenOutputModel(result.value.token))
             }
             is Failure ->
-                ResponseEntity.badRequest().build<Unit>() // still need to handle all error responses
+                when (result.value) {
+                    UserLoginError.InvalidCredentials -> Problem.response(400, Problem.invalidCredentials)
+                }
         }
     }
 
@@ -124,7 +128,7 @@ class AuthController(
             }
             is Failure ->
                 when (result.value) {
-                    ExternalUserLoginError.InvalidCredentials-> ResponseEntity.badRequest().build<Unit>()
+                    ExternalUserLoginError.InvalidCredentials-> Problem.response(400, Problem.invalidCredentials)
                 }
         }
     }
