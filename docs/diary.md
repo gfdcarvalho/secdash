@@ -49,3 +49,10 @@
 - Added a `UNIQUE (name, platform)` constraint to the `owners` table and `UNIQUE (external_id, platform)` to the `repositories` table in the schema to support upsert logic.
 - Schema updated: `created_at` and `updated_at` in `repositories` changed to `TIMESTAMPTZ`; `platform` enum corrected from `GITLABS` to `GITLAB`.
 - `SecurityConfig` updated: added `/github/repositories` to `permitAll()` to allow token-authenticated requests to pass through Spring Security.
+
+### April 21, 2026
+- Refactored `getRepositoriesByOwner` to fetch all repos of the authenticated user (private, public, collaborated) using the GitHub access token
+- Split into two endpoints: `GET /github/repos` for the authenticated user's repos and `GET /github/repos/{owner}` for public repos of a given owner
+- Fixed incorrect GitHub API URL and wrong variable being passed as the `Authorization` header
+- Improved error handling across `GithubServices` and `GithubController` with proper error types and HTTP responses
+- **Pendente:** decidir se o endpoint `/repos/{owner}` deve procurar pelo owner indicado ou pelo utilizador autenticado
