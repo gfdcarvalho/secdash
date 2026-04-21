@@ -4,6 +4,7 @@ import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.DependabotError
+import com.isel.ps.secdash.service.GetRepositoriesByOwnerError
 import com.isel.ps.secdash.service.GetRepositoriesError
 import com.isel.ps.secdash.service.GithubServices
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
@@ -28,7 +29,7 @@ class GithubController(
 //    @GetMapping("/login")
 //    fun loginUser(){}
 
-    @GetMapping("/repos/")
+    @GetMapping("/repos")
     fun getRepositories(
         user: AuthenticatedUser,
     ): ResponseEntity<*> {
@@ -54,7 +55,11 @@ class GithubController(
         return when (result) {
             is Success<*> -> ResponseEntity.status(200).body(result.value)
             is Failure -> {
-                TODO()
+                when (result.value) {
+                    GetRepositoriesByOwnerError.OwnerIsRequired -> Problem.response( 400, Problem.ownerIsRequired)
+                    GetRepositoriesByOwnerError.OwnerNotFound -> Problem.response( 404, Problem.ownerNotFound)
+                    GetRepositoriesByOwnerError.Unauthorized -> Problem.response( 401, Problem.userAuthorizationRequired)
+                }
             }
         }
     }
