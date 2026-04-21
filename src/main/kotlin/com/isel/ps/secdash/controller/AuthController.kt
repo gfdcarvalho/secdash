@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel
 import com.isel.ps.secdash.service.AuthServices
+import com.isel.ps.secdash.service.AuthorizationError
 import com.isel.ps.secdash.service.ExternalUserLoginError
 import com.isel.ps.secdash.service.ExternalUserLoginResult
 import com.isel.ps.secdash.service.GithubServices
@@ -140,23 +141,37 @@ class AuthController(
         request: HttpServletRequest
     ): ResponseEntity<*> {
         val user = requestTokenProcessor.processCookies(request.cookies)
-            ?: return ResponseEntity.status(401).build<Unit>() // precisamos de resolver o tratamento de erros
-        val accessToken = authorizedClient.accessToken.tokenValue
-        authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
-        return ResponseEntity.status(200).body(user.user) // just for testing ( password validation is in user)
+            ?: return Problem.response(401, Problem.unauthorized)
+        val accessToken = authorizedClient.accessToken?.tokenValue
+            ?: return Problem.response(401, Problem.unauthorized)
+        val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
+        return when (result) {
+            is Success -> ResponseEntity.ok(user.user)
+            is Failure -> when (result.value) {
+                AuthorizationError.InvalidToken -> Problem.response(400, Problem.invalidRequest)
+                AuthorizationError.Unknown -> Problem.response(500, Problem.internalServerError)
+            }
+        }
     }
 
     @GetMapping("/authorize/gitlab")
     fun gitlabAuthorize(
-        @AuthenticationPrincipal principal: OAuth2User,
-        @RegisteredOAuth2AuthorizedClient("gitlab-api") authorizedClient: OAuth2AuthorizedClient,
+        @AuthenticationPrincipal principal: OAuth2User?,
+        @RegisteredOAuth2AuthorizedClient("gitlab-api") authorizedClient: OAuth2AuthorizedClient?,
         request: HttpServletRequest
     ): ResponseEntity<*> {
         val user = requestTokenProcessor.processCookies(request.cookies)
-            ?: return ResponseEntity.status(401).build<Unit>()
-        val accessToken = authorizedClient.accessToken.tokenValue
-        authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITLAB, accessToken)
-        return ResponseEntity.status(200).body(user.user)
+            ?: return Problem.response(401, Problem.unauthorized)
+        val accessToken = authorizedClient?.accessToken?.tokenValue
+            ?: return Problem.response(401, Problem.unauthorized)
+        val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITLAB, accessToken)
+        return when (result) {
+            is Success -> ResponseEntity.ok(user.user)
+            is Failure -> when (result.value) {
+                AuthorizationError.InvalidToken -> Problem.response(400, Problem.invalidRequest)
+                AuthorizationError.Unknown -> Problem.response(500, Problem.internalServerError)
+            }
+        }
     }
 
 }

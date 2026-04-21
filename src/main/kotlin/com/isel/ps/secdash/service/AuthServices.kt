@@ -28,7 +28,12 @@ sealed class ExternalUserLoginError {
 
 typealias ExternalUserLoginResult = Either<ExternalUserLoginError, TokenExternalInfo>
 
+sealed class AuthorizationError {
+    data object InvalidToken : AuthorizationError()
+    data object Unknown : AuthorizationError()
+}
 
+typealias AuthorizationResult = Either<AuthorizationError, Unit>
 
 @Service
 class AuthServices(
@@ -101,10 +106,14 @@ class AuthServices(
         userId: Int,
         authProvider: AuthProvider,
         accessToken: String,
-    ) { // this function will be used by GitHub and gitlab either on the login process or the authorization process
-        transactionManager.run {
+    ): AuthorizationResult {
+        if (accessToken.isBlank()) {
+            return failure(AuthorizationError.InvalidToken)
+        }
+        return transactionManager.run {
             val usersRepo = it.usersRepository
             usersRepo.storeUserAuthorization(userId, authProvider, accessToken)
+            success(Unit)
         }
     }
 

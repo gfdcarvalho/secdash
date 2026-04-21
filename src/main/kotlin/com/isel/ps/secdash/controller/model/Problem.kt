@@ -21,6 +21,11 @@ class Problem(
             .header("Content-Type", MEDIA_TYPE)
             .body<Any>(problem)
 
+        val internalServerError =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Internal Server Error",
+            )
 
         // ------------------ User Errors
         val userAlreadyExists =
@@ -28,6 +33,7 @@ class Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "User Already Exists",
             )
+
         val invalidCredentials =
             Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
@@ -36,12 +42,17 @@ class Problem(
 
         // ------------------ Auth Errors
         // using invalidCredentials from user erros for responses
-
-        // ------------------ github / gitlab / repositories erros
         val nameIsRequired =
             Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "Username is required",
+            )
+
+        // ------------------ github / gitlab / repositories erros
+        val invalidRequest =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Invalid Request",
             )
         val invalidExternalId =
             Problem(
