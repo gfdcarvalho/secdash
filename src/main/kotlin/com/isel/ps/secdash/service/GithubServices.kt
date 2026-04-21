@@ -42,6 +42,7 @@ class GithubServices(
 
     fun fetchGithubEmail(accessToken: String): String? = githubClient.fetchGithubEmail(accessToken)
 
+
     fun getRepositoriesByOwner(owner: String, userId: Int): GetRepositoryResult {
         if (owner.isBlank()) return failure(GetRepositoryError.OwnerIsRequired)
         return transactionManager.run {

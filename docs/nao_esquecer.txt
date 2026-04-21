@@ -1,9 +1,7 @@
 
-tratar dos erros enviados nas respostas no controller
 
-fazer tratamento de erros no github services
 
 fazer tratamento de erros das chamadas as api's externas
 
-acho que precisamos de um repositoriesRepository... para fazer ações dos repositorios tipo ir bucsar um repo com base no id ... etc
-
+resolver getrepositoriesbyowner neste momento não é precios owner porque ele vai buscar os repos do utilizadore com base no acess token
+temos de ou adaptar este endpoint para procurar pelo owner indicado ou criar um novo
