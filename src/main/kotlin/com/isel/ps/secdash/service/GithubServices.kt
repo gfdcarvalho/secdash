@@ -25,6 +25,14 @@ sealed class DependabotError {
 
 typealias DependabotResult = Either<DependabotError, RepositoryVulnerabilities>
 
+sealed class GetRepositoryError {
+    data object UserAuthorizationIsRequired : GetRepositoryError()
+    data object RepositoryNotFound : GetRepositoryError()
+    data object OwnerIsRequired : GetRepositoryError()
+}
+
+typealias GetRepositoryResult = Either<GetRepositoryError, List<ExternalRepository>?>
+
 
 @Service
 class GithubServices(
@@ -34,8 +42,16 @@ class GithubServices(
 
     fun fetchGithubEmail(accessToken: String): String? = githubClient.fetchGithubEmail(accessToken)
 
-    fun getRepositoriesByOwner(owner: String): List<ExternalRepository>? {
-        return githubClient.getRepositoriesByOwner(owner)
+    fun getRepositoriesByOwner(owner: String, userId: Int): GetRepositoryResult {
+        if (owner.isBlank()) return failure(GetRepositoryError.OwnerIsRequired)
+        return transactionManager.run {
+            val usersRepo = it.usersRepository
+            val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(
+                GetRepositoryError.UserAuthorizationIsRequired)
+            val repositories = githubClient.getRepositoriesByOwner(owner, accessToken)
+            success(repositories)
+
+        }
     }
 
     fun addRepository(

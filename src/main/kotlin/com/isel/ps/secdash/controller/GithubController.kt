@@ -30,10 +30,10 @@ class GithubController(
 
     @GetMapping("/repos/{owner}")
     fun getRepositories(
+        user: AuthenticatedUser,
         @PathVariable owner: String
     ): ResponseEntity<*> {
-        println(owner)
-        val result = githubServices.getRepositoriesByOwner(owner)
+        val result = githubServices.getRepositoriesByOwner(owner, user.user.uid)
         return ResponseEntity.status(200)
             .body(result)
         /* return when (result) {
