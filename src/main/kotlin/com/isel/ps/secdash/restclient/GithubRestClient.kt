@@ -26,10 +26,20 @@ class GithubRestClient {
         return emails?.firstOrNull { it.primary && it.verified }?.email
     }
 
-    fun getRepositoriesByOwner(owner: String, accessToken: String): List<ExternalRepository>? {
+    fun getRepositoriesFromAuthenticatedUser(accessToken: String): List<ExternalRepository>? {
         val  repos = restClient.get()
             .uri("https://api.github.com/user/repos?visibility=all") // podemos passar um parametro para a visibilidade e temos que passar a fazer paginação
             .header("Authorization", "Bearer $accessToken")
+            .header("Accept", "application/vnd.github+json")
+            .retrieve()
+            .body<Array<GithubRepositoryDto>>()
+
+        return repos?.map { it.toExternalGithubRepository() }
+    }
+
+    fun getRepositoriesByOwner(owner: String): List<ExternalRepository>? {
+        val  repos = restClient.get()
+            .uri("https://api.github.com/users/$owner/repos")
             .header("Accept", "application/vnd.github+json")
             .retrieve()
             .body<Array<GithubRepositoryDto>>()

@@ -25,13 +25,20 @@ sealed class DependabotError {
 
 typealias DependabotResult = Either<DependabotError, RepositoryVulnerabilities>
 
-sealed class GetRepositoryError {
-    data object UserAuthorizationIsRequired : GetRepositoryError()
-    data object RepositoryNotFound : GetRepositoryError()
-    data object OwnerIsRequired : GetRepositoryError()
+sealed class GetRepositoriesError {
+    data object UserAuthorizationIsRequired : GetRepositoriesError()
+    data object RepositoryNotFound : GetRepositoriesError()
 }
 
-typealias GetRepositoryResult = Either<GetRepositoryError, List<ExternalRepository>?>
+typealias GetRepositoriesResult = Either<GetRepositoriesError, List<ExternalRepository>?>
+
+sealed class GetRepositoriesByOwnerError {
+    data object Unauthorized : GetRepositoriesByOwnerError()
+    data object OwnerIsRequired : GetRepositoriesByOwnerError()
+    data object OwnerNotFound : GetRepositoriesByOwnerError()
+}
+
+typealias GetRepositoriesByOwnerResult = Either<GetRepositoriesByOwnerError, List<ExternalRepository>>
 
 
 @Service
@@ -43,16 +50,22 @@ class GithubServices(
     fun fetchGithubEmail(accessToken: String): String? = githubClient.fetchGithubEmail(accessToken)
 
 
-    fun getRepositoriesByOwner(owner: String, userId: Int): GetRepositoryResult {
-        if (owner.isBlank()) return failure(GetRepositoryError.OwnerIsRequired)
+    fun getRepositoriesFromAuthorizedUser(userId: Int): GetRepositoriesResult {
         return transactionManager.run {
             val usersRepo = it.usersRepository
             val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(
-                GetRepositoryError.UserAuthorizationIsRequired)
-            val repositories = githubClient.getRepositoriesByOwner(owner, accessToken)
+                GetRepositoriesError.UserAuthorizationIsRequired)
+            val repositories = githubClient.getRepositoriesFromAuthenticatedUser(accessToken)
             success(repositories)
 
         }
+    }
+
+    fun getRepositoriesByOwner(owner: String): GetRepositoriesByOwnerResult {
+        if (owner.isBlank()) return failure(GetRepositoriesByOwnerError.OwnerNotFound)
+        val repositories = githubClient.getRepositoriesByOwner(owner) ?:
+            return failure(GetRepositoriesByOwnerError.OwnerNotFound)
+        return success(repositories)
     }
 
     fun addRepository(

@@ -1,10 +1,10 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.controller.model.Problem
-import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.DependabotError
+import com.isel.ps.secdash.service.GetRepositoriesError
 import com.isel.ps.secdash.service.GithubServices
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
 import com.isel.ps.secdash.service.ResponseTypes.SastError
@@ -28,27 +28,38 @@ class GithubController(
 //    @GetMapping("/login")
 //    fun loginUser(){}
 
-    @GetMapping("/repos/{owner}")
+    @GetMapping("/repos/")
     fun getRepositories(
         user: AuthenticatedUser,
-        @PathVariable owner: String
     ): ResponseEntity<*> {
-        val result = githubServices.getRepositoriesByOwner(owner, user.user.uid)
-        return ResponseEntity.status(200)
-            .body(result)
-        /* return when (result) {
+        val result = githubServices.getRepositoriesFromAuthorizedUser(user.user.uid)
+        return when (result) {
             is Success ->
                 ResponseEntity.status(200)
                     .body(result.value)
             is Failure ->
-                ResponseEntity.badRequest().build<Unit>()
-                //when (result.value) {
-
-                //UserGoogleLoginError.InvalidCredentials-> ResponseEntity.badRequest().build<Unit>()
+                when (result.value) {
+                    GetRepositoriesError.RepositoryNotFound -> Problem.response( 404, Problem.repositoryNotFound)
+                    GetRepositoriesError.UserAuthorizationIsRequired -> Problem.response( 401, Problem.userAuthorizationRequired)
                 }
         }
-        */
     }
+
+    @GetMapping("/repos/{owner}")
+    fun getRepositoriesByOwner(
+        user: AuthenticatedUser,
+        @PathVariable owner: String,
+    ): ResponseEntity<*> {
+        val result = githubServices.getRepositoriesByOwner(owner)
+        return when (result) {
+            is Success<*> -> ResponseEntity.status(200).body(result.value)
+            is Failure -> {
+                TODO()
+            }
+        }
+    }
+
+
 
     @PostMapping("/repositories")
     fun addRepository(
