@@ -3,7 +3,7 @@ package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.users.AuthenticatedUser
-import com.isel.ps.secdash.model.users.UserCreationDto
+import com.isel.ps.secdash.model.users.UserCreationModel
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
 import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserServices
@@ -25,7 +25,7 @@ class UserController(
 
     @PostMapping("/register")
     fun registerUser(
-        @RequestBody user: UserCreationDto
+        @RequestBody user: UserCreationModel
     ): ResponseEntity<*> {
         val result = userServices.createUser(
             user.username,

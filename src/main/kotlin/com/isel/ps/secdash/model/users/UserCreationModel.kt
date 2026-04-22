@@ -1,6 +1,6 @@
 package com.isel.ps.secdash.model.users
 
-data class UserCreationDto(
+data class UserCreationModel(
     val username: String,
     val password: String,
     val email: String

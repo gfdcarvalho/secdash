@@ -5,6 +5,7 @@ import com.isel.ps.secdash.controller.pipeline.AuthenticationInterceptor
 import com.isel.ps.secdash.model.users.Sha256TokenEncoder
 import com.isel.ps.secdash.model.users.UsersDomainConfig
 import com.isel.ps.secdash.utils.configureWithAppRequirements
+import com.isel.ps.secdash.utils.env
 import kotlinx.datetime.Clock
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
@@ -20,15 +21,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import kotlin.time.Duration.Companion.hours
 
-
-private fun env(key: String): String { // don't like this but the .env file was not working properly
-	val envFile = java.io.File(".env")
-	if (envFile.exists()) {
-		val line = envFile.readLines().firstOrNull { it.startsWith("$key=") }
-		if (line != null) return line.substringAfter("=")
-	}
-	return System.getenv(key) ?: error("Missing environment variable: $key")
-}
 
 @SpringBootApplication
 class SecdashApplication{
