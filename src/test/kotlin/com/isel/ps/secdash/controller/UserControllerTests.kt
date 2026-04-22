@@ -50,9 +50,9 @@ class UserControllerTests {
 
     @Test
     fun `Create a new User through register function`() {
-        val username    = "testUsername"
-        val password    = "testPassword"
-        val email       = "testemail@test.com"
+        val username    = "newtestUsername"
+        val password    = "newtestPassword"
+        val email       = "newtestEmail@test.com"
         client().post()
             .uri("/users/register")
             .bodyValue(UserCreationModel(username, password, email))
@@ -60,5 +60,57 @@ class UserControllerTests {
             .expectStatus().isCreated
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectHeader().location("/users/me")
+    }
+
+    @Test
+    fun `Create new User with invalid name should fail`() {
+        val username    = ""
+        val password    = "newtestPassword"
+        val email       = "newtestEmail@test.com"
+        client().post()
+        .uri("/users/register")
+        .bodyValue(UserCreationModel(username, password, email))
+        .exchange()
+        .expectStatus().isBadRequest
+        .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `Create new User with invalid email should fail`() {
+        val username    = "newtestUsername"
+        val password    = "newtestPassword"
+        val email       = ""
+        client().post()
+        .uri("/users/register")
+        .bodyValue(UserCreationModel(username, password, email))
+        .exchange()
+        .expectStatus().isBadRequest
+        .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `Create new User with invalid password should fail`() {
+        val username    = "newtestUsername"
+        val password    = ""
+        val email       = "newtestEmail@test.com"
+        client().post()
+        .uri("/users/register")
+        .bodyValue(UserCreationModel(username, password, email))
+        .exchange()
+        .expectStatus().isBadRequest
+        .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `Create User that already exists should fail`() {
+        val username    = "testUsername1"
+        val password    = "testPassword1"
+        val email       = "testemail@test1.com"
+        client().post()
+        .uri("/users/register")
+        .bodyValue(UserCreationModel(username, password, email))
+        .exchange()
+        .expectStatus().isBadRequest
+        .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
     }
 }

@@ -60,5 +60,12 @@ class UserDomain(
         }
     }
 
+    fun validUsername(username: String): Boolean = !username.isBlank()
+
+    fun validEmail(email: String): Boolean = !email.isBlank()
+
+    fun validPassword(password: String): Boolean = !password.isBlank()
+
+
     val maxNumberOfTokensPerUser = config.maxTokensPerUser
 }

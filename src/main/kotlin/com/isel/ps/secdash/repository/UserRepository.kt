@@ -180,6 +180,14 @@ class UserRepository(
         return user
     }
 
+    override fun checkIfUserAlreadyExists(email: String): Boolean {
+        val user = handle.createQuery("select * from users where email = :email")
+        .bind("email", email)
+        .mapTo<User>()
+        .singleOrNull()
+        return user != null
+    }
+
     private data class UserAndTokenModel(
         val uid: Int,
         val name: String,

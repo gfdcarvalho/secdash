@@ -38,9 +38,12 @@ class UserController(
                     .body(UserCreationOutputDto(result.value))
 
             is Failure ->
-                when (result.value) {  // Need a better solutions for the error responses
+                when (result.value) {
                     UserCreationError.UserAlreadyExists -> Problem.response(400, Problem.userAlreadyExists)
                     UserCreationError.InvalidCredentials -> Problem.response(400, Problem.invalidCredentials)
+                    UserCreationError.InvalidEmail -> Problem.response(400, Problem.invalidEmail)
+                    UserCreationError.InvalidPassword -> Problem.response(400, Problem.invalidPassword)
+                    UserCreationError.InvalidUsername -> Problem.response(400, Problem.invalidUsername)
                 }
 
         }

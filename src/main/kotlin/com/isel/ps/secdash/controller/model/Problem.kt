@@ -33,11 +33,25 @@ class Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "User Already Exists",
             )
-
         val invalidCredentials =
             Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "Password or username is invalid",
+            )
+        val invalidUsername =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Username is invalid",
+            )
+        val invalidEmail =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Email is invalid",
+            )
+        val invalidPassword =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Password is invalid",
             )
 
         // ------------------ Auth Errors

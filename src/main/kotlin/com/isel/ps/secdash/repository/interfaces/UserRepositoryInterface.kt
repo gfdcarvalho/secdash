@@ -61,5 +61,7 @@ interface UserRepositoryInterface {
 
     fun getUserByEmail(email: String): User?
 
+    fun checkIfUserAlreadyExists(email: String): Boolean
+
 
 }

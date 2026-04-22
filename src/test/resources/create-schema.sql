@@ -132,6 +132,8 @@ $$ LANGUAGE plpgsql;
 -- test data for UserControllerTests
 CREATE OR REPLACE FUNCTION test_data_for_UserControllerTests() RETURNS VOID AS $$
 BEGIN
-    -- add test data here as tests are written
+    INSERT INTO users (name, password_validation, email)
+    VALUES  ('testUsername1','$2a$10$pbZFnR8NSKtxZ5ERtXYqreiyZNTMFAb1efUBT0RnrKsYOn3PimMii','testemail@test1.com'), -- testpassword1
+            ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','testemail@test2.com'); -- testpassword2
 END;
 $$ LANGUAGE plpgsql;
