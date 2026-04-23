@@ -74,7 +74,7 @@ class GithubController(
         val result = githubServices.addRepository(repo, user.user.uid)
         return when (result) {
             is Success ->
-                ResponseEntity.status(200).body(result)
+                ResponseEntity.status(200).body(result.value)
             is Failure ->
                 when (result.value) {
                     AddRepositoryError.RepositoryAlreadyAdded -> Problem.response(400, Problem.repositoryAlreadyAdded)
@@ -96,7 +96,7 @@ class GithubController(
         val result = githubServices.getDependabot(user.user.uid, rid)
         return when (result) {
             is Success ->
-                ResponseEntity.status(200).body(result)
+                ResponseEntity.status(200).body(result.value)
             is Failure ->
                 when (result.value) {
                     DependabotError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
@@ -114,7 +114,7 @@ class GithubController(
         val result = githubServices.getSastAlerts(user.user.uid, rid)
         return when (result) {
             is Success ->
-                ResponseEntity.status(200).body(result)
+                ResponseEntity.status(200).body(result.value)
             is Failure ->
                 when (result.value) {
                     SastError.Unauthorized -> Problem.response(401, Problem.unauthorized)

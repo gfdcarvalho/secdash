@@ -5,8 +5,11 @@ import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.testExternalRepository
+import com.isel.ps.secdash.testRepository
+import com.isel.ps.secdash.testRepositoryCreationDto
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -112,4 +115,50 @@ class GithubControllerTests : ControllerTestsBase() {
             .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
     }
 
+    @Test
+    fun `add repository with full repository should return repository`() {
+        val token = login("testUsername1", "testpassword1")
+
+        client().post()
+            .uri("/github/repositories")
+            .header("Authorization", "Bearer $token")
+            .bodyValue(testRepositoryCreationDto(platform = Platform.GITHUB))
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody<Repository>()
+    }
+
+    @Test
+    fun `add repository just with name should return repository`() {
+        val token = login("testUsername1", "testpassword1")
+        val name = "testRepo"
+        whenever(githubRestClient.getRepositoryByName("testRepo", "testToken"))
+            .thenReturn(
+                testExternalRepository(platform = Platform.GITHUB)
+            )
+
+        client().post()
+            .uri("/github/repositories")
+            .header("Authorization", "Bearer $token")
+            .bodyValue(RepositoryCreationDto(name = name))
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody<Repository>()
+    }
+
+    @Test
+    fun `add repository that already exists in our domain should return 400`() {
+        val token = login("testUsername1", "testpassword1")
+        val name = "testRepository"
+
+        client().post()
+            .uri("/github/repositories")
+            .header("Authorization", "Bearer $token")
+            .bodyValue(RepositoryCreationDto(name = name))
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
 }

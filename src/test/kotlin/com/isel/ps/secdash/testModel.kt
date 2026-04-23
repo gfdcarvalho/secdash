@@ -5,6 +5,7 @@ import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import java.time.Instant
 
 fun testExternalRepository(
@@ -19,7 +20,19 @@ fun testExternalRepository(
     updatedAt: Instant = Instant.parse("2024-01-01T00:00:00Z"),
     forksCount: Int = 0,
     visibility: Repository.Visibility = Repository.Visibility.PUBLIC,
-    ) = ExternalRepository(name, externalId, platform, owner, htmlUrl, description, issuesCount, createdAt, updatedAt, forksCount, visibility)
+) = ExternalRepository(
+    name,
+    externalId,
+    platform,
+    owner,
+    htmlUrl,
+    description,
+    issuesCount,
+    createdAt,
+    updatedAt,
+    forksCount,
+    visibility
+)
 
 
 fun testExternalOwner(
@@ -44,7 +57,20 @@ fun testRepository(
     updatedAt: Instant = Instant.parse("2024-01-01T00:00:00Z"),
     forksCount: Int = 0,
     visibility: Repository.Visibility = Repository.Visibility.PUBLIC,
-) = Repository(rid, name, externalId, platform, owner, htmlUrl, description, issuesCount, createdAt, updatedAt, forksCount, visibility)
+) = Repository(
+    rid,
+    name,
+    externalId,
+    platform,
+    owner,
+    htmlUrl,
+    description,
+    issuesCount,
+    createdAt,
+    updatedAt,
+    forksCount,
+    visibility
+)
 
 fun testOwner(
     oid: Int = 1,
@@ -54,3 +80,28 @@ fun testOwner(
     avatarUrl: String = "https://example.com/owner/avatar",
     platform: Platform,
 ) = Owner(oid, externalId, name, url, avatarUrl, platform)
+
+fun testRepositoryCreationDto(
+    name: String = "testRepository",
+    externalId: String = "123",
+    platform: Platform,
+    owner: ExternalOwner = testExternalOwner(platform = platform),
+    htmlUrl: String = "https://www.example.com",
+    description: String = "test",
+    issuesCount: Int = 0,
+    createdAt: Instant = Instant.parse("2024-01-01T00:00:00Z"),
+    updatedAt: Instant = Instant.parse("2024-01-01T00:00:00Z"),
+    forksCount: Int = 0,
+    visibility: Repository.Visibility = Repository.Visibility.PUBLIC,
+) = RepositoryCreationDto(
+    name,
+    externalId,
+    owner,
+    htmlUrl,
+    description,
+    issuesCount,
+    createdAt.toString(),
+    updatedAt.toString(),
+    forksCount,
+    visibility
+)
