@@ -62,6 +62,9 @@ dependencies {
 	// WebTestClient on tests
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux")
+
+	// Mockito Kotlin DSL (whenever, any, etc.)
+	testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
 }
 
 kotlin {

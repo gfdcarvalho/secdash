@@ -45,7 +45,7 @@ class AuthServices(
         username: String,
         password: String,
     ): UserLoginResult {
-        if (username.isNotBlank() && password.isNotBlank()) {
+        if (!username.isNotBlank() && !password.isNotBlank()) {
             return failure(UserLoginError.InvalidCredentials)
         }
         return transactionManager.run {

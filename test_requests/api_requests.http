@@ -15,9 +15,9 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "testeUsername2",
-  "password": "testpassword2",
-  "email": "testemail@teste3.com"
+  "username": "testeaa1",
+  "password": "teste1",
+  "email": "testeasasmail@teste3.com"
 }
 
 

@@ -137,3 +137,14 @@ BEGIN
             ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','testemail@test2.com'); -- testpassword2
 END;
 $$ LANGUAGE plpgsql;
+
+-- test data for GithubControllerTests
+CREATE OR REPLACE FUNCTION test_data_for_GithubControllerTests() RETURNS VOID AS $$
+BEGIN
+    INSERT INTO users (name, password_validation, email)
+    VALUES  ('testUsername1','$2a$10$pbZFnR8NSKtxZ5ERtXYqreiyZNTMFAb1efUBT0RnrKsYOn3PimMii','testemail@test1.com'), -- testpassword1
+            ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','testemail@test2.com'); -- testpassword2
+    INSERT INTO user_authorization (user_id, provider, access_token)
+    VALUES  (1,'GITHUB','testToken');
+END;
+$$ LANGUAGE plpgsql;
