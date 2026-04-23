@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.isel.ps.secdash.model.repositories.ExternalRepository
+import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
 import com.isel.ps.secdash.model.repositories.GitlabRepositoryDto
 import com.isel.ps.secdash.model.sast.ExternalSastAlerts
 import com.isel.ps.secdash.model.sast.GitlabSastAlertsDto
@@ -18,6 +19,17 @@ class GitLabRestClient {
     private val restClient = RestClient.create()
     private val objectMapper = jacksonObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+    fun getRepositoriesFromAuthenticatedUser(accessToken: String): List<ExternalRepository>? {
+        val  repos = restClient.get()
+            .uri("https://gitlab.com/api/v4/projects?membership=true&private=true")
+            .header("Authorization", "Bearer $accessToken")
+            .header("Accept", "application/vnd.github+json")
+            .retrieve()
+            .body<Array<GitlabRepositoryDto>>()
+
+        return repos?.map { it.toExternalRepository() }
+    }
 
     fun getRepositoriesByOwner(owner: String): List<ExternalRepository>? {
         val repos = restClient.get()

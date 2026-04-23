@@ -31,6 +31,16 @@ class GitlabServices(
     private val gitlabClient: GitLabRestClient,
 ) {
 
+    fun getRepositoriesFromAuthorizedUser(userId: Int): GetRepositoriesResult {
+        return transactionManager.run {
+            val usersRepo = it.usersRepository
+            val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITLAB) ?: return@run failure(
+                GetRepositoriesError.UserAuthorizationIsRequired)
+            val repositories = gitlabClient.getRepositoriesFromAuthenticatedUser(accessToken)
+            success(repositories)
+        }
+    }
+
     fun getRepositoriesByOwner(owner: String): List<ExternalRepository>? {
         return gitlabClient.getRepositoriesByOwner(owner)
     }

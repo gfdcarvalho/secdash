@@ -57,7 +57,6 @@ class GithubServices(
                 GetRepositoriesError.UserAuthorizationIsRequired)
             val repositories = githubClient.getRepositoriesFromAuthenticatedUser(accessToken)
             success(repositories)
-
         }
     }
 

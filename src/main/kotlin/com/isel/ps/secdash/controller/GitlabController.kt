@@ -28,8 +28,17 @@ class GitlabController(
 //    @GetMapping("/login")
 //    fun loginUser(){}
 
-    @GetMapping("/repositories/{owner}")
+    @GetMapping("/repos")
     fun getRepositories(
+        user: AuthenticatedUser
+    ): ResponseEntity<*> {
+        val result = gitlabServices.getRepositoriesFromAuthorizedUser(user.user.uid)
+        return ResponseEntity.status(200)
+            .body(result)
+    }
+
+    @GetMapping("/repos/{owner}")
+    fun getRepositoriesByOwner(
         @PathVariable owner: String,
         user: AuthenticatedUser
     ): ResponseEntity<*> {
