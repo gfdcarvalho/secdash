@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.restclient.GithubRestClient
+import com.isel.ps.secdash.testExternalRepository
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,25 +48,7 @@ class GithubControllerTests : ControllerTestsBase() {
     fun `get repositories returns list when user has github authorization`() {
         whenever(githubRestClient.getRepositoriesFromAuthenticatedUser("testToken"))
             .thenReturn(listOf(
-                ExternalRepository(
-                    name = "owner/repo",
-                    externalId = "123",
-                    platform = Platform.GITHUB,
-                    externalOwner = ExternalOwner(
-                        externalId = "1",
-                        name = "owner",
-                        url = "https://github.com/owner",
-                        avatarUrl = null,
-                        platform = Platform.GITHUB,
-                    ),
-                    htmlUrl = "https://github.com/owner/repo",
-                    description = "test repo",
-                    issuesCount = 0,
-                    createdAt = Instant.parse("2024-01-01T00:00:00Z"),
-                    updatedAt = Instant.parse("2024-01-01T00:00:00Z"),
-                    forksCount = 0,
-                    visibility = Repository.Visibility.PUBLIC,
-                )
+                testExternalRepository(platform = Platform.GITHUB)
             ))
 
         val token = login("testUsername1", "testpassword1")
@@ -103,25 +86,7 @@ class GithubControllerTests : ControllerTestsBase() {
         val owner = "testowner"
         whenever(githubRestClient.getRepositoriesByOwner(owner))
             .thenReturn(listOf(
-                ExternalRepository(
-                    name = "owner/repo",
-                    externalId = "123",
-                    platform = Platform.GITLAB,
-                    externalOwner = ExternalOwner(
-                        externalId = "1",
-                        name = "owner",
-                        url = "https://github.com/owner",
-                        avatarUrl = null,
-                        platform = Platform.GITHUB,
-                    ),
-                    htmlUrl = "https://github.com/owner/repo",
-                    description = "test repo",
-                    issuesCount = 0,
-                    createdAt = Instant.parse("2024-01-01T00:00:00Z"),
-                    updatedAt = Instant.parse("2024-01-01T00:00:00Z"),
-                    forksCount = 0,
-                    visibility = Repository.Visibility.PUBLIC,
-                )
+                testExternalRepository(platform = Platform.GITHUB)
             ))
 
         val token = login("testUsername1", "testpassword1")
@@ -135,7 +100,7 @@ class GithubControllerTests : ControllerTestsBase() {
     }
 
     @Test
-    fun `get reposiroties by owner with owner missing should return 400`() {
+    fun `get repositories by owner with owner missing should return 400`() {
         val owner = " "
         val token = login("testUsername1", "testpassword1")
 
@@ -146,4 +111,5 @@ class GithubControllerTests : ControllerTestsBase() {
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
     }
+
 }

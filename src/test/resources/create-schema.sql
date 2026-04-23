@@ -150,7 +150,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- test data for GitlabControllerTests
-CREATE OR REPLACE FUNCTION test_data_for_GithubControllerTests() RETURNS VOID AS $$
+CREATE OR REPLACE FUNCTION test_data_for_GitlabControllerTests() RETURNS VOID AS $$
 BEGIN
     INSERT INTO users (name, password_validation, email)
     VALUES  ('testUsername1','$2a$10$pbZFnR8NSKtxZ5ERtXYqreiyZNTMFAb1efUBT0RnrKsYOn3PimMii','testemail@test1.com'), -- testpassword1
