@@ -62,7 +62,7 @@ class GithubServices(
     }
 
     fun getRepositoriesByOwner(owner: String): GetRepositoriesByOwnerResult {
-        if (owner.isBlank()) return failure(GetRepositoriesByOwnerError.OwnerNotFound)
+        if (owner.isBlank()) return failure(GetRepositoriesByOwnerError.OwnerIsRequired)
         val repositories = githubClient.getRepositoriesByOwner(owner) ?:
             return failure(GetRepositoriesByOwnerError.OwnerNotFound)
         return success(repositories)

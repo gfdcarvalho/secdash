@@ -97,4 +97,53 @@ class GithubControllerTests : ControllerTestsBase() {
             .exchange()
             .expectStatus().isUnauthorized
     }
+
+    @Test
+    fun `get repositories by owner should return list of repositories`() {
+        val owner = "testowner"
+        whenever(githubRestClient.getRepositoriesByOwner(owner))
+            .thenReturn(listOf(
+                ExternalRepository(
+                    name = "owner/repo",
+                    externalId = "123",
+                    platform = Platform.GITLAB,
+                    externalOwner = ExternalOwner(
+                        externalId = "1",
+                        name = "owner",
+                        url = "https://github.com/owner",
+                        avatarUrl = null,
+                        platform = Platform.GITHUB,
+                    ),
+                    htmlUrl = "https://github.com/owner/repo",
+                    description = "test repo",
+                    issuesCount = 0,
+                    createdAt = Instant.parse("2024-01-01T00:00:00Z"),
+                    updatedAt = Instant.parse("2024-01-01T00:00:00Z"),
+                    forksCount = 0,
+                    visibility = Repository.Visibility.PUBLIC,
+                )
+            ))
+
+        val token = login("testUsername1", "testpassword1")
+
+        client().get()
+            .uri("/github/repos/$owner")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<ExternalRepository>>()
+    }
+
+    @Test
+    fun `get reposiroties by owner with owner missing should return 400`() {
+        val owner = " "
+        val token = login("testUsername1", "testpassword1")
+
+        client().get()
+            .uri("/github/repos/$owner")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
 }
