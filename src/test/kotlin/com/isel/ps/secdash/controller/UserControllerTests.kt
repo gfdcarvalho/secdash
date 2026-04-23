@@ -2,39 +2,20 @@ package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.SecdashApplication
 import com.isel.ps.secdash.model.users.UserCreationModel
-import com.isel.ps.secdash.utils.configureWithAppRequirements
-import com.isel.ps.secdash.utils.env
-import org.jdbi.v3.core.Jdbi
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.postgresql.ds.PGSimpleDataSource
+import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.MediaType
-import org.springframework.test.web.reactive.server.WebTestClient
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [SecdashApplication::class])
-class UserControllerTests {
-    companion object {
-        private val jdbi =
-            Jdbi.create(
-                PGSimpleDataSource().apply {
-                    setURL(env("JDBC_DATABASE_URL"))
-                },
-            ).configureWithAppRequirements()
-    }
-
-    init {
-        val schema =
-            UserControllerTests::class.java.getResource("/create-schema.sql")?.readText()
-                ?: throw IllegalStateException("create-schema.sql not found in test resources")
-        jdbi.useHandle<Exception> { handle ->
-            handle.connection.createStatement().use { stmt ->
-                stmt.execute(schema)
-            }
-        }
-    }
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) // for the @AfterAll annotation
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = [SecdashApplication::class, TestJdbiConfig::class],
+    properties = ["spring.main.allow-bean-definition-overriding=true"], // so we can use the new jdbi bean for the test database
+)
+class UserControllerTests : ControllerTestsBase() {
     @BeforeEach
     fun setup() {
         jdbi.useHandle<Exception> { handle ->
@@ -43,10 +24,12 @@ class UserControllerTests {
         }
     }
 
-    @LocalServerPort
-    var port: Int = 0
-
-    private fun client() = WebTestClient.bindToServer().baseUrl("http://localhost:$port").build()
+    @AfterAll
+    fun cleanUp() {
+        jdbi.useHandle<Exception> { handle ->
+            handle.execute("select init()")
+        }
+    }
 
     @Test
     fun `Create a new User through register function`() {
