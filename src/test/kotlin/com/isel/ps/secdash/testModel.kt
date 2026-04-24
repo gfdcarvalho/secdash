@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
+import com.isel.ps.secdash.model.sast.ExternalSastAlerts
 import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
 import com.isel.ps.secdash.model.vulnerability.RepositoryVulnerabilities
 import java.time.Instant
@@ -113,4 +114,6 @@ fun testRepositoryVulnerabilities(
     vulnerabilities: List<ExternalVulnerability> = emptyList<ExternalVulnerability>(),
 ) = RepositoryVulnerabilities(rid, vulnerabilities)
 
-fun testExternalVulnerabilities() = emptyList<ExternalVulnerability>()
+fun testListExternalVulnerabilities() = emptyList<ExternalVulnerability>()
+
+fun testListExternalSast() = emptyList<ExternalSastAlerts>()

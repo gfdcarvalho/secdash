@@ -5,10 +5,12 @@ import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
+import com.isel.ps.secdash.model.sast.RepositorySast
 import com.isel.ps.secdash.model.vulnerability.RepositoryVulnerabilities
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.testExternalRepository
-import com.isel.ps.secdash.testExternalVulnerabilities
+import com.isel.ps.secdash.testListExternalSast
+import com.isel.ps.secdash.testListExternalVulnerabilities
 import com.isel.ps.secdash.testRepositoryCreationDto
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
@@ -215,7 +217,7 @@ class GithubControllerTests : ControllerTestsBase() {
 
         whenever(githubRestClient.getDependabot("testRepo", "testToken"))
             .thenReturn(
-                testExternalVulnerabilities()
+                testListExternalVulnerabilities()
             )
 
         client().get()
@@ -263,6 +265,51 @@ class GithubControllerTests : ControllerTestsBase() {
             .header("Authorization", "Bearer $token")
             .exchange()
             .expectStatus().isUnauthorized
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `get sast should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val rid = 1
+
+        whenever(githubRestClient.getSastAlerts("testRepo", "testToken"))
+            .thenReturn(
+                testListExternalSast()
+            )
+
+        client().get()
+            .uri("/github/repositories/$rid/sast")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody<RepositorySast>()
+    }
+
+    @Test
+    fun `get sast without user authorization should return 401`() {
+        val token = login("testUsername2", "testpassword2")
+        val rid = 1
+
+        client().get()
+            .uri("/github/repositories/$rid/sast")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isUnauthorized
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `get sast with invalid rid should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val rid = 999 // invalid rid
+
+        client().get()
+            .uri("/github/repositories/$rid/sast")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNotFound
             .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
     }
 }
