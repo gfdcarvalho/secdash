@@ -2,13 +2,13 @@ package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.SecdashApplication
 import com.isel.ps.secdash.model.Platform
-import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
+import com.isel.ps.secdash.model.vulnerability.RepositoryVulnerabilities
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.testExternalRepository
-import com.isel.ps.secdash.testRepository
+import com.isel.ps.secdash.testExternalVulnerabilities
 import com.isel.ps.secdash.testRepositoryCreationDto
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.reactive.server.expectBody
-import java.time.Instant
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(
@@ -159,6 +158,111 @@ class GithubControllerTests : ControllerTestsBase() {
             .bodyValue(RepositoryCreationDto(name = name))
             .exchange()
             .expectStatus().isBadRequest
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `add repository that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val name = "testRepositoryDoesNotExist"
+
+        whenever(githubRestClient.getRepositoryByName(name, token))
+            .thenReturn(
+                null
+            )
+
+        client().post()
+            .uri("/github/repositories")
+            .header("Authorization", "Bearer $token")
+            .bodyValue(RepositoryCreationDto(name = name))
+            .exchange()
+            .expectStatus().isNotFound
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `add repository without name should return 400`() {
+        val token = login("testUsername1", "testpassword1")
+        val name = " "
+
+        client().post()
+            .uri("/github/repositories")
+            .header("Authorization", "Bearer $token")
+            .bodyValue(RepositoryCreationDto(name = name))
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `add repository without user authorization should return 401`() {
+        val token = login("testUsername2", "testpassword2")
+        val name = "testRepository"
+
+        client().post()
+            .uri("/github/repositories")
+            .header("Authorization", "Bearer $token")
+            .bodyValue(RepositoryCreationDto(name = name))
+            .exchange()
+            .expectStatus().isUnauthorized
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `get Dependabot should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val rid = 1
+
+        whenever(githubRestClient.getDependabot("testRepo", "testToken"))
+            .thenReturn(
+                testExternalVulnerabilities()
+            )
+
+        client().get()
+            .uri("/github/repositories/$rid/dependabot")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody<RepositoryVulnerabilities>()
+    }
+
+    @Test
+    fun `get dependabot with invalid rid should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val rid = 999 // invalid rid
+
+        client().get()
+            .uri("/github/repositories/$rid/dependabot")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNotFound
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `get dependabot without user authorization should return 401`() {
+        val token = login("testUsername2", "testpassword2")
+        val rid = 1
+
+        client().get()
+            .uri("/github/repositories/$rid/dependabot")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isUnauthorized
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `get dependabot with user that does not have access to repository should return 401`() {
+        val token = login("testUsername1", "testpassword1")
+        val rid = 2
+
+        client().get()
+            .uri("/github/repositories/$rid/dependabot")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isUnauthorized
             .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
     }
 }

@@ -48,7 +48,7 @@ CREATE TABLE owners (
     url             VARCHAR(255) NOT NULL,
     avatar_url      VARCHAR(255),
     platform        platform     NOT NULL,
-    UNIQUE (name, platform)
+    UNIQUE (external_id, platform)
 );
 
 -- Repositories

@@ -80,9 +80,10 @@ class GithubController(
                     AddRepositoryError.RepositoryAlreadyAdded -> Problem.response(400, Problem.repositoryAlreadyAdded)
                     AddRepositoryError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
                     AddRepositoryError.NameIsRequired -> Problem.response(400, Problem.nameIsRequired)
-                    AddRepositoryError.InvalidExternalId -> Problem.response(400, Problem.invalidExternalId)
+                    //AddRepositoryError.InvalidExternalId -> Problem.response(400, Problem.invalidExternalId)
                     AddRepositoryError.UserAuthorizationRequired -> Problem.response(401, Problem.userAuthorizationRequired)
-                    AddRepositoryError.ExternalIdIsRequired -> Problem.response(400, Problem.externalIdIsRequired)
+                    //AddRepositoryError.ExternalIdIsRequired -> Problem.response(400, Problem.externalIdIsRequired)
+                    else -> Problem.response(500, Problem.internalServerError) // the 2 other error cases should never happen in this endpoint
                 }
         }
     }

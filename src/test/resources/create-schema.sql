@@ -64,7 +64,7 @@ BEGIN
         url         VARCHAR(255) NOT NULL,
         avatar_url  VARCHAR(255),
         platform    platform     NOT NULL,
-        UNIQUE (name, platform)
+        UNIQUE (external_id, platform)
     );
 
     CREATE TABLE repositories (
@@ -149,9 +149,11 @@ BEGIN
     INSERT INTO owners (external_id, name, url, avatar_url, platform)
     VALUES  ('123','testOwner','https://example.com/owner/repo','https://example.com/owner/avatar','GITHUB');
     INSERT INTO repositories (name, external_id, platform, owner_id, html_url, description, issues_count, created_at, updated_at, forks_count, visibility)
-    VALUES  ('testRepository', '123','GITHUB',1,'https://www.example.com','test',0 , '2026-03-23 15:31:04.000000 +00:00','2026-03-23 16:30:55.000000 +00:00', 0, 'PUBLIC' );
+    VALUES  ('testRepository', '123','GITHUB',1,'https://www.example.com','test',0 , '2026-03-23 15:31:04.000000 +00:00','2026-03-23 16:30:55.000000 +00:00', 0, 'PUBLIC' ),
+            ('testRepository1', '1234','GITHUB',1,'https://www.example.com','test',0 , '2026-03-23 15:31:04.000000 +00:00','2026-03-23 16:30:55.000000 +00:00', 0, 'PUBLIC' );
     INSERT INTO user_repositories (uid, rid)
-    VALUES  (1,1);
+    VALUES  (1,1),
+            (2,2);
 END;
 $$ LANGUAGE plpgsql;
 

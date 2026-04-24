@@ -6,11 +6,13 @@ import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
+import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
+import com.isel.ps.secdash.model.vulnerability.RepositoryVulnerabilities
 import java.time.Instant
 
 fun testExternalRepository(
-    name: String = "testRepository",
-    externalId: String = "123",
+    name: String = "testRepository0",
+    externalId: String = "12",
     platform: Platform,
     owner: ExternalOwner = testExternalOwner(platform = platform),
     htmlUrl: String = "https://www.example.com",
@@ -82,8 +84,8 @@ fun testOwner(
 ) = Owner(oid, externalId, name, url, avatarUrl, platform)
 
 fun testRepositoryCreationDto(
-    name: String = "testRepository",
-    externalId: String = "123",
+    name: String = "testRepository0",
+    externalId: String = "12",
     platform: Platform,
     owner: ExternalOwner = testExternalOwner(platform = platform),
     htmlUrl: String = "https://www.example.com",
@@ -105,3 +107,10 @@ fun testRepositoryCreationDto(
     forksCount,
     visibility
 )
+
+fun testRepositoryVulnerabilities(
+    rid: Int = 1,
+    vulnerabilities: List<ExternalVulnerability> = emptyList<ExternalVulnerability>(),
+) = RepositoryVulnerabilities(rid, vulnerabilities)
+
+fun testExternalVulnerabilities() = emptyList<ExternalVulnerability>()

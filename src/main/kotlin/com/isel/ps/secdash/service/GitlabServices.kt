@@ -54,7 +54,7 @@ class GitlabServices(
         return transactionManager.run {
             val repositoriesRepo = it.repositoriesRepository
             val usersRepo = it.usersRepository
-            if (repositoriesRepo.userAlreadyHasRepoByExternalId(userId, repo.externalId)) return@run failure(AddRepositoryError.RepositoryAlreadyAdded)
+            if (repositoriesRepo.userAlreadyHasRepoByExternalId(userId, repo.externalId, Platform.GITLAB)) return@run failure(AddRepositoryError.RepositoryAlreadyAdded)
             val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITLAB) ?: return@run failure(
                 AddRepositoryError.UserAuthorizationRequired // maybe we should ask for permission instead of returning error !!!
             )

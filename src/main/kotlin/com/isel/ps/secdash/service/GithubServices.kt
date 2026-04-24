@@ -84,9 +84,9 @@ class GithubServices(
                 if (repo.isComplete()) repo.toExternalRepository(Platform.GITHUB)
                 else githubClient.getRepositoryByName(repo.name, accessToken)
                     ?: return@run failure(AddRepositoryError.RepositoryNotFound)
-
+            if (repositoriesRepo.userAlreadyHasRepoByExternalId(userId, repoToSave.externalId, Platform.GITHUB)) return@run failure(
+                AddRepositoryError.RepositoryAlreadyAdded)
             val repository = repositoriesRepo.storeRepository(userId, repoToSave)
-
             success(repository)
         }
 
@@ -100,7 +100,7 @@ class GithubServices(
             val userRepo = it.usersRepository
             val repositoriesRepo = it.repositoriesRepository
             val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(DependabotError.RepositoryNotFound)
-            if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(DependabotError.Unauthorized)
+            if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(DependabotError.Unauthorized) // could this return 403 forbidden ??
             val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(DependabotError.Unauthorized)
             val vulnerabilities = githubClient.getDependabot(fullName, accessToken)
             success(RepositoryVulnerabilities(rid, vulnerabilities))

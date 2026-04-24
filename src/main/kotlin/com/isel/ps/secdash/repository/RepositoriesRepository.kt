@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.repository
 
 import com.isel.ps.secdash.model.Owner
+import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
@@ -49,16 +50,17 @@ class RepositoriesRepository(
         return resultRid != null
     }
 
-    override fun userAlreadyHasRepoByExternalId(userId: Int, externalId: String): Boolean {
+    override fun userAlreadyHasRepoByExternalId(userId: Int, externalId: String, platform: Platform): Boolean {
         val resultRid = handle.createQuery(
             """
             SELECT r.rid FROM repositories r
             JOIN user_repositories ur ON r.rid = ur.rid
-            WHERE ur.uid = :userId AND r.external_id = :externalId
+            WHERE ur.uid = :userId AND r.external_id = :externalId AND r.platform = :platform::platform
             """.trimIndent()
         )
             .bind("userId", userId)
             .bind("externalId", externalId)
+            .bind("platform", platform.name)
             .mapTo<Int>()
             .singleOrNull()
         return resultRid != null
@@ -130,7 +132,7 @@ class RepositoriesRepository(
             """
                 insert into owners (external_id, name, url, avatar_url, platform)
                 values (:external_id, :name, :url, :avatar_url, :platform)
-                ON CONFLICT (name, platform) DO NOTHING
+                ON CONFLICT (external_id, platform) DO NOTHING
             """.trimIndent()
         )
             .bind("external_id", owner.externalId)
