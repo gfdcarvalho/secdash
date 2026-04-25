@@ -6,6 +6,8 @@ import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.DependencyScanError
 import com.isel.ps.secdash.service.GitlabServices
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesByOwnerError
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesError
 import com.isel.ps.secdash.service.ResponseTypes.SastError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
@@ -33,8 +35,16 @@ class GitlabController(
         user: AuthenticatedUser
     ): ResponseEntity<*> {
         val result = gitlabServices.getRepositoriesFromAuthorizedUser(user.user.uid)
-        return ResponseEntity.status(200)
-            .body(result)
+        return when (result) {
+            is Success ->
+                ResponseEntity.status(200)
+                    .body(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetRepositoriesError.RepositoryNotFound -> Problem.response( 404, Problem.repositoryNotFound)
+                    GetRepositoriesError.UserAuthorizationIsRequired -> Problem.response( 401, Problem.userAuthorizationRequired)
+                }
+        }
     }
 
     @GetMapping("/repos/{owner}")
@@ -42,9 +52,17 @@ class GitlabController(
         @PathVariable owner: String,
         user: AuthenticatedUser
     ): ResponseEntity<*> {
-            val result = gitlabServices.getRepositoriesByOwner(owner)
-            return ResponseEntity.status(200)
-                .body(result)
+        val result = gitlabServices.getRepositoriesByOwner(owner)
+        return when (result) {
+            is Success -> ResponseEntity.status(200).body(result.value)
+            is Failure -> {
+                when (result.value) {
+                    GetRepositoriesByOwnerError.OwnerIsRequired -> Problem.response( 400, Problem.ownerIsRequired)
+                    GetRepositoriesByOwnerError.OwnerNotFound -> Problem.response( 404, Problem.ownerNotFound)
+                    GetRepositoriesByOwnerError.Unauthorized -> Problem.response( 401, Problem.userAuthorizationRequired)
+                }
+            }
+        }
     }
 
     @PostMapping("/repositories")

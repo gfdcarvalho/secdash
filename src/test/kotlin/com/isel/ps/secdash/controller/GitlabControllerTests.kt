@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.restclient.GitLabRestClient
+import com.isel.ps.secdash.testExternalRepository
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -43,4 +44,97 @@ class GitlabControllerTests: ControllerTestsBase() {
         }
     }
 
+    @Test
+    fun `get repositories returns list of external repositories`() {
+        whenever(gitlabRestClient.getRepositoriesFromAuthenticatedUser("testToken"))
+            .thenReturn(listOf(
+                testExternalRepository(platform = Platform.GITLAB)
+            ))
+
+        val token = login("testUsername1", "testpassword1")
+
+        client().get()
+            .uri("/gitlab/repos")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody<List<ExternalRepository>>()
+    }
+
+    @Test
+    fun `get repositories with no gitlab authorization should return 401`() {
+        val token = login("testUsername2", "testpassword2")
+
+        client().get()
+            .uri("/gitlab/repos")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isUnauthorized
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `get repositories returns 404 when no repositories are found`() {
+        val token = login("testUsername1", "testpassword1")
+
+        whenever(gitlabRestClient.getRepositoriesFromAuthenticatedUser("testToken"))
+            .thenReturn(null)
+
+        client().get()
+            .uri("/gitlab/repos")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNotFound
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `get repositories by owner should return list of repositories`() {
+        val owner = "testowner"
+        whenever(gitlabRestClient.getRepositoriesByOwner(owner))
+            .thenReturn(listOf(
+                testExternalRepository(platform = Platform.GITLAB)
+            ))
+
+        val token = login("testUsername1", "testpassword1")
+
+        client().get()
+            .uri("/gitlab/repos/$owner")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<ExternalRepository>>()
+    }
+
+    @Test
+    fun `get repositories by owner with owner missing should return 400`() {
+        val owner = " "
+        val token = login("testUsername1", "testpassword1")
+
+        client().get()
+            .uri("/gitlab/repos/$owner")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isBadRequest
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `get repositories by owner owner doesn't have repos or does not exist should return 404`() {
+        val owner = "testowner"
+        whenever(gitlabRestClient.getRepositoriesByOwner(owner))
+            .thenReturn(
+                null
+            )
+
+        val token = login("testUsername1", "testpassword1")
+
+        client().get()
+            .uri("/gitlab/repos/$owner")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNotFound
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
 }

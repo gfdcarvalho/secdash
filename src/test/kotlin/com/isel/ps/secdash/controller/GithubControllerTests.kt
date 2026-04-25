@@ -49,7 +49,7 @@ class GithubControllerTests : ControllerTestsBase() {
     }
 
     @Test
-    fun `get repositories returns list when user has github authorization`() {
+    fun `get repositories returns list of external repositories`() {
         whenever(githubRestClient.getRepositoriesFromAuthenticatedUser("testToken"))
             .thenReturn(listOf(
                 testExternalRepository(platform = Platform.GITHUB)

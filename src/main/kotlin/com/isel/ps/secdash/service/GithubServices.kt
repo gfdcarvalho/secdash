@@ -2,7 +2,6 @@ package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.Platform
-import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.sast.RepositorySast
 import com.isel.ps.secdash.model.vulnerability.RepositoryVulnerabilities
@@ -10,6 +9,10 @@ import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryResult
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesByOwnerError
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesByOwnerResult
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesError
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesResult
 import com.isel.ps.secdash.service.ResponseTypes.SastError
 import com.isel.ps.secdash.service.ResponseTypes.SastResult
 import com.isel.ps.secdash.utils.Either
@@ -25,20 +28,6 @@ sealed class DependabotError {
 
 typealias DependabotResult = Either<DependabotError, RepositoryVulnerabilities>
 
-sealed class GetRepositoriesError {
-    data object UserAuthorizationIsRequired : GetRepositoriesError()
-    data object RepositoryNotFound : GetRepositoriesError()
-}
-
-typealias GetRepositoriesResult = Either<GetRepositoriesError, List<ExternalRepository>?>
-
-sealed class GetRepositoriesByOwnerError {
-    data object Unauthorized : GetRepositoriesByOwnerError()
-    data object OwnerIsRequired : GetRepositoriesByOwnerError()
-    data object OwnerNotFound : GetRepositoriesByOwnerError()
-}
-
-typealias GetRepositoriesByOwnerResult = Either<GetRepositoriesByOwnerError, List<ExternalRepository>>
 
 
 @Service
@@ -55,7 +44,9 @@ class GithubServices(
             val usersRepo = it.usersRepository
             val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(
                 GetRepositoriesError.UserAuthorizationIsRequired)
-            val repositories = githubClient.getRepositoriesFromAuthenticatedUser(accessToken)
+            val repositories = githubClient.getRepositoriesFromAuthenticatedUser(accessToken) ?: return@run failure(
+                GetRepositoriesError.RepositoryNotFound
+            )
             success(repositories)
         }
     }
@@ -63,7 +54,7 @@ class GithubServices(
     fun getRepositoriesByOwner(owner: String): GetRepositoriesByOwnerResult {
         if (owner.isBlank()) return failure(GetRepositoriesByOwnerError.OwnerIsRequired)
         val repositories = githubClient.getRepositoriesByOwner(owner) ?:
-            return failure(GetRepositoriesByOwnerError.OwnerNotFound)
+            return failure(GetRepositoriesByOwnerError.OwnerNotFound) // this could be because owner not found or owner doesn't have repos
         return success(repositories)
     }
 

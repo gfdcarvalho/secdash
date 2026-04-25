@@ -1,8 +1,24 @@
 package com.isel.ps.secdash.service.ResponseTypes
 
+import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.sast.RepositorySast
 import com.isel.ps.secdash.utils.Either
+
+sealed class GetRepositoriesError {
+    data object UserAuthorizationIsRequired : GetRepositoriesError()
+    data object RepositoryNotFound : GetRepositoriesError()
+}
+
+typealias GetRepositoriesResult = Either<GetRepositoriesError, List<ExternalRepository>>
+
+sealed class GetRepositoriesByOwnerError {
+    data object Unauthorized : GetRepositoriesByOwnerError()
+    data object OwnerIsRequired : GetRepositoriesByOwnerError()
+    data object OwnerNotFound : GetRepositoriesByOwnerError()
+}
+
+typealias GetRepositoriesByOwnerResult = Either<GetRepositoriesByOwnerError, List<ExternalRepository>>
 
 sealed class AddRepositoryError {
     data object NameIsRequired : AddRepositoryError()

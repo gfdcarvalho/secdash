@@ -10,6 +10,10 @@ import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.restclient.GitLabRestClient
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryResult
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesByOwnerError
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesByOwnerResult
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesError
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesResult
 import com.isel.ps.secdash.service.ResponseTypes.SastError
 import com.isel.ps.secdash.service.ResponseTypes.SastResult
 import com.isel.ps.secdash.utils.Either
@@ -36,13 +40,18 @@ class GitlabServices(
             val usersRepo = it.usersRepository
             val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITLAB) ?: return@run failure(
                 GetRepositoriesError.UserAuthorizationIsRequired)
-            val repositories = gitlabClient.getRepositoriesFromAuthenticatedUser(accessToken)
+            val repositories = gitlabClient.getRepositoriesFromAuthenticatedUser(accessToken)?: return@run failure(
+                GetRepositoriesError.RepositoryNotFound
+            )
             success(repositories)
         }
     }
 
-    fun getRepositoriesByOwner(owner: String): List<ExternalRepository>? {
-        return gitlabClient.getRepositoriesByOwner(owner)
+    fun getRepositoriesByOwner(owner: String): GetRepositoriesByOwnerResult {
+        if (owner.isBlank()) return failure(GetRepositoriesByOwnerError.OwnerIsRequired)
+        val repositories = gitlabClient.getRepositoriesByOwner(owner) ?:
+        return failure(GetRepositoriesByOwnerError.OwnerNotFound) // this could be because owner not found or owner doesn't have repos
+        return success(repositories)
     }
 
     fun addRepository(

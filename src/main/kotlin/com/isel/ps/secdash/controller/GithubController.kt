@@ -4,10 +4,10 @@ import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.DependabotError
-import com.isel.ps.secdash.service.GetRepositoriesByOwnerError
-import com.isel.ps.secdash.service.GetRepositoriesError
 import com.isel.ps.secdash.service.GithubServices
 import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesByOwnerError
+import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesError
 import com.isel.ps.secdash.service.ResponseTypes.SastError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
@@ -53,7 +53,7 @@ class GithubController(
     ): ResponseEntity<*> {
         val result = githubServices.getRepositoriesByOwner(owner)
         return when (result) {
-            is Success<*> -> ResponseEntity.status(200).body(result.value)
+            is Success -> ResponseEntity.status(200).body(result.value)
             is Failure -> {
                 when (result.value) {
                     GetRepositoriesByOwnerError.OwnerIsRequired -> Problem.response( 400, Problem.ownerIsRequired)
