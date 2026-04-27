@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositorySqlDto
+import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
 import com.isel.ps.secdash.repository.interfaces.RepositoriesRepositoryInterface
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -171,7 +172,7 @@ class RepositoriesRepository(
     override fun findAllByUser(uid: Int): List<Repository> {
         return handle.createQuery(
             """
-        SELECT 
+        SELECT
             r.rid, r.name, r.external_id, r.platform, r.owner_id,
             r.html_url, r.description, r.issues_count,
             r.created_at, r.updated_at, r.forks_count, r.visibility,
@@ -184,34 +185,8 @@ class RepositoriesRepository(
         """.trimIndent()
         )
             .bind("uid", uid)
-            .map { rs, _ ->
-
-                val owner = Owner(
-                    oid = rs.getInt("oid"),
-                    externalId = rs.getString("o_external_id"),
-                    name = rs.getString("o_name"),
-                    url = rs.getString("url"),
-                    avatarUrl = rs.getString("avatar_url"),
-                    platform = Platform.valueOf(rs.getString("o_platform"))
-                )
-
-                val repoDto = RepositorySqlDto(
-                    rid = rs.getInt("rid"),
-                    name = rs.getString("name"),
-                    externalId = rs.getString("external_id"),
-                    platform = Platform.valueOf(rs.getString("platform")),
-                    ownerId = rs.getInt("owner_id"),
-                    htmlUrl = rs.getString("html_url"),
-                    description = rs.getString("description"),
-                    issuesCount = rs.getInt("issues_count"),
-                    createdAt = rs.getObject("created_at", java.time.OffsetDateTime::class.java).toInstant(),
-                    updatedAt = rs.getObject("updated_at", java.time.OffsetDateTime::class.java).toInstant(),
-                    forksCount = rs.getInt("forks_count"),
-                    visibility = Repository.Visibility.valueOf(rs.getString("visibility"))
-                )
-
-                repoDto.toDomainRepository(owner)
-            }
+            .mapTo<RepositoryWithOwnerSqlDto>()
             .list()
+            .map { it.toDomain() }
     }
 }
