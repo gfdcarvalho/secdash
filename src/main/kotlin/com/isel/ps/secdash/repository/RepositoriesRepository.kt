@@ -167,4 +167,51 @@ class RepositoriesRepository(
 
         return externalId
     }
+
+    override fun findAllByUser(uid: Int): List<Repository> {
+        return handle.createQuery(
+            """
+        SELECT 
+            r.rid, r.name, r.external_id, r.platform, r.owner_id,
+            r.html_url, r.description, r.issues_count,
+            r.created_at, r.updated_at, r.forks_count, r.visibility,
+            o.oid, o.external_id AS o_external_id, o.name AS o_name,
+            o.url, o.avatar_url, o.platform AS o_platform
+        FROM repositories r
+        JOIN user_repositories ur ON r.rid = ur.rid
+        JOIN owners o ON r.owner_id = o.oid
+        WHERE ur.uid = :uid
+        """.trimIndent()
+        )
+            .bind("uid", uid)
+            .map { rs, _ ->
+
+                val owner = Owner(
+                    oid = rs.getInt("oid"),
+                    externalId = rs.getString("o_external_id"),
+                    name = rs.getString("o_name"),
+                    url = rs.getString("url"),
+                    avatarUrl = rs.getString("avatar_url"),
+                    platform = Platform.valueOf(rs.getString("o_platform"))
+                )
+
+                val repoDto = RepositorySqlDto(
+                    rid = rs.getInt("rid"),
+                    name = rs.getString("name"),
+                    externalId = rs.getString("external_id"),
+                    platform = Platform.valueOf(rs.getString("platform")),
+                    ownerId = rs.getInt("owner_id"),
+                    htmlUrl = rs.getString("html_url"),
+                    description = rs.getString("description"),
+                    issuesCount = rs.getInt("issues_count"),
+                    createdAt = rs.getObject("created_at", java.time.OffsetDateTime::class.java).toInstant(),
+                    updatedAt = rs.getObject("updated_at", java.time.OffsetDateTime::class.java).toInstant(),
+                    forksCount = rs.getInt("forks_count"),
+                    visibility = Repository.Visibility.valueOf(rs.getString("visibility"))
+                )
+
+                repoDto.toDomainRepository(owner)
+            }
+            .list()
+    }
 }

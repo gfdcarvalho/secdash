@@ -2,9 +2,12 @@ package com.isel.ps.secdash.controller
 
 
 import com.isel.ps.secdash.controller.model.Problem
+import com.isel.ps.secdash.model.repositories.ExternalRepository
+import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserCreationModel
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
+import com.isel.ps.secdash.service.RepositoryServices
 import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserServices
 import com.isel.ps.secdash.utils.Failure
@@ -20,7 +23,8 @@ import java.net.URI
 @RestController
 @RequestMapping("/users")
 class UserController(
-    private val userServices: UserServices
+    private val userServices: UserServices,
+    private val repositoryServices: RepositoryServices
 ) {
 
     @PostMapping("/register")
@@ -52,7 +56,8 @@ class UserController(
     @GetMapping("/me")
     fun me(
         user: AuthenticatedUser,
-    ) {
-        println("user: ${user.user} ${user.token}")
+    ):ResponseEntity<*> {
+        val repos: List<Repository> = repositoryServices.findAllByUser(user.user.uid)
+        return ResponseEntity.ok(repos) // Needs error treatment
     }
 }
