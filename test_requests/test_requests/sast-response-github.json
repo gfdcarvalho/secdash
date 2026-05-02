@@ -1,0 +1,165 @@
+[
+  {
+    "number": 4,
+    "created_at": "2026-03-23T16:31:35Z",
+    "updated_at": "2026-03-23T16:31:35Z",
+    "url": "https://api.github.com/repos/RodrigoVitorino/SecDash-sast-test/code-scanning/alerts/4",
+    "html_url": "https://github.com/RodrigoVitorino/SecDash-sast-test/security/code-scanning/4",
+    "state": "open",
+    "fixed_at": null,
+    "dismissed_by": null,
+    "dismissed_at": null,
+    "dismissed_reason": null,
+    "dismissed_comment": null,
+    "rule": {
+      "id": "py/code-injection",
+      "severity": "error",
+      "description": "Code injection",
+      "name": "py/code-injection",
+      "tags": [
+        "external/cwe/cwe-094",
+        "external/cwe/cwe-095",
+        "external/cwe/cwe-116",
+        "security"
+      ],
+      "full_description": "Interpreting unsanitized user input as code allows a malicious user to perform arbitrary code execution.",
+      "help": "# Code injection\nDirectly evaluating user input (for example, an HTTP request parameter) as code without properly sanitizing the input first allows an attacker arbitrary code execution. This can occur when user input is passed to code that interprets it as an expression to be evaluated, such as `eval` or `exec`.\n\n\n## Recommendation\nAvoid including user input in any expression that may be dynamically evaluated. If user input must be included, use context-specific escaping before including it. It is important that the correct escaping is used for the type of evaluation that will occur.\n\n\n## Example\nThe following example shows two functions setting a name from a request. The first function uses `exec` to execute the `setname` function. This is dangerous as it can allow a malicious user to execute arbitrary code on the server. For example, the user could supply the value `\"' + subprocess.call('rm -rf') + '\"` to destroy the server's file system. The second function calls the `setname` function directly and is thus safe.\n\n\n```python\n\nurlpatterns = [\n    # Route to code_execution\n    url(r'^code-ex1$', code_execution_bad, name='code-execution-bad'),\n    url(r'^code-ex2$', code_execution_good, name='code-execution-good')\n]\n\ndef code_execution(request):\n    if request.method == 'POST':\n        first_name = base64.decodestring(request.POST.get('first_name', ''))\n        #BAD -- Allow user to define code to be run.\n        exec(\"setname('%s')\" % first_name)\n\ndef code_execution(request):\n    if request.method == 'POST':\n        first_name = base64.decodestring(request.POST.get('first_name', ''))\n        #GOOD --Call code directly\n        setname(first_name)\n\n```\n\n## References\n* OWASP: [Code Injection](https://www.owasp.org/index.php/Code_Injection).\n* Wikipedia: [Code Injection](https://en.wikipedia.org/wiki/Code_injection).\n* Common Weakness Enumeration: [CWE-94](https://cwe.mitre.org/data/definitions/94.html).\n* Common Weakness Enumeration: [CWE-95](https://cwe.mitre.org/data/definitions/95.html).\n* Common Weakness Enumeration: [CWE-116](https://cwe.mitre.org/data/definitions/116.html).\n",
+      "security_severity_level": "critical"
+    },
+    "tool": {
+      "name": "CodeQL",
+      "guid": null,
+      "version": "2.24.3"
+    },
+    "most_recent_instance": {
+      "ref": "refs/heads/main",
+      "analysis_key": ".github/workflows/codeql.yml:analyze",
+      "environment": "{\"build-mode\":\"none\",\"language\":\"python\"}",
+      "category": "/language:python",
+      "state": "open",
+      "commit_sha": "0bc7966a4aeed5dfb8dc6fbfaafead6b199e97ec",
+      "message": {
+        "text": "This code execution depends on a user-provided value."
+      },
+      "location": {
+        "path": "app.py",
+        "start_line": 27,
+        "end_line": 27,
+        "start_column": 21,
+        "end_column": 25
+      },
+      "classifications": []
+    },
+    "instances_url": "https://api.github.com/repos/RodrigoVitorino/SecDash-sast-test/code-scanning/alerts/4/instances",
+    "dismissal_approved_by": null,
+    "assignees": []
+  },
+  {
+    "number": 3,
+    "created_at": "2026-03-23T16:31:35Z",
+    "updated_at": "2026-03-23T16:31:35Z",
+    "url": "https://api.github.com/repos/RodrigoVitorino/SecDash-sast-test/code-scanning/alerts/3",
+    "html_url": "https://github.com/RodrigoVitorino/SecDash-sast-test/security/code-scanning/3",
+    "state": "open",
+    "fixed_at": null,
+    "dismissed_by": null,
+    "dismissed_at": null,
+    "dismissed_reason": null,
+    "dismissed_comment": null,
+    "rule": {
+      "id": "py/sql-injection",
+      "severity": "error",
+      "description": "SQL query built from user-controlled sources",
+      "name": "py/sql-injection",
+      "tags": [
+        "external/cwe/cwe-089",
+        "security"
+      ],
+      "full_description": "Building a SQL query from user-controlled sources is vulnerable to insertion of malicious SQL code by the user.",
+      "help": "# SQL query built from user-controlled sources\nIf a database query (such as a SQL or NoSQL query) is built from user-provided data without sufficient sanitization, a user may be able to run malicious database queries.\n\nThis also includes using the `TextClause` class in the `[SQLAlchemy](https://pypi.org/project/SQLAlchemy/)` PyPI package, which is used to represent a literal SQL fragment and is inserted directly into the final SQL when used in a query built using the ORM.\n\n\n## Recommendation\nMost database connector libraries offer a way of safely embedding untrusted data into a query by means of query parameters or prepared statements.\n\n\n## Example\nIn the following snippet, a user is fetched from the database using three different queries.\n\nIn the first case, the query string is built by directly using string formatting from a user-supplied request parameter. The parameter may include quote characters, so this code is vulnerable to a SQL injection attack.\n\nIn the second case, the user-supplied request attribute is passed to the database using query parameters. The database connector library will take care of escaping and inserting quotes as needed.\n\nIn the third case, the placeholder in the SQL string has been manually quoted. Since most databaseconnector libraries will insert their own quotes, doing so yourself will make the code vulnerable to SQL injection attacks. In this example, if `username` was `; DROP ALL TABLES -- `, the final SQL query would be `SELECT * FROM users WHERE username = ''; DROP ALL TABLES -- ''`\n\n\n```python\nfrom django.conf.urls import url\nfrom django.db import connection\n\n\ndef show_user(request, username):\n    with connection.cursor() as cursor:\n        # BAD -- Using string formatting\n        cursor.execute(\"SELECT * FROM users WHERE username = '%s'\" % username)\n        user = cursor.fetchone()\n\n        # GOOD -- Using parameters\n        cursor.execute(\"SELECT * FROM users WHERE username = %s\", username)\n        user = cursor.fetchone()\n\n        # BAD -- Manually quoting placeholder (%s)\n        cursor.execute(\"SELECT * FROM users WHERE username = '%s'\", username)\n        user = cursor.fetchone()\n\nurlpatterns = [url(r'^users/(?P<username>[^/]+)$', show_user)]\n\n```\n\n## References\n* Wikipedia: [SQL injection](https://en.wikipedia.org/wiki/SQL_injection).\n* OWASP: [SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html).\n* [SQLAlchemy documentation for TextClause](https://docs.sqlalchemy.org/en/14/core/sqlelement.html#sqlalchemy.sql.expression.text.params.text).\n* Common Weakness Enumeration: [CWE-89](https://cwe.mitre.org/data/definitions/89.html).\n",
+      "security_severity_level": "high"
+    },
+    "tool": {
+      "name": "CodeQL",
+      "guid": null,
+      "version": "2.24.3"
+    },
+    "most_recent_instance": {
+      "ref": "refs/heads/main",
+      "analysis_key": ".github/workflows/codeql.yml:analyze",
+      "environment": "{\"build-mode\":\"none\",\"language\":\"python\"}",
+      "category": "/language:python",
+      "state": "open",
+      "commit_sha": "0bc7966a4aeed5dfb8dc6fbfaafead6b199e97ec",
+      "message": {
+        "text": "This SQL query depends on a user-provided value."
+      },
+      "location": {
+        "path": "app.py",
+        "start_line": 13,
+        "end_line": 13,
+        "start_column": 20,
+        "end_column": 77
+      },
+      "classifications": []
+    },
+    "instances_url": "https://api.github.com/repos/RodrigoVitorino/SecDash-sast-test/code-scanning/alerts/3/instances",
+    "dismissal_approved_by": null,
+    "assignees": []
+  },
+  {
+    "number": 2,
+    "created_at": "2026-03-23T16:31:35Z",
+    "updated_at": "2026-03-23T16:31:35Z",
+    "url": "https://api.github.com/repos/RodrigoVitorino/SecDash-sast-test/code-scanning/alerts/2",
+    "html_url": "https://github.com/RodrigoVitorino/SecDash-sast-test/security/code-scanning/2",
+    "state": "open",
+    "fixed_at": null,
+    "dismissed_by": null,
+    "dismissed_at": null,
+    "dismissed_reason": null,
+    "dismissed_comment": null,
+    "rule": {
+      "id": "py/command-line-injection",
+      "severity": "error",
+      "description": "Uncontrolled command line",
+      "name": "py/command-line-injection",
+      "tags": [
+        "correctness",
+        "external/cwe/cwe-078",
+        "external/cwe/cwe-088",
+        "security"
+      ],
+      "full_description": "Using externally controlled strings in a command line may allow a malicious user to change the meaning of the command.",
+      "help": "# Uncontrolled command line\nCode that passes user input directly to `exec`, `eval`, or some other library routine that executes a command, allows the user to execute malicious code.\n\n\n## Recommendation\nIf possible, use hard-coded string literals to specify the command to run or the library to load. Instead of passing the user input directly to the process or library function, examine the user input and then choose among hard-coded string literals.\n\nIf the applicable libraries or commands cannot be determined at compile time, then add code to verify that the user input string is safe before using it.\n\n\n## Example\nThe following example shows two functions. The first is unsafe as it takes a shell script that can be changed by a user, and passes it straight to `subprocess.call()` without examining it first. The second is safe as it selects the command from a predefined allowlist.\n\n\n```python\n\nurlpatterns = [\n    # Route to command_execution\n    url(r'^command-ex1$', command_execution_unsafe, name='command-execution-unsafe'),\n    url(r'^command-ex2$', command_execution_safe, name='command-execution-safe')\n]\n\nCOMMANDS = {\n    \"list\" :\"ls\",\n    \"stat\" : \"stat\"\n}\n\ndef command_execution_unsafe(request):\n    if request.method == 'POST':\n        action = request.POST.get('action', '')\n        #BAD -- No sanitizing of input\n        subprocess.call([\"application\", action])\n\ndef command_execution_safe(request):\n    if request.method == 'POST':\n        action = request.POST.get('action', '')\n        #GOOD -- Use an allowlist\n        subprocess.call([\"application\", COMMANDS[action]])\n\n```\n\n## References\n* OWASP: [Command Injection](https://www.owasp.org/index.php/Command_Injection).\n* Common Weakness Enumeration: [CWE-78](https://cwe.mitre.org/data/definitions/78.html).\n* Common Weakness Enumeration: [CWE-88](https://cwe.mitre.org/data/definitions/88.html).\n",
+      "security_severity_level": "critical"
+    },
+    "tool": {
+      "name": "CodeQL",
+      "guid": null,
+      "version": "2.24.3"
+    },
+    "most_recent_instance": {
+      "ref": "refs/heads/main",
+      "analysis_key": ".github/workflows/codeql.yml:analyze",
+      "environment": "{\"build-mode\":\"none\",\"language\":\"python\"}",
+      "category": "/language:python",
+      "state": "open",
+      "commit_sha": "0bc7966a4aeed5dfb8dc6fbfaafead6b199e97ec",
+      "message": {
+        "text": "This command line depends on a user-provided value."
+      },
+      "location": {
+        "path": "app.py",
+        "start_line": 20,
+        "end_line": 20,
+        "start_column": 29,
+        "end_column": 48
+      },
+      "classifications": []
+    },
+    "instances_url": "https://api.github.com/repos/RodrigoVitorino/SecDash-sast-test/code-scanning/alerts/2/instances",
+    "dismissal_approved_by": null,
+    "assignees": []
+  }
+]

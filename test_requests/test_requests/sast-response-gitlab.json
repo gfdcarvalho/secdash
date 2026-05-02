@@ -1,0 +1,220 @@
+{
+  "version": "15.2.2",
+  "vulnerabilities": [
+    {
+      "id": "8597beceff584c1f17f62f088a41965b2af40ff4f9b706bd34180ac937a054b6",
+      "category": "sast",
+      "name": "Improper neutralization of directives in dynamically evaluated code ('Eval Injection')",
+      "description": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n",
+      "cve": "semgrep_id:bandit.B307:27:27",
+      "severity": "High",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app.py",
+        "start_line": 27
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "bandit.B307",
+          "value": "bandit.B307",
+          "url": "https://semgrep.dev/r/gitlab.bandit.B307"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-95",
+          "value": "95",
+          "url": "https://cwe.mitre.org/data/definitions/95.html"
+        },
+        {
+          "type": "owasp",
+          "name": "A03:2021 - Injection",
+          "value": "A03:2021"
+        },
+        {
+          "type": "owasp",
+          "name": "A1:2017 - Injection",
+          "value": "A1:2017"
+        },
+        {
+          "type": "bandit_test_id",
+          "name": "Bandit Test ID B307",
+          "value": "B307"
+        }
+      ]
+    },
+    {
+      "id": "0bcdd760195351896349fd007d5e01571cffbda303974b6e3f5e1c4603572470",
+      "category": "sast",
+      "name": "Improper neutralization of special elements used in an OS Command ('OS Command Injection')",
+      "description": "Found `subprocess` function `run` with `shell=True`. This is dangerous because this call will\nspawn the command using a shell process. Doing so propagates current shell settings and\nvariables,\nwhich makes it much easier for a malicious actor to execute commands. Use `shell=False`\ninstead.\n",
+      "cve": "semgrep_id:bandit.B602:20:20",
+      "severity": "High",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app.py",
+        "start_line": 20
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "bandit.B602",
+          "value": "bandit.B602",
+          "url": "https://semgrep.dev/r/gitlab.bandit.B602"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-78",
+          "value": "78",
+          "url": "https://cwe.mitre.org/data/definitions/78.html"
+        },
+        {
+          "type": "owasp",
+          "name": "A03:2021 - Injection",
+          "value": "A03:2021"
+        },
+        {
+          "type": "owasp",
+          "name": "A1:2017 - Injection",
+          "value": "A1:2017"
+        },
+        {
+          "type": "bandit_test_id",
+          "name": "Bandit Test ID B602",
+          "value": "B602"
+        }
+      ]
+    },
+    {
+      "id": "aa4ea8062ada4026d3022b6fd8686f469cd1ea9107c7e5b6589ed9f06d51bb24",
+      "category": "sast",
+      "name": "Improper neutralization of special elements used in an SQL Command ('SQL Injection')",
+      "description": "SQL Injection is a critical vulnerability that can lead to data or system compromise. By\ndynamically generating SQL query strings, user input may be able to influence the logic of\nthe SQL statement. This could lead to an adversary accessing information they should\nnot have access to, or in some circumstances, being able to execute OS functionality or code.\n\nReplace all dynamically generated SQL queries with parameterized queries. In situations where\ndynamic queries must be created, never use direct user input, but instead use a map or\ndictionary of valid values and resolve them using a user supplied key.\n\nFor example, some database drivers do not allow parameterized queries for `\u003e` or `\u003c` comparison\noperators. In these cases, do not use a user supplied `\u003e` or `\u003c` value, but rather have the\nuser\nsupply a `gt` or `lt` value. The alphabetical values are then used to look up the `\u003e` and `\u003c`\nvalues to be used in the construction of the dynamic query. The same goes for other queries\nwhere\ncolumn or table names are required but cannot be parameterized.\n\nExample using `PreparedStatement` queries:\n```\nimport sqlite3\n\n# Create a new database (in memory)\ncon = sqlite3.connect(\":memory:\")\n# Get a cursor from the connection\ncur = con.cursor()\n# Create a tuple of the value to be used in the parameterized query\nparams = ('user-input',)\n# execute the statement, passing in the params for the value\ncur.execute(\"select name from sqlite_master where name = ?\", params)\n# work with the result\nresult = cur.fetchall()\n```\n\nFor more information on SQL Injection see OWASP:\nhttps://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html\n",
+      "cve": "semgrep_id:bandit.B608:13:13",
+      "severity": "High",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app.py",
+        "start_line": 13
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "bandit.B608",
+          "value": "bandit.B608",
+          "url": "https://semgrep.dev/r/gitlab.bandit.B608"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-89",
+          "value": "89",
+          "url": "https://cwe.mitre.org/data/definitions/89.html"
+        },
+        {
+          "type": "owasp",
+          "name": "A03:2021 - Injection",
+          "value": "A03:2021"
+        },
+        {
+          "type": "owasp",
+          "name": "A1:2017 - Injection",
+          "value": "A1:2017"
+        },
+        {
+          "type": "bandit_test_id",
+          "name": "Bandit Test ID B608",
+          "value": "B608"
+        }
+      ]
+    },
+    {
+      "id": "227dd50295386f7faf2f94e76ba631d4a37df8c96e42cc49fb08ef6a2a539dab",
+      "category": "sast",
+      "name": "Improper neutralization of special elements used in an SQL Command ('SQL Injection')",
+      "description": "Detected user input used to manually construct a SQL string. This is usually\nbad practice because manual construction could accidentally result in a SQL\ninjection. An attacker could use a SQL injection to steal or modify contents\nof the database. Instead, use a parameterized query which is available\nby default in most database engines. Alternatively, consider using an\nobject-relational mapper (ORM) such as SQLAlchemy which will protect your queries.\n\nSQL Injections are a critical type of vulnerability that can lead to data \nor system compromise. By dynamically generating SQL query strings, user \ninput may be able to influence the logic of an SQL statement. \nThis could lead to an malicious parties accessing information they should not \nhave access to, or in some circumstances, being able to execute OS functionality\nor code.\n\nReplace all dynamically generated SQL queries with parameterized queries. \nIn situations where dynamic queries must be created, never use direct user input,\nbut instead use a map or dictionary of valid values and resolve them using a user \nsupplied key.\n\nFor example, some database drivers do not allow parameterized queries for \n`\u003e` or `\u003c` comparison operators. In these cases, do not use a user supplied \n`\u003e` or `\u003c` value, but rather have the user supply a `gt` or `lt` value. \nThe alphabetical values are then used to look up the `\u003e` and `\u003c` values to be used \nin the construction of the dynamic query. The same goes for other queries where \ncolumn or table names are required but cannot be parameterized.\nData that is possible user-controlled from a python request is passed\nto `execute()` function. To remediate this issue, use SQLAlchemy statements\nwhich are built with query parameterization and therefore not vulnerable \nto sql injection.\n\nIf for some reason this is not feasible, ensure calls including user-supplied \ndata pass it in to the `params` parameter of the `execute()` method.\nBelow is an example using `execute()`, passing in user-supplied data as `params`. \nThis will treat the query as a parameterized query and `params` as strictly data, \npreventing any possibility of SQL Injection.\n\n```\nname = request.args.get('name')\nreq = text('SELECT * FROM student WHERE firstname = :x')\nresult = db.session.execute(req, {\"x\":name})\n```\nFor more information on QuerySets see:\n- https://docs.djangoproject.com/en/4.2/ref/models/querysets/#queryset-api\nFor more information on SQL Injections see OWASP:\n- https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html\n",
+      "cve": "semgrep_id:python_flask_rule-flask-tainted-sql-string:13:13",
+      "severity": "High",
+      "scanner": {
+        "id": "semgrep",
+        "name": "Semgrep"
+      },
+      "location": {
+        "file": "app.py",
+        "start_line": 13
+      },
+      "identifiers": [
+        {
+          "type": "semgrep_id",
+          "name": "python_flask_rule-flask-tainted-sql-string",
+          "value": "python_flask_rule-flask-tainted-sql-string"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-89",
+          "value": "89",
+          "url": "https://cwe.mitre.org/data/definitions/89.html"
+        },
+        {
+          "type": "owasp",
+          "name": "A03:2021 - Injection",
+          "value": "A03:2021"
+        },
+        {
+          "type": "owasp",
+          "name": "A1:2017 - Injection",
+          "value": "A1:2017"
+        }
+      ]
+    }
+  ],
+  "scan": {
+    "analyzer": {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "url": "https://gitlab.com/gitlab-org/security-products/analyzers/semgrep",
+      "vendor": {
+        "name": "GitLab"
+      },
+      "version": "6.17.0"
+    },
+    "scanner": {
+      "id": "semgrep",
+      "name": "Semgrep",
+      "url": "https://github.com/returntocorp/semgrep",
+      "vendor": {
+        "name": "GitLab"
+      },
+      "version": "1.145.0"
+    },
+    "type": "sast",
+    "start_time": "2026-03-23T16:51:20",
+    "end_time": "2026-03-23T16:51:33",
+    "status": "success",
+    "observability": {
+      "events": [
+        {
+          "event": "collect_sast_scan_metrics_from_pipeline",
+          "property": "4b70eba2-62d0-44a3-82f0-a8d3e9442a6e",
+          "label": "semgrep",
+          "value": 0,
+          "version": "6.17.0",
+          "exit_code": 0,
+          "override_count": 0,
+          "passthrough_count": 0,
+          "custom_exclude_path_count": 0,
+          "time_s": 12,
+          "file_count": 2
+        }
+      ]
+    }
+  }
+}
