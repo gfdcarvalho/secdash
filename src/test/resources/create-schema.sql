@@ -167,3 +167,23 @@ BEGIN
     VALUES  (1,'GITLAB','testToken');
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION test_data_for_AuthControllerTests() RETURNS VOID AS $$
+BEGIN
+    INSERT INTO users (name, password_validation, email)
+    VALUES
+        -- password: testpassword1
+        ('testUsername1','$2a$10$pbZFnR8NSKtxZ5ERtXYqreiyZNTMFAb1efUBT0RnrKsYOn3PimMii','test1@email.com'),
+
+        -- password: testpassword2
+        ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','test2@email.com');
+
+    -- user1 already linked with GitHub login (external login scenario)
+    INSERT INTO user_authentication (user_id, provider, provider_id)
+    VALUES (1, 'GITHUB', 'gh-123');
+
+    -- user1 already authorized GitHub API
+    INSERT INTO user_authorization (user_id, provider, access_token)
+    VALUES (1, 'GITHUB', 'testToken');
+END;
+$$ LANGUAGE plpgsql;
