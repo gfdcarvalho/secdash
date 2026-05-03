@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { createContext } from 'react';
-import { type User } from '../domain/user/user.ts'
+import { type User } from '../model/user/user.ts'
 
 // isto vai ter o hook de useAuthentication
 

@@ -8,9 +8,9 @@ type RequireAuthenticationProps = {
 export function RequireAuthentication({
   children,
 }: RequireAuthenticationProps) {
-  const [username] = useAuthentication(); // from our own context
-  const location = useLocation(); // from React Router
-  if (username) {
+  const [user] = useAuthentication();
+  const location = useLocation();
+  if (user) {
     return children;
   } else {
     return (

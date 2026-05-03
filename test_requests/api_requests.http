@@ -1,4 +1,4 @@
-@token = 010JEJzW_2Gk_TFiNpvCQJBWlJ93cXHbDRsfkNjxWZA=
+@token = G4jJLY5czAgNItrBAFlmKAgfIDyXqAbGsVDo432k4q8=
 @token2 = OmZjdyvgEhrgpjqj-r2KjaqUtp193HZCguMdr-SQNfE=
 
 
@@ -15,9 +15,9 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "testeaa1",
+  "username": "testeUserSemRepos",
   "password": "teste1",
-  "email": "testeasasmail@teste3.com"
+  "email": "testeUserSemRepos@test.com"
 }
 
 
@@ -26,13 +26,13 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "testeaa1",
+  "username": "testeUserSemRepos",
   "password": "teste1"
 }
 
 ### user profile
 GET http://localhost:8080/users/me
-Authorization: Bearer {{token2}}
+Authorization: Bearer {{token}}
 
 
 ### add repository

@@ -7,6 +7,7 @@ import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserCreationModel
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
+import com.isel.ps.secdash.model.users.UserProfileInformation
 import com.isel.ps.secdash.service.RepositoryServices
 import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserServices
@@ -56,8 +57,15 @@ class UserController(
     @GetMapping("/me")
     fun me(
         user: AuthenticatedUser,
-    ):ResponseEntity<*> {
+    ): ResponseEntity<*> {
         val repos: List<Repository> = repositoryServices.findAllByUser(user.user.uid)
-        return ResponseEntity.ok(repos) // Needs error treatment
+        return ResponseEntity.ok(
+            UserProfileInformation(
+                user.user.uid,
+                user.user.name,
+                user.user.email,
+                repos
+            )
+        ) // Needs error treatment
     }
 }

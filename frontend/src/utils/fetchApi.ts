@@ -18,8 +18,8 @@ export type Response<T> = {
 
 export type ApiError = {
     status: number,
-    errorCode: number,
-    message: string
+    type: string,
+    detail?: string
 }
 
 function isJson(contentType: string | null): boolean {
@@ -45,8 +45,8 @@ export async function fetchApi<T>(request: Request): Promise<Either<ApiError, Re
         const errorData = isJson(contentType) ? await response.json() as ApiError : null
         return { type: 'error', value: {
             status: response.status,
-            errorCode: errorData?.errorCode ?? response.status,
-            message: errorData?.message ?? response.statusText
+            type: errorData?.type ?? response.statusText,
+            detail: errorData?.detail
         }}
     }
 }

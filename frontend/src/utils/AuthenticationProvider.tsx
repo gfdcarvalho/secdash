@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { AuthenticationContext, type AuthenticationState} from "./Authentication";
-import { type User } from '../domain/user/user'
+import { type User } from '../model/user/user'
 import { fetchApi } from "./fetchApi";
 
 type AuthenticationProviderProp = {
@@ -19,7 +19,7 @@ export function AuthenticationProvider({ children }: AuthenticationProviderProp)
 
   if (loading) return null;
 
-//   console.log(`provider ${observedUser}`);
+  // console.log(`provider ${observedUser}`);
   const value: AuthenticationState  = {
     user: observedUser,
     setUser: (user) => setUser(user),
