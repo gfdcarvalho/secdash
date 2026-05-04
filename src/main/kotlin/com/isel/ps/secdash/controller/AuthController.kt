@@ -4,6 +4,7 @@ import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.controller.pipeline.RequestTokenProcessor
 import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.UserLoginDto
+import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel
 import com.isel.ps.secdash.service.AuthServices
 import com.isel.ps.secdash.service.AuthorizationError
@@ -146,7 +147,7 @@ class AuthController(
             ?: return Problem.response(401, Problem.unauthorized)
         val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
         return when (result) {
-            is Success -> ResponseEntity.ok(user.user)
+            is Success -> ResponseEntity.ok(UserOutputDto(user.user.uid, user.user.name, user.user.email))
             is Failure -> when (result.value) {
                 AuthorizationError.InvalidToken -> Problem.response(400, Problem.invalidRequest)
                 AuthorizationError.Unknown -> Problem.response(500, Problem.internalServerError)
@@ -166,7 +167,7 @@ class AuthController(
             ?: return Problem.response(401, Problem.unauthorized)
         val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITLAB, accessToken)
         return when (result) {
-            is Success -> ResponseEntity.ok(user.user)
+            is Success -> ResponseEntity.ok(UserOutputDto(user.user.uid, user.user.name, user.user.email))
             is Failure -> when (result.value) {
                 AuthorizationError.InvalidToken -> Problem.response(400, Problem.invalidRequest)
                 AuthorizationError.Unknown -> Problem.response(500, Problem.internalServerError)

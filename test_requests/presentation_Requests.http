@@ -1,0 +1,74 @@
+@token = h329J40_acPevE_8o6TU94UDOnLhbi6crGTgf38bwV0=
+
+
+// http://localhost:8080/oauth2/authorization/github   login with github
+
+// http://localhost:8080/oauth2/authorization/github-api   authorize with github for api access
+
+// http://localhost:8080/github/repos
+
+
+### add github dependabot repository
+POST http://localhost:8080/github/repositories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "RodrigoVitorino/SecDash-test"
+}
+
+
+### add github sast repository
+POST http://localhost:8080/github/repositories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "RodrigoVitorino/secdash-sast-test"
+}
+
+###
+// http://localhost:8080/oauth2/authorization/gitlab-api  authorize with gitlab for api access
+
+// http://localhost:8080/gitlab/repos
+
+
+
+### add dependancy-scanning gitlab repository
+POST http://localhost:8080/gitlab/repositories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "externalId": "80319756"
+}
+
+
+### add sast gitlab repo
+POST http://localhost:8080/gitlab/repositories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "externalId": "80515032"
+}
+
+
+### Github dependabot
+GET http://localhost:8080/github/repositories/1/dependabot
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+### Gitlab dependancy-scanning
+GET http://localhost:8080/gitlab/repositories/3/dependency-scanning
+Authorization: Bearer {{token}}
+
+### Github sast
+GET http://localhost:8080/github/repositories/2/sast
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### Gitlab sast
+GET http://localhost:8080/gitlab/repositories/4/sast
+Authorization: Bearer {{token}}

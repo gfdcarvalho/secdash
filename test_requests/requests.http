@@ -27,3 +27,11 @@ GET https://gitlab.com/api/v4/projects/{{GITLAB_PROJECT_ID_SAST}}/jobs/artifacts
 PRIVATE-TOKEN: {{GITLAB_TOKEN}}
 
 >> test_requests/sast-response-gitlab.json
+
+
+### Github - repositories
+GET https://api.github.com//user/repos?visibility=all
+Authorization: Bearer {{GITHUB_TOKEN}}
+Accept: application/vnd.github+json
+
+>> test_requests/repositories-response-github.json
