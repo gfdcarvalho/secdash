@@ -1,5 +1,5 @@
 import { useTranslation } from '../i18n/I18nProvider'
-import style from './Input.module.css'
+import style from './components.module.css'
 
 interface UsernameInputProps {
     className?: string

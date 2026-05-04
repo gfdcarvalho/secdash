@@ -3,6 +3,8 @@ import { useTranslation, type Translations } from '../../i18n/I18nProvider'
 import { localeConfig } from '../../i18n/localeConfig'
 import { UsernameInput } from '../../components/UsernameInput'
 import { PasswordInput } from '../../components/PasswordInput'
+import { EmailInput } from '../../components/EmailInput'
+import { ProviderLoginButtons, type Provider } from './ProviderLoginButtons'
 import style from './Login.module.css'
 import { useReducer } from 'react'
 import { authenticate } from '../../utils/Authenticate'
@@ -13,8 +15,9 @@ import { useLocation, useNavigate } from 'react-router'
 type LoginFields = { username: string; password: string }
 type RegisterFields = { username: string; password: string; email: string }
 type LoginErrorKey = keyof Translations['login']['errors'] | ""
+type RegisterErrorKey = keyof Translations['register']['errors'] | ""
 type LoginErrors = { username: LoginErrorKey; password: LoginErrorKey }
-type RegisterErrors = { username: LoginErrorKey; email: LoginErrorKey; password: LoginErrorKey }
+type RegisterErrors = { username: RegisterErrorKey; email: RegisterErrorKey; password: RegisterErrorKey }
 
 type State = {
     login: LoginFields
@@ -108,6 +111,14 @@ export function Login() {
     }
 
     const handleRegister = async () => {
+        const { username, password, email } = state.register
+        if (!username) dispatch(setRegisterError("username", "blankUsername"))
+        if (!email) dispatch(setRegisterError("email", "blankEmail"))
+        if (!password) dispatch(setRegisterError("password", "blankPassword"))
+        if (!username || !email || !password) return
+    }
+
+    const handleProviderLogin = async (provider: Provider) =>{
 
     }
 
@@ -119,7 +130,7 @@ export function Login() {
                     className={style.langButton} 
                     onClick={() => setLocale(languageToChange)} 
                     title={localeConfig[languageToChange].label}>
-                    <Icon icon={localeConfig[languageToChange].icon} width="24" />
+                    <Icon icon={localeConfig[languageToChange].icon} width="2em" />
                 </button>
             </div>
             
@@ -128,13 +139,15 @@ export function Login() {
             <div className={style.loginRow}>
                 <div className={style.registerCard}>
                     {t.register.register}
-                    <UsernameInput value={state.register.username} onChange={e => dispatch(setRegisterField("username", e))}/>
-                    <input type="text" placeholder={t.common.email} onChange={e => dispatch(setRegisterField("email", e.target.value))}/>
-                    <PasswordInput value={state.register.password} onChange={e => dispatch(setRegisterField("password", e))} />
+                    <ProviderLoginButtons func={handleProviderLogin} />
+                    <UsernameInput value={state.register.username} onChange={e => dispatch(setRegisterField("username", e))} error={state.registerErrors.username && t.register.errors[state.registerErrors.username]}/>
+                    <EmailInput value={state.register.email} onChange={e => dispatch(setRegisterField("email", e))} error={state.registerErrors.email && t.register.errors[state.registerErrors.email]}/>
+                    <PasswordInput value={state.register.password} onChange={e => dispatch(setRegisterField("password", e))} error={state.registerErrors.password && t.register.errors[state.registerErrors.password]}/>
                     <button onClick={handleRegister}> {t.register.register} </button>
                 </div>
                 <div className={style.loginCard}>
                     {t.login.login}
+                    <ProviderLoginButtons func={handleProviderLogin} />
                     <UsernameInput value={state.login.username} onChange={e => dispatch(setLoginField("username", e))} error={state.loginErrors.username && t.login.errors[state.loginErrors.username]}/>
                     <PasswordInput value={state.login.password} onChange={e => dispatch(setLoginField("password", e))} error={state.loginErrors.password && t.login.errors[state.loginErrors.password]}/>
                     <button onClick={handleLogin}> {t.login.login} </button>

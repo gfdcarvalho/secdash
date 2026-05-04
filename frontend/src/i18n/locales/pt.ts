@@ -16,5 +16,10 @@ export const pt = {
     },
     register: {
         register: "Criar conta",
+        errors: {
+            blankUsername: "utilizador é obrigatório",
+            blankPassword: "password é obrigatória",
+            blankEmail: "email é obrigatório",
+        }
     }
 }

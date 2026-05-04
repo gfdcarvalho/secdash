@@ -16,5 +16,10 @@ export const en = {
     },
     register: {
         register: "Register",
+        errors: {
+            blankUsername: "username is required",
+            blankPassword: "password is required",
+            blankEmail: "email is required",
+        }
     }
 }
