@@ -9,6 +9,10 @@ export const pt = {
     login: {
         title: "Página de login",
         login: "login",
+        errors: {
+            blankUsername: "utilizador é obrigatório",
+            blankPassword: "password é obrigatória",
+        }
     },
     register: {
         register: "Criar conta",

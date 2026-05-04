@@ -9,6 +9,10 @@ export const en = {
     login: {
         title: "Login page",
         login: "login",
+        errors: {
+            blankUsername: "username is Required",
+            blankPassword: "password is Required",
+        }
     },
     register: {
         register: "Register",
