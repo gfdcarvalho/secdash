@@ -50,3 +50,17 @@ export async function fetchApi<T>(request: Request): Promise<Either<ApiError, Re
         }}
     }
 }
+
+export const api = {
+    get: <T>(uri: string, headers?: Record<string, string>) =>
+        fetchApi<T>({ method: 'GET', uri, headers }),
+
+    post: <T>(uri: string, body?: object, headers?: Record<string, string>) =>
+        fetchApi<T>({ method: 'POST', uri, body, headers }),
+
+    put: <T>(uri: string, body?: object, headers?: Record<string, string>) =>
+        fetchApi<T>({ method: 'PUT', uri, body, headers }),
+
+    delete: <T>(uri: string, headers?: Record<string, string>) =>
+        fetchApi<T>({ method: 'DELETE', uri, headers }),
+}
