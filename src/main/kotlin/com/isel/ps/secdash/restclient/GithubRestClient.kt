@@ -9,6 +9,7 @@ import com.isel.ps.secdash.model.sast.GithubSastAlertsDto
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
+import org.springframework.web.client.toEntity
 
 @Service
 class GithubRestClient {
@@ -26,25 +27,43 @@ class GithubRestClient {
         return emails?.firstOrNull { it.primary && it.verified }?.email
     }
 
-    fun getRepositoriesFromAuthenticatedUser(accessToken: String): List<ExternalRepository>? {
-        val  repos = restClient.get()
-            .uri("https://api.github.com/user/repos?visibility=all") // podemos passar um parametro para a visibilidade e temos que passar a fazer paginação
-            .header("Authorization", "Bearer $accessToken")
-            .header("Accept", "application/vnd.github+json")
-            .retrieve()
-            .body<Array<GithubRepositoryDto>>()
-
-        return repos?.map { it.toExternalGithubRepository() }
+    fun getRepositoriesFromAuthenticatedUser(accessToken: String): List<ExternalRepository> {
+        val results = mutableListOf<GithubRepositoryDto>()
+        var nextUrl: String? = "https://api.github.com/user/repos?visibility=all&per_page=100"
+        while (nextUrl != null) {
+            val response = restClient.get()
+                .uri(nextUrl)
+                .header("Authorization", "Bearer $accessToken")
+                .header("Accept", "application/vnd.github+json")
+                .retrieve()
+                .toEntity<Array<GithubRepositoryDto>>()
+            response.body?.let { results.addAll(it) }
+            nextUrl = response.headers["Link"]
+                        ?.firstOrNull()
+                        ?.split(",")
+                        ?.firstOrNull { it.contains("""rel="next"""") }
+                        ?.substringAfter("<")?.substringBefore(">")
+        }
+        return results.map { it.toExternalGithubRepository() }
     }
 
-    fun getRepositoriesByOwner(owner: String): List<ExternalRepository>? {
-        val  repos = restClient.get()
-            .uri("https://api.github.com/users/$owner/repos")
-            .header("Accept", "application/vnd.github+json")
-            .retrieve()
-            .body<Array<GithubRepositoryDto>>()
-
-        return repos?.map { it.toExternalGithubRepository() }
+    fun getRepositoriesByOwner(owner: String): List<ExternalRepository> {
+        val results = mutableListOf<GithubRepositoryDto>()
+        var nextUrl: String? = "https://api.github.com/users/$owner/repos?per_page=100"
+        while (nextUrl != null) {
+            val response = restClient.get()
+                .uri(nextUrl)
+                .header("Accept", "application/vnd.github+json")
+                .retrieve()
+                .toEntity<Array<GithubRepositoryDto>>()
+            response.body?.let { results.addAll(it) }
+            nextUrl = response.headers["Link"]
+                ?.firstOrNull()
+                ?.split(",")
+                ?.firstOrNull { it.contains("""rel="next"""") }
+                ?.substringAfter("<")?.substringBefore(">")
+        }
+        return results.map { it.toExternalGithubRepository() }
     }
 
     fun getRepositoryByName(fullName: String, accessToken: String): ExternalRepository? {
@@ -61,26 +80,46 @@ class GithubRestClient {
         fullName: String,
         accessToken: String,
     ): List<ExternalVulnerability> {
-        val alerts = restClient.get()
-            .uri("https://api.github.com/repos/$fullName/dependabot/alerts")
-            .header("Authorization", "Bearer $accessToken")
-            .header("Accept", "application/vnd.github+json")
-            .retrieve()
-            .body<Array<GithubDependabotAlertDto>>()
-        return alerts?.map { it.toExternalVulnerability() } ?: emptyList()
+        val results = mutableListOf<GithubDependabotAlertDto>()
+        var nextUrl: String? = "https://api.github.com/repos/$fullName/dependabot/alerts?per_page=100"
+        while (nextUrl != null) {
+            val response = restClient.get()
+                .uri(nextUrl)
+                .header("Authorization", "Bearer $accessToken")
+                .header("Accept", "application/vnd.github+json")
+                .retrieve()
+                .toEntity<Array<GithubDependabotAlertDto>>()
+            response.body?.let { results.addAll(it) }
+            nextUrl = response.headers["Link"]
+                ?.firstOrNull()
+                ?.split(",")
+                ?.firstOrNull { it.contains("""rel="next"""") }
+                ?.substringAfter("<")?.substringBefore(">")
+        }
+        return results.map { it.toExternalVulnerability() }
     }
 
     fun getSastAlerts(
         fullName: String,
         accessToken: String,
     ): List<ExternalSastAlerts> {
-        val alerts = restClient.get()
-            .uri("https://api.github.com/repos/$fullName/code-scanning/alerts")
-            .header("Authorization", "Bearer $accessToken")
-            .header("Accept", "application/vnd.github+json")
-            .retrieve()
-            .body<Array<GithubSastAlertsDto>>()
-        return alerts?.map { it.toExternalSastAlerts() } ?: emptyList()
+        val results = mutableListOf<GithubSastAlertsDto>()
+        var nextUrl: String? = "https://api.github.com/repos/$fullName/code-scanning/alerts?per_page=100"
+        while (nextUrl != null) {
+            val response = restClient.get()
+                .uri(nextUrl)
+                .header("Authorization", "Bearer $accessToken")
+                .header("Accept", "application/vnd.github+json")
+                .retrieve()
+                .toEntity<Array<GithubSastAlertsDto>>()
+            response.body?.let { results.addAll(it) }
+            nextUrl = response.headers["Link"]
+                ?.firstOrNull()
+                ?.split(",")
+                ?.firstOrNull { it.contains("""rel="next"""") }
+                ?.substringAfter("<")?.substringBefore(">")
+        }
+        return results.map { it.toExternalSastAlerts() }
     }
 
     private data class GithubEmail(
