@@ -7,7 +7,7 @@ import { EmailInput } from '../../components/EmailInput'
 import { ProviderLoginButtons, type Provider } from './ProviderLoginButtons'
 import style from './Login.module.css'
 import { useReducer } from 'react'
-import { authenticate } from '../../utils/Authenticate'
+import { authenticate, registerAndAuthenticate } from '../../utils/Authenticate'
 import { isSuccess } from '../../utils/Either'
 import { useAuthentication } from '../../utils/Authentication'
 import { useLocation, useNavigate } from 'react-router'
@@ -99,7 +99,7 @@ export function Login() {
         if (!password) dispatch(setLoginError("password", "blankPassword"))
         if (!username || !password) return
 
-        dispatch(setLoadingAction(true))
+        dispatch(setLoadingAction(true)) // we will use this to disable the input buttons 
 
         const response = await authenticate(username, password)
         if (isSuccess(response)){
@@ -116,9 +116,21 @@ export function Login() {
         if (!email) dispatch(setRegisterError("email", "blankEmail"))
         if (!password) dispatch(setRegisterError("password", "blankPassword"))
         if (!username || !email || !password) return
+
+        dispatch(setLoadingAction(true)) // we will use this to disable the input buttons 
+
+        const response = await registerAndAuthenticate(username, email, password)
+        if (isSuccess(response)){
+            setUser(response.value)
+            navigate(location.state?.source || "/", { replace: true })
+        } else {
+            // handle register erros ...
+        }
+
     }
 
     const handleProviderLogin = async (provider: Provider) =>{
+
 
     }
 

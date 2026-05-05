@@ -20,3 +20,18 @@ export async function authenticate(username: string, password: string): Promise<
     }
 
 } 
+
+
+export async function registerAndAuthenticate( username: string, email: string, password: string): Promise<Either<ApiError, User>> {
+    const registerResponse = await api.post<number>("users/register", {username, password, email })
+    if (isSuccess(registerResponse)){
+        const loginResponse = await authenticate(username, password)
+        if (isSuccess(loginResponse)) {
+            return success(loginResponse.value)
+        }else {
+            return failure(loginResponse.value)
+        }
+    } else {
+        return failure(registerResponse.value)
+    }
+}
