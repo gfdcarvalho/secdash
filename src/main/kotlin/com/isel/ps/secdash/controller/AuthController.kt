@@ -122,15 +122,16 @@ class AuthController(
 
     private fun handleExternalLoginResponse(result: ExternalUserLoginResult): ResponseEntity<*> {
         return when (result) {
-            is Success ->{
+            is Success -> {
                 val responseCookie = requestTokenProcessor.createCookie(result.value)
-                ResponseEntity.status(200)
+                ResponseEntity.status(302)
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .body(result.value)
+                    .header(HttpHeaders.LOCATION, "http://localhost:5173/") // had to add this for the oauth process to work
+                    .build<Unit>()
             }
             is Failure ->
                 when (result.value) {
-                    ExternalUserLoginError.InvalidCredentials-> Problem.response(400, Problem.invalidCredentials)
+                    ExternalUserLoginError.InvalidCredentials -> Problem.response(400, Problem.invalidCredentials)
                 }
         }
     }

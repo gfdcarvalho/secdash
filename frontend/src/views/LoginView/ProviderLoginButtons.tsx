@@ -3,12 +3,12 @@ import style from './Login.module.css'
 
 
 
-export type Provider = "GOOGLE" | "GITHUB" | "GITLAB"
+export type Provider = "google" | "github" | "gitlab"
 
 const providers: { id: Provider; icon: string }[] = [
-    { id: "GOOGLE", icon: "logos:google-icon" },
-    { id: "GITHUB", icon: "logos:github-icon" },
-    { id: "GITLAB", icon: "logos:gitlab-icon" },
+    { id: "google", icon: "logos:google-icon" },
+    { id: "github", icon: "logos:github-icon" },
+    { id: "gitlab", icon: "logos:gitlab-icon" },
 ]
 
 interface ProviderLoginButtonsProps {

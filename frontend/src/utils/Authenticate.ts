@@ -1,10 +1,11 @@
 
 // função para fazer pedido de authenticação a api
 
+import type { Provider } from "../views/LoginView/ProviderLoginButtons";
 import type { User } from "../model/user/user";
 import type { UserToken } from "../model/user/userToken";
 import { failure, isSuccess, success, type Either } from "./Either";
-import { api, fetchApi, type ApiError } from "./fetchApi";
+import { api, type ApiError } from "./fetchApi";
 
 export async function authenticate(username: string, password: string): Promise<Either<ApiError, User>> {
     const response = await api.post<UserToken>("auth/login", {username, password})
@@ -34,4 +35,8 @@ export async function registerAndAuthenticate( username: string, email: string, 
     } else {
         return failure(registerResponse.value)
     }
+}
+
+export function authenticateWithProvider(provider: Provider): void {
+    window.location.href = `/api/oauth2/authorization/${provider}`
 }

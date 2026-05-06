@@ -7,7 +7,7 @@ import { EmailInput } from '../../components/EmailInput'
 import { ProviderLoginButtons, type Provider } from './ProviderLoginButtons'
 import style from './Login.module.css'
 import { useReducer } from 'react'
-import { authenticate, registerAndAuthenticate } from '../../utils/Authenticate'
+import { authenticate, authenticateWithProvider, registerAndAuthenticate } from '../../utils/Authenticate'
 import { isSuccess } from '../../utils/Either'
 import { useAuthentication } from '../../utils/Authentication'
 import { useLocation, useNavigate } from 'react-router'
@@ -129,9 +129,8 @@ export function Login() {
 
     }
 
-    const handleProviderLogin = async (provider: Provider) =>{
-
-
+    const handleProviderLogin = (provider: Provider) => {
+        authenticateWithProvider(provider)
     }
 
     return (
