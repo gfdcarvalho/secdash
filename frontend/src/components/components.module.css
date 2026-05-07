@@ -3,3 +3,9 @@
     margin: 0;
     font-size: 0.75rem;
 }
+
+.flagButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}

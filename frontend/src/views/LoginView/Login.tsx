@@ -1,10 +1,10 @@
-import { Icon } from '@iconify/react'
 import { useTranslation, type Translations } from '../../i18n/I18nProvider'
-import { localeConfig } from '../../i18n/localeConfig'
 import { UsernameInput } from '../../components/UsernameInput'
 import { PasswordInput } from '../../components/PasswordInput'
 import { EmailInput } from '../../components/EmailInput'
 import { ProviderLoginButtons, type Provider } from './ProviderLoginButtons'
+import { FlagButton } from '../../components/FlagButton'
+import { ThemeButton } from '../../components/ThemeButton'
 import style from './Login.module.css'
 import { useReducer } from 'react'
 import { authenticate, authenticateWithProvider, registerAndAuthenticate } from '../../utils/Authenticate'
@@ -90,8 +90,7 @@ export function Login() {
     const location = useLocation()
     const [_ , setUser ] = useAuthentication()
     const [state, dispatch] = useReducer(reducer, initialState)
-    const { t, locale, setLocale } = useTranslation()
-    const languageToChange = localeConfig[locale].next
+    const { t } = useTranslation()
 
     const handleLogin = async () => {
         const { username, password } = state.login
@@ -136,17 +135,12 @@ export function Login() {
     return (
         <div>
             <div className={style.loginTopRow}>
-                <h2> {t.login.title} </h2>
-                <button 
-                    className={style.langButton} 
-                    onClick={() => setLocale(languageToChange)} 
-                    title={localeConfig[languageToChange].label}>
-                    <Icon icon={localeConfig[languageToChange].icon} width="2em" />
-                </button>
+                <h1> {t.login.title} </h1>
+                <div className={style.loginTopRowRight}>
+                    <ThemeButton />
+                    <FlagButton />
+                </div>
             </div>
-            
-            
-            
             <div className={style.loginRow}>
                 <div className={style.registerCard}>
                     {t.register.register}

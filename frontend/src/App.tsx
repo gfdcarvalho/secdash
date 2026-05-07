@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
-import { AuthenticationProvider } from './utils/AuthenticationProvider';
+import { AuthenticationProvider } from './utils/AuthenticationProvider'
+import { ThemeProvider } from './utils/ThemeProvider';
 import { Home } from './views/HomeView/Home'
 import { Login } from './views/LoginView/Login'
 import { Layout } from './views/LayoutView/Layout'
@@ -19,8 +20,10 @@ const router = createBrowserRouter ([
 
 export function App() {
     return (
-    <AuthenticationProvider>
-      <RouterProvider router={router} />
-    </AuthenticationProvider>
+    <ThemeProvider>
+      <AuthenticationProvider>
+        <RouterProvider router={router} />
+      </AuthenticationProvider>
+    </ThemeProvider>
   );
 }

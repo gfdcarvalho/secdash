@@ -1,0 +1,16 @@
+
+.topBar{
+    padding: 2em;
+    background-color: var(--color-topbar);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topBarRight {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1em;
+}

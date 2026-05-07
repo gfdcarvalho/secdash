@@ -6,8 +6,11 @@ export const pt = {
         submit: "Submeter",
         cancel: "Cancelar",
     },
+    layout: {
+        title: "SecDash",
+    },
     login: {
-        title: "Página de login",
+        title: "SecDash",
         login: "login",
         errors: {
             blankUsername: "utilizador é obrigatório",

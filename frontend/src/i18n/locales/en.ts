@@ -6,8 +6,11 @@ export const en = {
         submit: "Submit",
         cancel: "Cancel",
     },
+    layout: {
+        title: "SecDash",
+    },
     login: {
-        title: "Login page",
+        title: "SecDash",
         login: "login",
         errors: {
             blankUsername: "username is Required",

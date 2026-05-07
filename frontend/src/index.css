@@ -1,3 +1,24 @@
-:root {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root,
+[data-theme="light"] {
     --color-error: #d32f2f;
+    --color-topbar: #d3d3d3;
+    --color-bg: rgb(246, 246, 233);
+    --color-text: #111111;
+}
+
+[data-theme="dark"] {
+    --color-topbar: #1e1e1e;
+    --color-bg: #525252;
+    --color-text: #eeeeee;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
 }
