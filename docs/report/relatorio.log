@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.5.9)  9 MAY 2026 16:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.5.9)  9 MAY 2026 16:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -335,7 +335,7 @@ r/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/
 public/amsfonts/cm/cmti10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmtt10.pfb>
-Output written on relatorio.pdf (23 pages, 708969 bytes).
+Output written on relatorio.pdf (23 pages, 709075 bytes).
 PDF statistics:
  133 PDF objects out of 1000 (max. 8388607)
  83 compressed objects within 1 object stream
