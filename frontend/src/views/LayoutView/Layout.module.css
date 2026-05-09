@@ -1,6 +1,6 @@
 
-.topBar{
-    padding: 2em;
+.topBar {
+    padding: 1.5em;
     background-color: var(--color-topbar);
     display: flex;
     flex-direction: row;
@@ -8,9 +8,30 @@
     align-items: center;
 }
 
+.sideBar {
+    padding: 3em;
+    background-color: var(--color-sidebar);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+}
+
 .topBarRight {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 1em;
+}
+
+.body {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.content {
+    padding: 1em;
+    flex: 1;
+    overflow: auto;
 }

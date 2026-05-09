@@ -4,6 +4,7 @@ import { RequireAuthentication } from '../../utils/RequireAuthentication'
 import style from './Layout.module.css' 
 import { useTranslation } from '../../i18n/I18nProvider'
 import { FlagButton } from '../../components/FlagButton'
+import { ThemeButton } from '../../components/ThemeButton'
 
 export function Layout() {
     const [user] = useAuthentication()
@@ -16,10 +17,18 @@ export function Layout() {
                 <h1> {t.layout.title} </h1>
                 <div className={style.topBarRight}>
                     <h3> {user?.name} </h3>
+                    <ThemeButton />
                     <FlagButton />
                 </div>
             </div>
-            <Outlet />
+            <div className={style.body}>
+                <div className={style.sideBar}>
+                    teste
+                </div>
+                <div className={style.content}>
+                    <Outlet />
+                </div>
+            </div>
         </RequireAuthentication>
     )
 }

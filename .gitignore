@@ -48,3 +48,25 @@ test_requests/http-client.env.json
 
 # Environment variables - dont commit credentials
 .env
+
+### LaTeX ###
+frontend/latex/**/*.aux
+frontend/latex/**/*.log
+frontend/latex/**/*.synctex.gz
+frontend/latex/**/*.toc
+frontend/latex/**/*.out
+frontend/latex/**/*.fls
+frontend/latex/**/*.fdb_latexmk
+frontend/latex/**/*.bbl
+frontend/latex/**/*.blg
+frontend/latex/**/*.bcf
+frontend/latex/**/*.run.xml
+frontend/latex/**/*.nav
+frontend/latex/**/*.snm
+frontend/latex/**/*.vrb
+frontend/latex/**/*.lof
+frontend/latex/**/*.lot
+frontend/latex/**/*.idx
+frontend/latex/**/*.ind
+frontend/latex/**/*.ilg
+frontend/latex/**/*.pdf

@@ -127,7 +127,8 @@ class AuthController(
                 ResponseEntity.status(302)
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                     .header(HttpHeaders.LOCATION, "http://localhost:5173/") // had to add this for the oauth process to work
-                    .build<Unit>()
+//                    .build<Unit>()
+                    .body(UserTokenOutputModel(result.value.token))
             }
             is Failure ->
                 when (result.value) {
