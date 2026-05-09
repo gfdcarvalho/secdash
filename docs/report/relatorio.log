@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.5.9)  9 MAY 2026 16:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.5.9)  9 MAY 2026 18:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -146,8 +146,9 @@ Document Style - pseudocode environments for use with the `algorithmicx' style
 ) (./relatorio.aux
 Package babel Info: 'portuguese' activates 'portuges' shorthands.
 (babel)             Reported on input line 5.
- (./introducao.aux) (./capenquadramento.aux)
-(./capexemplos.aux) (./captestes.aux) (./apendiceex.aux))
+ (./introducao.aux) (./caparquitetura.aux)
+(./capimplementacao.aux) (./capdeployment.aux) (./capdificuldades.aux)
+(./capconclusao.aux) (./apendiceex.aux))
 \openout1 = `relatorio.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 57.
@@ -216,12 +217,17 @@ LaTeX Font Info:    External font `cmex10' loaded for size
  [1] [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 97--102
+Underfull \hbox (badness 10000) in paragraph at lines 97--98
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 97--102
+Underfull \hbox (badness 10000) in paragraph at lines 99--101
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--101
 
  []
 
@@ -230,7 +236,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 97--102
 ] [4
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 114--116
+Underfull \hbox (badness 10000) in paragraph at lines 115--117
 
  []
 
@@ -251,81 +257,92 @@ Underfull \hbox (badness 10000) in paragraph at lines 114--116
 
  (./introducao.tex
 Cap\'{\i }tulo 1.
-<./figures/logoISELnew3.png, id=44, 3420.2982pt x 853.7496pt>
-File: ./figures/logoISELnew3.png Graphic file (type png)
-<use ./figures/logoISELnew3.png>
-Package pdftex.def Info: ./figures/logoISELnew3.png  used on input line 20.
-(pdftex.def)             Requested size: 3420.2899pt x 853.74753pt.
 ) [1
 
 
- <./figures/logoISELnew3.png>] [2]
-\openout2 = `capenquadramento.aux'.
+]
+\openout2 = `caparquitetura.aux'.
 
- (./capenquadramento.tex
+ (./caparquitetura.tex [2
+
+
+
+
+]
 Cap\'{\i }tulo 2.
-) [3
+) [3]
+\openout2 = `capimplementacao.aux'.
+
+ (./capimplementacao.tex [4
 
 
 
 
-] [4]
-\openout2 = `capexemplos.aux'.
-
- (./capexemplos.tex
+]
 Cap\'{\i }tulo 3.
 
-Underfull \hbox (badness 10000) in paragraph at lines 20--21
+Underfull \hbox (badness 10000) in paragraph at lines 27--29
 
  []
 
-[5
+[5]) [6]
+\openout2 = `capdeployment.aux'.
 
-
-
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 50--52
-
- []
-
-[6]) [7]
-\openout2 = `captestes.aux'.
-
- (./captestes.tex [8
-
-
-
-
-]
+ (./capdeployment.tex
 Cap\'{\i }tulo 4.
-) [9] (./relatorio.bbl [10
+) [7
 
 
 
-]) [11]
+
+]
+\openout2 = `capdificuldades.aux'.
+
+ (./capdificuldades.tex [8
+
+
+
+
+]
+Cap\'{\i }tulo 5.
+) [9]
+\openout2 = `capconclusao.aux'.
+
+ (./capconclusao.tex [10
+
+
+
+
+]
+Cap\'{\i }tulo 6.
+) [11] (./relatorio.bbl [12
+
+
+
+]) [13]
 \openout2 = `apendiceex.aux'.
 
- (./apendiceex.tex [12
+ (./apendiceex.tex [14
 
 
 ]
 Ap\^{e}ndice A.
-) [13] (./relatorio.aux (./introducao.aux) (./capenquadramento.aux)
-(./capexemplos.aux) (./captestes.aux) (./apendiceex.aux))
+) [15] (./relatorio.aux (./introducao.aux) (./caparquitetura.aux)
+(./capimplementacao.aux) (./capdeployment.aux) (./capdificuldades.aux)
+(./capconclusao.aux) (./apendiceex.aux))
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3874 strings out of 467525
- 69029 string characters out of 5425862
- 572894 words of memory out of 5000000
- 32722 multiletter control sequences out of 15000+600000
+ 3913 strings out of 467525
+ 70507 string characters out of 5425862
+ 571735 words of memory out of 5000000
+ 32747 multiletter control sequences out of 15000+600000
  636142 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 73i,13n,77p,622b,315s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 73i,13n,77p,309b,315s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-dist/fonts/type1/publ
@@ -335,10 +352,10 @@ r/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/
 public/amsfonts/cm/cmti10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfont
 s/cm/cmtt10.pfb>
-Output written on relatorio.pdf (23 pages, 709075 bytes).
+Output written on relatorio.pdf (25 pages, 369740 bytes).
 PDF statistics:
- 133 PDF objects out of 1000 (max. 8388607)
- 83 compressed objects within 1 object stream
+ 138 PDF objects out of 1000 (max. 8388607)
+ 88 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
