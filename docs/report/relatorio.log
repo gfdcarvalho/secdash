@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.5.9)  9 MAY 2026 18:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.5.9)  9 MAY 2026 23:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -151,20 +151,20 @@ Package babel Info: 'portuguese' activates 'portuges' shorthands.
 (./capconclusao.aux) (./apendiceex.aux))
 \openout1 = `relatorio.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 57.
-LaTeX Font Info:    ... okay on input line 57.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
 
 (/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -191,21 +191,21 @@ e
 <./figures/logoISELnew2.png, id=1, 2263.2555pt x 853.7496pt>
 File: ./figures/logoISELnew2.png Graphic file (type png)
 <use ./figures/logoISELnew2.png>
-Package pdftex.def Info: ./figures/logoISELnew2.png  used on input line 60.
+Package pdftex.def Info: ./figures/logoISELnew2.png  used on input line 61.
 (pdftex.def)             Requested size: 2263.25pt x 853.74753pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 60--60
+Underfull \hbox (badness 10000) in paragraph at lines 61--61
 
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <17.28> on input line 60.
+(Font)              <17.28> on input line 61.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 60.
+(Font)              <12> on input line 61.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 60.
+(Font)              <8> on input line 61.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 60.
+(Font)              <6> on input line 61.
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./figures/logoISELnew2.png
@@ -213,21 +213,21 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 ]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 76.
+(Font)              <10.95> on input line 77.
  [1] [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 97--98
+Underfull \hbox (badness 10000) in paragraph at lines 98--99
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 99--101
+Underfull \hbox (badness 10000) in paragraph at lines 100--102
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 99--101
+Underfull \hbox (badness 10000) in paragraph at lines 100--102
 
  []
 
@@ -236,7 +236,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 99--101
 ] [4
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 115--117
+Underfull \hbox (badness 10000) in paragraph at lines 116--118
 
  []
 
@@ -257,20 +257,50 @@ Underfull \hbox (badness 10000) in paragraph at lines 115--117
 
  (./introducao.tex
 Cap\'{\i }tulo 1.
-) [1
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--11
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 12--13
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 14--15
+
+ []
+
+[1
 
 
 ]
+Underfull \hbox (badness 10000) in paragraph at lines 16--17
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 18--19
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 20--21
+
+ []
+
+) [2]
 \openout2 = `caparquitetura.aux'.
 
- (./caparquitetura.tex [2
+ (./caparquitetura.tex
+Cap\'{\i }tulo 2.
+) [3
 
 
 
 
 ]
-Cap\'{\i }tulo 2.
-) [3]
 \openout2 = `capimplementacao.aux'.
 
  (./capimplementacao.tex [4
@@ -319,15 +349,15 @@ Cap\'{\i }tulo 6.
 
 
 
-]) [13]
+] [13]) [14]
 \openout2 = `apendiceex.aux'.
 
- (./apendiceex.tex [14
-
-
-]
+ (./apendiceex.tex
 Ap\^{e}ndice A.
-) [15] (./relatorio.aux (./introducao.aux) (./caparquitetura.aux)
+) [15
+
+
+] (./relatorio.aux (./introducao.aux) (./caparquitetura.aux)
 (./capimplementacao.aux) (./capdeployment.aux) (./capdificuldades.aux)
 (./capconclusao.aux) (./apendiceex.aux))
  ***********
@@ -336,13 +366,13 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3913 strings out of 467525
- 70507 string characters out of 5425862
- 571733 words of memory out of 5000000
- 32747 multiletter control sequences out of 15000+600000
+ 3922 strings out of 467525
+ 70627 string characters out of 5425862
+ 573716 words of memory out of 5000000
+ 32756 multiletter control sequences out of 15000+600000
  636142 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 73i,13n,77p,309b,315s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 73i,13n,77p,1300b,315s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-dist/fonts/type1/publ
@@ -350,12 +380,13 @@ ic/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
 r/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmti10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmtt10.pfb>
-Output written on relatorio.pdf (25 pages, 369526 bytes).
+public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmti10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb
+>
+Output written on relatorio.pdf (25 pages, 384463 bytes).
 PDF statistics:
- 138 PDF objects out of 1000 (max. 8388607)
- 88 compressed objects within 1 object stream
+ 143 PDF objects out of 1000 (max. 8388607)
+ 91 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
