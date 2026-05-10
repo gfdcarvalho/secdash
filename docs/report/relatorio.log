@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.5.9)  9 MAY 2026 23:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.5.9)  10 MAY 2026 16:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -290,12 +290,33 @@ Underfull \hbox (badness 10000) in paragraph at lines 20--21
 
  []
 
-) [2]
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
+
+ []
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--29
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--39
+
+ []
+
+[3{/usr/share/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]) [4]
 \openout2 = `caparquitetura.aux'.
 
- (./caparquitetura.tex
+
+(./caparquitetura.tex
 Cap\'{\i }tulo 2.
-) [3
+) [5
 
 
 
@@ -303,7 +324,7 @@ Cap\'{\i }tulo 2.
 ]
 \openout2 = `capimplementacao.aux'.
 
- (./capimplementacao.tex [4
+ (./capimplementacao.tex [6
 
 
 
@@ -315,12 +336,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 27--29
 
  []
 
-[5]) [6]
+[7]) [8]
 \openout2 = `capdeployment.aux'.
 
  (./capdeployment.tex
 Cap\'{\i }tulo 4.
-) [7
+) [9
 
 
 
@@ -328,33 +349,33 @@ Cap\'{\i }tulo 4.
 ]
 \openout2 = `capdificuldades.aux'.
 
- (./capdificuldades.tex [8
+ (./capdificuldades.tex [10
 
 
 
 
 ]
 Cap\'{\i }tulo 5.
-) [9]
+) [11]
 \openout2 = `capconclusao.aux'.
 
- (./capconclusao.tex [10
+ (./capconclusao.tex [12
 
 
 
 
 ]
 Cap\'{\i }tulo 6.
-) [11] (./relatorio.bbl [12
+) [13] (./relatorio.bbl [14
 
 
 
-] [13]) [14]
+] [15]) [16]
 \openout2 = `apendiceex.aux'.
 
  (./apendiceex.tex
 Ap\^{e}ndice A.
-) [15
+) [17
 
 
 ] (./relatorio.aux (./introducao.aux) (./caparquitetura.aux)
@@ -366,27 +387,28 @@ L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3922 strings out of 467525
- 70627 string characters out of 5425862
- 573716 words of memory out of 5000000
- 32756 multiletter control sequences out of 15000+600000
- 636142 words of font info for 68 fonts, out of 8000000 for 9000
+ 3933 strings out of 467525
+ 70819 string characters out of 5425862
+ 574729 words of memory out of 5000000
+ 32764 multiletter control sequences out of 15000+600000
+ 636842 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  73i,13n,77p,1300b,315s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
-r/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmti10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb
->
-Output written on relatorio.pdf (25 pages, 384463 bytes).
+ts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmcsc10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
+/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmsy6.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.p
+fb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share
+/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
+Output written on relatorio.pdf (27 pages, 412418 bytes).
 PDF statistics:
- 143 PDF objects out of 1000 (max. 8388607)
- 91 compressed objects within 1 object stream
+ 161 PDF objects out of 1000 (max. 8388607)
+ 102 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

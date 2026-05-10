@@ -18,5 +18,29 @@ O caso da Equifax, empresa considerada um dos três maiores bureaus de crédito 
 Ainda assim, o uso destas bibliotecas de código aberto tem vindo a crescer. Como tal, várias ferramentas de análise e \textit{pipelines} CI/CD foram desenvolvidas. As equipas de desenvolvimento de software modernas dependem muitas vezes da integração destas ferramentas de \textit{scanning} nas suas \textit{pipelines} CI/CD tais como GitHub Dependabot, GitLab SAST, Trivy ou OWASP Dependency-Check. Apesar de estas ferramentas serem eficazes na deteção de vulnerabilidades conhecidas, os seus resultados ficam dispersos por diferentes repositórios e plataformas, tornando-se difícil obter uma visão unificada e consolidada da postura de segurança global de uma organização. \\
 
 O \textbf{SecDash} pretende ser uma plataforma web concebida para agregar a visualização de vulnerabilidades de segurança já identificadas por estas ferramentas externas ou por pipelines de CI/CD existentes. Em vez de realizar a sua própria análise, o SecDash recolhe relatórios de vulnerabilidades de múltiplos repositórios de código-fonte e apresenta-os através de um \textit{dashboard} único e interativo, permitindo que arquitetos de segurança de software e responsáveis de desenvolvimento monitorizem o risco em todos os seus projetos de forma imediata. \\
+
 \section{Enquadramento e estado da arte} \label{intro:enquadramento}
+Perante o cenário histórico de vulnerabilidades críticas como as anteriormente mencionadas, a necessidade de ferramentas de agregação torna-se evidente, existindo atualmente várias soluções amplamente utilizadas na indústria. Contudo, estas plataformas distinguem-se do \textbf{SecDash} pelos seus objetivos e complexidade; focam-se habitualmente no segmento \textit{enterprise} e na gestão operacional de ciclo completo, incluindo a orquestração de múltiplos \textit{scanners} e fluxos de remediação (remediation workflows). \\
+
+O SecDash, em contrapartida, não pretende ser uma ferramenta que efetua os seus próprios scans de segurança, mas sim focar-se especificamente na agregação, normalização e visualização centralizada de vulnerabilidades provenientes de múltiplos repositórios em plataformas distintas. O objetivo principal do projeto consiste em fornecer uma integração totalmente funcional com o GitHub e o GitLab, as duas plataformas mais amplamente utilizadas para hospedar código, uma vez que estas abrangem a vasta maioria dos casos de uso em ambientes reais. A integração com pipelines de Jenkins é considerada um \textit{stretch goal}, a ser explorado caso a calendarização assim o permita. \\
+
+\subsection{DefectDojo}
+O \textbf{DefectDojo} é uma plataforma DevSecOps que atua como um agregador automático para o seu conjunto de ferramentas de segurança, permitindo organizar facilmente o trabalho de segurança e reportar a postura de segurança da organização aos \textit{stakeholders}. \cite{aboutdefectdojo}\\
+
+De entre as funcionalidades do DefectDojo contam-se, entre outras:
+\begin{itemize}
+	\item O rastreio e reporte de \textit{Findings} de segurança;
+	\item A imposição de SLAs (\textit{Service Level Agreement}) em contexto;
+	\item A gestão de \textit{risk-acceptance} e outras decisões de triagem
+	\item Coordenação com gestão de testes de penetração tradicionais;
+\end{itemize}
+
+Para além de possibilitar a integração com mais de 200 ferramentas de segurança, a sua instalação local requer múltiplos contentores para vários serviços, requerindo inclusive instâncias dedicadas de \textit{Celery} e \textit{Reddis}enquanto \textit{task-queue} para a gestão de tarefas assíncronas tais como o processamento de ficheiros de reporte volumosos ou a sincronização com o \textit{Jira} e envio de notificações aos utilizadores. Estamos portanto perante uma infraestrutura comparativamente mais complexa que a requirida pelo SecDash, que será mais apropriada para equipas pequenas que não requiram todas as funcionalidades disponíveis no DefetDojo.\\
+
+Por outro lado, o modelo de dados utilizado pelo \textbf{DefectDojo} utiliza cinco classes distintas (\textbf{\textit{Product Types}}, \textbf{\textit{Products}}, \textbf{\textit{Engagements}}, \textbf{\textit{Tests}} e \textbf{\textit{Findings}}) para organizar o trabalho das equipas que o utilizem.\cite{modeldefectdojo} Um Engagement, por exemplo, representa um momento no tempo em que um \textit{Test} é realizado, e contem um ou mais \textit{Tests}. A necessidade de instanciar um \textit{Engagement} para cada nova análise introduz uma barreira de agilidade significativa. Apesar de se apresentar como flexível de forma a que este modelo se possa adaptar às diferentes equipas que o utilizem, a abordagem do DefectDojo revela uma preocupação mais voltada para questões de auditoria do que para a visão imediata de vulnerabilidades e agilidade durante o processo de desenvolvimento do software.
+
+\subsection{ArmorCode}
+\subsection{ArcherySec}
+\subsection{SecObserve}
+
 \section{Requisitos Funcionais} \label{intro:requisitos}
