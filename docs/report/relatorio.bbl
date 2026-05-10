@@ -105,4 +105,11 @@ R.~Lerman and C.~Zakrzewski. (2021) The {Log4j} vulnerability has the internet
   \url{https://docs.defectdojo.com/asset_modelling/hierarchy/product_hierarchy/}
 \BIBentrySTDinterwordspacing
 
+\bibitem{scanerless}
+\BIBentryALTinterwordspacing
+{ArmorCode Inc.} (2024) Unified vulnerability management: {A} modern approach.
+  Official Platform Overview. [Online]. Available:
+  \url{https://www.armorcode.com/unified-vulnerability-management}
+\BIBentrySTDinterwordspacing
+
 \end{thebibliography}
