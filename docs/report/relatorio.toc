@@ -10,19 +10,30 @@
 \contentsline {subsection}{\numberline {1.2.6}Ox}{4}{}%
 \contentsline {subsection}{\numberline {1.2.7}Apiiro}{4}{}%
 \contentsline {subsection}{\numberline {1.2.8}Faraday}{4}{}%
-\contentsline {section}{\numberline {1.3}Requisitos Funcionais}{4}{}%
-\contentsline {chapter}{\numberline {2}Arquitetura e tecnologias}{5}{}%
-\contentsline {section}{\numberline {2.1}Visão geral do sistema}{5}{}%
-\contentsline {section}{\numberline {2.2}APIs externas}{5}{}%
-\contentsline {section}{\numberline {2.3}Tecnologias e linguagens}{5}{}%
-\contentsline {subsection}{\numberline {2.3.1}Backend}{5}{}%
-\contentsline {subsection}{\numberline {2.3.2}Frontend}{5}{}%
-\contentsline {chapter}{\numberline {3}Implementação}{7}{}%
-\contentsline {section}{\numberline {3.1}Modelo de dados}{7}{}%
-\contentsline {section}{\numberline {3.2}Backend}{7}{}%
-\contentsline {section}{\numberline {3.3}Frontend}{7}{}%
-\contentsline {chapter}{\numberline {4}Deployment}{9}{}%
-\contentsline {chapter}{\numberline {5}Dificuldades Técnicas e teóricas}{11}{}%
-\contentsline {chapter}{\numberline {6}Conclusão}{13}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{16}{}%
-\contentsline {chapter}{\numberline {A}Exemplo de apêndice}{17}{}%
+\contentsline {section}{\numberline {1.3}Requisitos funcionais}{4}{}%
+\contentsline {section}{\numberline {1.4}Requisitos funcionais}{5}{}%
+\contentsline {subsection}{\numberline {1.4.1}Integração de repositórios}{5}{}%
+\contentsline {subsection}{\numberline {1.4.2}Autenticação de utilizadores}{5}{}%
+\contentsline {subsection}{\numberline {1.4.3}Controlo de acesso com base em papéis}{6}{}%
+\contentsline {subsection}{\numberline {1.4.4}Agregação de vulnerabilidades}{6}{}%
+\contentsline {subsection}{\numberline {1.4.5}Dashboard Web}{7}{}%
+\contentsline {subsection}{\numberline {1.4.6}Exportação de relatórios}{7}{}%
+\contentsline {section}{\numberline {1.5}Objetivos opcionais}{7}{}%
+\contentsline {subsection}{\numberline {1.5.1}Integração com Jenkins}{7}{}%
+\contentsline {subsection}{\numberline {1.5.2}Deployment em contentores}{7}{}%
+\contentsline {subsection}{\numberline {1.5.3}Tracking}{7}{}%
+\contentsline {chapter}{\numberline {2}Arquitetura e tecnologias}{9}{}%
+\contentsline {section}{\numberline {2.1}Visão geral do sistema}{9}{}%
+\contentsline {section}{\numberline {2.2}APIs externas}{9}{}%
+\contentsline {section}{\numberline {2.3}Tecnologias e linguagens}{9}{}%
+\contentsline {subsection}{\numberline {2.3.1}Backend}{9}{}%
+\contentsline {subsection}{\numberline {2.3.2}Frontend}{9}{}%
+\contentsline {chapter}{\numberline {3}Implementação}{11}{}%
+\contentsline {section}{\numberline {3.1}Modelo de dados}{11}{}%
+\contentsline {section}{\numberline {3.2}Backend}{11}{}%
+\contentsline {section}{\numberline {3.3}Frontend}{11}{}%
+\contentsline {chapter}{\numberline {4}Deployment}{13}{}%
+\contentsline {chapter}{\numberline {5}Dificuldades Técnicas e teóricas}{15}{}%
+\contentsline {chapter}{\numberline {6}Conclusão}{17}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{20}{}%
+\contentsline {chapter}{\numberline {A}Exemplo de apêndice}{21}{}%
