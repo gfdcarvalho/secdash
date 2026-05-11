@@ -20,8 +20,8 @@
 \contentsline {subsection}{\numberline {1.4.6}Exportação de relatórios}{7}{}%
 \contentsline {section}{\numberline {1.5}Objetivos opcionais}{7}{}%
 \contentsline {subsection}{\numberline {1.5.1}Integração com Jenkins}{7}{}%
-\contentsline {subsection}{\numberline {1.5.2}Deployment em contentores}{7}{}%
-\contentsline {subsection}{\numberline {1.5.3}Tracking}{7}{}%
+\contentsline {subsection}{\numberline {1.5.2}Deployment em contentores}{8}{}%
+\contentsline {subsection}{\numberline {1.5.3}Tracking de \textit {Findings}}{8}{}%
 \contentsline {chapter}{\numberline {2}Arquitetura e tecnologias}{9}{}%
 \contentsline {section}{\numberline {2.1}Visão geral do sistema}{9}{}%
 \contentsline {section}{\numberline {2.2}APIs externas}{9}{}%

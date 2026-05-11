@@ -136,6 +136,20 @@ Os relatórios exportados deverão incluir:
 	\item Data de geração do relatório.
 \end{itemize}
 \section{Objetivos opcionais}
+No caso de a calendarização o permitir, pretendem-se implementar os seguintes objetivos opcionais, considerados \textit{stretch goals}. Consideramos que estes objetivos poderiam acrescentar mais alguma usabilidade à aplicação, embora não sejam estritamente necessários para responder ao problema que esta pretende desenvolver. \\
+
 \subsection{Integração com Jenkins}
+Pretende-se acrescentar uma nova possível fonte de dados para além das plataformas GitHub e GitLab, integrando o \textbf{SecDash} com o Jenkins, um dos servidores de automação mais utilizados na indústria para CI/CD. \\
+
 \subsection{Deployment em contentores}
-\subsection{Tracking}
+De forma a validar a viabilidade operacional da plataforma, pretende-se realizar o \textit{deployment} do \textbf{SecDash} alojando-o num servidor pessoal. \\
+
+Este processo envolveria a configuração e gestão de redes para exposição controlada do serviço e a orquestração via \textit{Docker}. O objetivo é que a aplicação possa ser demonstrada num ambiente que mais se assemelharia a um ambiente real e não apenas no ambiente de desenvolvimento local, passando a aplicação a estar acessível de forma remota. \\
+
+Pretende-se deste modo alargar o âmbito do projeto para lá de apenas desenvolvimento de software, passando pela gestão de regras de \textit{firewall} e exposição segura de serviços para acesso remoto. \\
+
+\subsection{Tracking de \textit{Findings}}
+Este objetivo visa dotar o \textbf{SecDash} de capacidades \textit{tracking} sobre as vulnerabilidades detetadas. \\
+
+Pretende-se implementar um sistema de acompanhamento que permita verificar se determinadada vulnerabilidade já se encontra ao encargo de algum desenvolvedor da equipa ou se esta já se encontra resolvida e, em caso afirmativo, desde quando. \\
+
