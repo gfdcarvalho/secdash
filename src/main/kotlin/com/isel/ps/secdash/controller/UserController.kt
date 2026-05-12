@@ -2,7 +2,6 @@ package com.isel.ps.secdash.controller
 
 
 import com.isel.ps.secdash.controller.model.Problem
-import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserCreationModel
@@ -64,6 +63,7 @@ class UserController(
                 user.user.uid,
                 user.user.name,
                 user.user.email,
+                user.user.role,
                 repos
             )
         ) // Needs error treatment

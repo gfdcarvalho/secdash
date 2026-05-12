@@ -1,9 +1,9 @@
 package com.isel.ps.secdash.repository
 
 import com.isel.ps.secdash.model.AuthProvider
+import com.isel.ps.secdash.model.users.AppRole
 import com.isel.ps.secdash.model.users.PasswordValidationInfo
 import com.isel.ps.secdash.model.users.Token
-import com.isel.ps.secdash.model.users.TokenExternalInfo
 import com.isel.ps.secdash.model.users.TokenValidationInfo
 import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.repository.interfaces.UserRepositoryInterface
@@ -68,7 +68,7 @@ class UserRepository(
     override fun getTokenByTokenValidationInfo(tokenValidationInfo: TokenValidationInfo): Pair<User, Token>? =
         handle.createQuery(
             """
-                select uid, name, email, password_validation, token_validation, created_at, last_used_at
+                select uid, name, email, password_validation, app_role, token_validation, created_at, last_used_at
                 from users
                 inner join tokens
                 on users.uid = tokens.user_id
@@ -193,6 +193,7 @@ class UserRepository(
         val name: String,
         val email: String,
         val passwordValidation: String?,
+        val role: AppRole,
         val tokenValidation: TokenValidationInfo,
         val createdAt: Long,
         val lastUsedAt: Long,
@@ -200,7 +201,7 @@ class UserRepository(
         val userAndToken: Pair<User, Token>
             get() =
                 Pair(
-                    User(uid, name, email, passwordValidation),
+                    User(uid, name, email, passwordValidation, role),
                     Token(
                         tokenValidation,
                         uid,
