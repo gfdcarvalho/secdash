@@ -6,13 +6,16 @@ CREATE TYPE vulnerability_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
 CREATE TYPE sast_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW');
 CREATE TYPE sast_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
 CREATE TYPE auth_provider AS ENUM ('GOOGLE', 'GITHUB', 'GITLAB');
+CREATE TYPE app_roles as ENUM ('ADMIN', 'USER');
+CREATE TYPE team_roles as ENUM ('LEADER', 'COLLABORATOR');
 
 -- Users
 CREATE TABLE users (
     uid                     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name                    VARCHAR(255) NOT NULL,
     password_validation     TEXT,
-    email                   VARCHAR(255) NOT NULL UNIQUE
+    email                   VARCHAR(255) NOT NULL UNIQUE,
+    role                    app_roles NOT NULL DEFAULT 'USER'
 );
 
 -- user_identities (authentication)
@@ -116,4 +119,21 @@ CREATE TABLE sast_alerts (
     line       VARCHAR(50)   NOT NULL
 );
 
+CREATE TABLE teams (
+    tid         INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description VARCHAR(255)
+);
 
+CREATE TABLE team_users (
+    tid     INT NOT NULL REFERENCES teams(tid),
+    uid     INT NOT NULL REFERENCES users(uid),
+    role    team_roles NOT NULL,
+    PRIMARY KEY (tid, uid)
+);
+
+CREATE TABLE team_repos (
+    tid     INT NOT NULL REFERENCES teams(tid),
+    rid     INT NOT NULL REFERENCES repositories(rid),
+    PRIMARY KEY (tid, rid)
+);
