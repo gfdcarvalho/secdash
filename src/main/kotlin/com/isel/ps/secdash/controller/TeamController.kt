@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 class TeamController(
     private val teamServices: TeamServices
 ) {
-    //fun getUserTeams()
+
     //fun createTeam()
     //fun getTeam()
     //fun deleteTeam()

@@ -8,6 +8,7 @@ import com.isel.ps.secdash.model.users.UserCreationModel
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
 import com.isel.ps.secdash.model.users.UserProfileInformation
 import com.isel.ps.secdash.service.RepositoryServices
+import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserServices
 import com.isel.ps.secdash.utils.Failure
@@ -24,7 +25,8 @@ import java.net.URI
 @RequestMapping("/users")
 class UserController(
     private val userServices: UserServices,
-    private val repositoryServices: RepositoryServices
+    private val repositoryServices: RepositoryServices,
+    private val teamServices: TeamServices
 ) {
 
     @PostMapping("/register")
@@ -67,5 +69,13 @@ class UserController(
                 repos
             )
         ) // Needs error treatment
+    }
+
+    @GetMapping("/teams")
+    fun getUserTeams(
+        user: AuthenticatedUser
+    ): ResponseEntity<*> {
+        val teams = teamServices.findAllByUser(user.user.uid)
+        return ResponseEntity.ok(teams) // Needs error treatment
     }
 }

@@ -4,6 +4,7 @@ import com.isel.ps.secdash.model.Owner
 import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.Repository.Visibility
 import java.time.Instant
+
 class Repository(
     val rid: Int,
     val name: String,
