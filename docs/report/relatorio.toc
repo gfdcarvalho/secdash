@@ -24,10 +24,10 @@
 \contentsline {subsection}{\numberline {1.5.3}Tracking de \textit {Findings}}{8}{}%
 \contentsline {chapter}{\numberline {2}Arquitetura e tecnologias}{9}{}%
 \contentsline {section}{\numberline {2.1}Visão geral do sistema}{9}{}%
-\contentsline {section}{\numberline {2.2}APIs externas}{9}{}%
-\contentsline {section}{\numberline {2.3}Tecnologias e linguagens}{9}{}%
-\contentsline {subsection}{\numberline {2.3.1}Backend}{9}{}%
-\contentsline {subsection}{\numberline {2.3.2}Frontend}{9}{}%
+\contentsline {section}{\numberline {2.2}APIs externas}{10}{}%
+\contentsline {section}{\numberline {2.3}Tecnologias e linguagens}{10}{}%
+\contentsline {subsection}{\numberline {2.3.1}Backend}{10}{}%
+\contentsline {subsection}{\numberline {2.3.2}Frontend}{10}{}%
 \contentsline {chapter}{\numberline {3}Implementação}{11}{}%
 \contentsline {section}{\numberline {3.1}Modelo de dados}{11}{}%
 \contentsline {section}{\numberline {3.2}Backend}{11}{}%
