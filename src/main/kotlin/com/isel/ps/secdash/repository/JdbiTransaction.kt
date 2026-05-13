@@ -8,6 +8,7 @@ class JdbiTransaction(private val handle: Handle) : Transaction {
     override val githubRepository: GithubRepository = GithubRepository(handle)
     override val gitlabRepository: GitlabRepository = GitlabRepository(handle)
     override val repositoriesRepository: RepositoriesRepository = RepositoriesRepository(handle)
+    override val teamRepository: TeamRepository = TeamRepository(handle)
 
 
 

@@ -68,7 +68,7 @@ class UserRepository(
     override fun getTokenByTokenValidationInfo(tokenValidationInfo: TokenValidationInfo): Pair<User, Token>? =
         handle.createQuery(
             """
-                select uid, name, email, password_validation, app_role, token_validation, created_at, last_used_at
+                select uid, name, email, password_validation, role, token_validation, created_at, last_used_at
                 from users
                 inner join tokens
                 on users.uid = tokens.user_id

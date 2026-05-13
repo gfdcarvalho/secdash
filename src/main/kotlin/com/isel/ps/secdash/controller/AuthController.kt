@@ -126,7 +126,7 @@ class AuthController(
                 val responseCookie = requestTokenProcessor.createCookie(result.value)
                 ResponseEntity.status(302)
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .header(HttpHeaders.LOCATION, "http://localhost:5173/") // had to add this for the oauth process to work
+//                    .header(HttpHeaders.LOCATION, "http://localhost:5173/") // had to add this for the oauth process to work
 //                    .build<Unit>()
                     .body(UserTokenOutputModel(result.value.token))
             }
