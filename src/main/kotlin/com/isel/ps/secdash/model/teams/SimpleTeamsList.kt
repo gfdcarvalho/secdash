@@ -5,7 +5,7 @@ data class SimpleTeamsListOutput(
 )
 
 data class SimpleTeam(
-    val id : Int,
+    val tid : Int,
     val name : String,
     val description : String?,
 )

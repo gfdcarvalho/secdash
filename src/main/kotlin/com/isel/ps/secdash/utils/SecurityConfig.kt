@@ -23,6 +23,7 @@ class SecurityConfig(
             .addFilterBefore(bearerTokenAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeHttpRequests { auth ->
                 auth
+//                    .anyRequest().permitAll()
                     .requestMatchers("/auth/**", "/users/register").permitAll()
                     .anyRequest().authenticated()
             }

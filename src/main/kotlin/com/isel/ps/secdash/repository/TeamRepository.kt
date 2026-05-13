@@ -3,6 +3,7 @@ package com.isel.ps.secdash.repository
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
+import com.isel.ps.secdash.model.teams.TeamRoles
 import com.isel.ps.secdash.repository.interfaces.TeamRepositoryInterface
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -23,6 +24,7 @@ class TeamRepository(
             .bind("uid", uid)
             .mapTo<SimpleTeam>()
             .list()
+
     }
 
     override fun getTeam(teamId: Int): Team? {
@@ -51,8 +53,44 @@ class TeamRepository(
             .list()
             .map { it.toDomain() }
 
-        return Team(name = team.name, description = team.description, repos = repos)
+        return Team(tid= team.tid, name = team.name, description = team.description, repos = repos)
     }
 
+    override fun checkUserHasTeamAccess(tid: Int, uid: Int): Boolean {
+        return handle.createQuery(
+            """
+                SELECT COUNT(*) FROM team_users
+                WHERE tid = :tid AND uid = :uid
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("uid", uid)
+            .mapTo<Int>()
+            .one() > 0
+    }
+
+    override fun createTeam(uid: Int, teamName: String, description: String?): Int {
+        val tid = handle.createUpdate(
+            """
+                INSERT INTO teams(name, description) VALUES (:teamName, :description)
+            """.trimIndent()
+        )
+            .bind("teamName", teamName)
+            .bind("description", description)
+            .executeAndReturnGeneratedKeys()
+            .mapTo<Int>()
+            .one()
+
+        handle.createUpdate(
+            """
+                INSERT INTO team_users(tid, uid, role) VALUES (:tid, :uid, :role::team_roles)
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("uid", uid)
+            .bind("role", TeamRoles.LEADER.name)
+            .execute()
+        return tid
+    }
 
 }

@@ -7,4 +7,8 @@ interface TeamRepositoryInterface {
     fun getTeamsByUser(uid: Int): List<SimpleTeam>
 
     fun getTeam(teamId: Int): Team?
+
+    fun checkUserHasTeamAccess(tid: Int, uid: Int): Boolean
+
+    fun createTeam(uid: Int, teamName: String, description: String?): Int
 }

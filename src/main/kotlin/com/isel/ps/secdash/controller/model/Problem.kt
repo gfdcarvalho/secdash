@@ -113,5 +113,12 @@ class Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "Owner Not Found",
             )
+
+        // ---------------- teams
+        val invalidTeamName =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Invalid Team name",
+            )
     }
 }

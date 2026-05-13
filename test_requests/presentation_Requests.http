@@ -1,4 +1,4 @@
-@token = AOsS5V-atHQAgN9hjS7YBZlzP1KAO53kPtk-AtL_Hno=
+@token = pVRUTK2LfmA_aY76NetGEDnvWBD8EJ20TathbvVbZ2k=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -7,6 +7,24 @@
 
 // http://localhost:8080/github/repos
 
+### create a new user
+POST http://localhost:8080/users/register
+Content-Type: application/json
+
+{
+  "username": "testeteste",
+  "password": "testestestes",
+  "email": "teste@testes"
+}
+
+### login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "testeteste",
+  "password": "testestestes"
+}
 
 ### add github dependabot repository
 POST http://localhost:8080/github/repositories
@@ -71,4 +89,23 @@ Content-Type: application/json
 
 ### Gitlab sast
 GET http://localhost:8080/gitlab/repositories/4/sast
+Authorization: Bearer {{token}}
+
+
+### Create new team
+POST http://localhost:8080/teams
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "grandaEquipa",
+  "description": "testes"
+}
+
+###
+GET http://localhost:8080/users/me
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:8080/teams
 Authorization: Bearer {{token}}

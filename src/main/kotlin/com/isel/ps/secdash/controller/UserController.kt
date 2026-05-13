@@ -28,6 +28,7 @@ class UserController(
     private val repositoryServices: RepositoryServices,
 ) {
 
+//    @PreAuthorize("hasRole('ADMIN')") // so exemplo ...
     @PostMapping("/register")
     fun registerUser(
         @RequestBody user: UserCreationModel
@@ -36,7 +37,7 @@ class UserController(
             user.username,
             user.email,
             user.password
-        ) // we could change the services to receive the Dto ??
+        )
         return when (result) {
             is Success ->
                 ResponseEntity.created(URI.create("/users/me"))             // still need to think about this !

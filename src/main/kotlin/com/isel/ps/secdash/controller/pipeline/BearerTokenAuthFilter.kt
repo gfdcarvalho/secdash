@@ -33,6 +33,6 @@ class BearerTokenAuthFilter(
                 AuthenticatedUserArgumentResolver.addUserTo(user, request)
             }
         }
-        filterChain.doFilter(request, response)
+        filterChain.doFilter(request, response) // resolver isto !!! grave erros de redirect ...
     }
 }

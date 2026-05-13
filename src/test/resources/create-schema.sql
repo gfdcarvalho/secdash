@@ -151,7 +151,7 @@ BEGIN
     CREATE TABLE teams (
                            tid         INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                            name        VARCHAR(255) NOT NULL,
-                           description VARCHAR(255)
+                           description TEXT
     );
 
     CREATE TABLE team_users (
