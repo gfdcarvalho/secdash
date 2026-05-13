@@ -24,6 +24,9 @@ Para além disso, separar a lógica de apresentação da lógica de dados permit
 
 
 \section{APIs externas} \label{arquitetura:apis}
+O funcionamento da aplicação está intrinsecamente ligado ao usp de APIs externas.  Os utilizadores podem-se autenticar através da utilização do protocolo \textit{OAuth 2.0} usando como \textit{identity providers} Google, GitHub ou GitLab. \\
+
+Estes dois últimos provedores de identidade cumprem um papel duplo, pois para além da possibilidade de providenciarem \textit{autenticação} ao SecDash são também eles que providenciam \textit{autorização}, de forma a que a aplicação possa requisitar os repositórios dos utilizadores bem como consumir os endpoints de segurança que contêm os relatórios de vulnerabilidades sobre os quais a funcionalidade base do projeto assenta. \\
 
 \section{Tecnologias e linguagens} \label{arquitetura:tecnologias}
 \subsection{Backend} \label{arquitetura:tecnologias:backend}
