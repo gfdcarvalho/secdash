@@ -1,7 +1,10 @@
 package com.isel.ps.secdash.repository.interfaces
 
+import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
 
 interface TeamRepositoryInterface {
-    fun findAllByUser(uid: Int): List<Team>
+    fun getTeamsByUser(uid: Int): List<SimpleTeam>
+
+    fun getTeam(teamId: Int): Team?
 }

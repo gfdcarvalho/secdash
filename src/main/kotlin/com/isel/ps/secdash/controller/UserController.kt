@@ -26,7 +26,6 @@ import java.net.URI
 class UserController(
     private val userServices: UserServices,
     private val repositoryServices: RepositoryServices,
-    private val teamServices: TeamServices
 ) {
 
     @PostMapping("/register")
@@ -69,13 +68,5 @@ class UserController(
                 repos
             )
         ) // Needs error treatment
-    }
-
-    @GetMapping("/teams")
-    fun getUserTeams(
-        user: AuthenticatedUser
-    ): ResponseEntity<*> {
-        val teams = teamServices.findAllByUser(user.user.uid)
-        return ResponseEntity.ok(teams) // Needs error treatment
     }
 }
