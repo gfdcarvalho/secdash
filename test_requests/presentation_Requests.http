@@ -163,3 +163,7 @@ Content-Type: application/json
 {
   "repositoryId": 1
 }
+
+### remove repository from a team
+DELETE http://localhost:8080/teams/1/repository/1
+Authorization: Bearer {{token}}

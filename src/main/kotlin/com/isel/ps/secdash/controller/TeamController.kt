@@ -12,6 +12,7 @@ import com.isel.ps.secdash.service.CreateTeamError
 import com.isel.ps.secdash.service.DeleteTeamError
 import com.isel.ps.secdash.service.GetTeamError
 import com.isel.ps.secdash.service.PromoteUserToLeaderError
+import com.isel.ps.secdash.service.RemoveRepoFromTeamError
 import com.isel.ps.secdash.service.RemoveUserFromTeamError
 import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.utils.Failure
@@ -173,6 +174,21 @@ class TeamController(
         }
     }
 
-    //fun addRepoToTeam()
-    //fun removeRepoFromTeam()
+    @DeleteMapping("/{tid}/repository/{repoToRemove}")
+    fun removeRepositoryFromTeam(
+        user: AuthenticatedUser,
+        @PathVariable tid: Int,
+        @PathVariable repoToRemove: Int
+    ): ResponseEntity<*> {
+        val result = teamServices.removeRepositoryFromTeam(user.user.uid, tid, repoToRemove)
+        return when (result) {
+            is Success -> ResponseEntity.ok().build<Any>()
+            is Failure ->
+                when (result.value) {
+                    RemoveRepoFromTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
+                    RemoveRepoFromTeamError.OnlyTeamLeader -> Problem.response(403, Problem.onlyTeamLeader)
+                    RemoveRepoFromTeamError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                }
+        }
+    }
 }

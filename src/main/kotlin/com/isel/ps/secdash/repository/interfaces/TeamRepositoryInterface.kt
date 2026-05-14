@@ -29,4 +29,6 @@ interface TeamRepositoryInterface {
     fun checkTeamHasRepo(tid: Int, rid: Int): Boolean
 
     fun addRepositoryToTeam(tid: Int, repositoryToAdd: Int)
+
+    fun removeRepositoryFromTeam(tid: Int, repositoryToRemove: Int)
 }

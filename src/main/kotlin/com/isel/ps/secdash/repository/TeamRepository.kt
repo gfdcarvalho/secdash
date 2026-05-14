@@ -200,4 +200,15 @@ class TeamRepository(
             .bind("rid", repositoryToAdd)
             .execute()
     }
+
+    override fun removeRepositoryFromTeam(tid: Int, repositoryToRemove: Int) {
+        handle.createUpdate(
+            """
+                delete from team_repos where tid = :tid and rid = :rid
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("rid", repositoryToRemove)
+            .execute()
+    }
 }

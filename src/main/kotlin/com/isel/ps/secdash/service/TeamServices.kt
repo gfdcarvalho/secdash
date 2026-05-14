@@ -70,6 +70,14 @@ sealed class AddRepositoryToTeamError {
 
 typealias AddRepositoryToTeamResult = Either<AddRepositoryToTeamError, Unit>
 
+sealed class RemoveRepoFromTeamError {
+    data object OnlyTeamLeader: RemoveRepoFromTeamError()
+    data object TeamNotFound: RemoveRepoFromTeamError()
+    data object RepositoryNotFound: RemoveRepoFromTeamError()
+}
+
+typealias RemoveRepoFromTeamResult = Either<RemoveRepoFromTeamError, Unit>
+
 @Service
 class TeamServices(
     private val transactionManager: TransactionManager,
@@ -234,6 +242,26 @@ class TeamServices(
 
             // add repo
             teamsRepo.addRepositoryToTeam(tid, repositoryToAdd)
+
+            success(Unit)
+        }
+    }
+
+    fun removeRepositoryFromTeam(
+        uid: Int,
+        tid: Int,
+        repositoryToRemove: Int,
+    ): RemoveRepoFromTeamResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(RemoveRepoFromTeamError.TeamNotFound)
+
+            if (!teamsRepo.checkUserTeamLeader(uid, tid)) return@run failure(RemoveRepoFromTeamError.OnlyTeamLeader)
+
+            if (!teamsRepo.checkTeamHasRepo(tid, repositoryToRemove)) return@run failure(RemoveRepoFromTeamError.RepositoryNotFound)
+
+            teamsRepo.removeRepositoryFromTeam(tid, repositoryToRemove)
 
             success(Unit)
         }
