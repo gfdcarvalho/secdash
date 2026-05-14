@@ -188,6 +188,17 @@ class UserRepository(
         return user != null
     }
 
+    override fun checkIfUserExists(uid: Int): Boolean {
+        return handle.createQuery(
+            """
+                SELECT EXISTS(SELECT 1 from users where uid = :uid)
+            """.trimIndent()
+        )
+            .bind("uid", uid)
+            .mapTo<Boolean>()
+            .one()
+    }
+
     private data class UserAndTokenModel(
         val uid: Int,
         val name: String,

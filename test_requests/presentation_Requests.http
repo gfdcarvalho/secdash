@@ -110,6 +110,19 @@ Authorization: Bearer {{token}}
 GET http://localhost:8080/teams
 Authorization: Bearer {{token}}
 
+### get team information
+GET http://localhost:8080/teams/12
+Authorization: Bearer {{token}}
+
 ### Delete a Team
 DELETE http://localhost:8080/teams/11
 Authorization: Bearer {{token}}
+
+### Add user to team
+POST http://localhost:8080/teams/12/users
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "userId": "2"
+}

@@ -130,10 +130,15 @@ class Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "Only The Team Leader can perform this action",
             )
-        val TeamNotFound =
+        val teamNotFound =
             Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "Team Not Found",
+            )
+        val userAlreadyOnTeam =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "User Already On Team",
             )
     }
 }

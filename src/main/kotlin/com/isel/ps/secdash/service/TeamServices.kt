@@ -35,6 +35,15 @@ sealed class DeleteTeamError {
 
 typealias DeleteTeamResult = Either<DeleteTeamError, Unit>
 
+sealed class AddUserToTeamError {
+    data object OnlyTeamLeader: AddUserToTeamError()
+    data object TeamNotFound: AddUserToTeamError()
+    data object UserNotFound: AddUserToTeamError()
+    data object UserAlreadyOnTeam: AddUserToTeamError()
+}
+
+typealias AddUserToTeamResult = Either<AddUserToTeamError, Unit>
+
 @Service
 class TeamServices(
     private val transactionManager: TransactionManager,
@@ -95,6 +104,34 @@ class TeamServices(
                     reposRepository.deleteRepo(repo.rid)
                 }
             }
+
+            success(Unit)
+        }
+    }
+
+    fun addUserToTeam(
+        uid: Int,
+        tid: Int,
+        userToAdd: Int,
+    ): AddUserToTeamResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+            val usersRepo = it.usersRepository
+
+            // check if team exists
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(AddUserToTeamError.TeamNotFound)
+
+            // check if is team leader
+            if (!teamsRepo.checkUserTeamLeader(uid, tid)) return@run failure(AddUserToTeamError.OnlyTeamLeader)
+
+            // check if user exists
+            if (!usersRepo.checkIfUserExists(userToAdd)) return@run failure(AddUserToTeamError.UserNotFound)
+
+            // check if user is not already on the team
+            if (!teamsRepo.checkUserAlreadyOnTeam(tid, userToAdd)) return@run failure(AddUserToTeamError.UserAlreadyOnTeam)
+
+            // add user to team
+            teamsRepo.addUserToTeam(tid, userToAdd)
 
             success(Unit)
         }

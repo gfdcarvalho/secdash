@@ -130,4 +130,27 @@ class TeamRepository(
             .bind("tid", tid)
             .execute()
     }
+
+    override fun checkUserAlreadyOnTeam(tid: Int, uid: Int): Boolean {
+        return handle.createQuery(
+            """
+                select exists(select 1 from team_users where tid = :tid and uid = :uid)
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("uid", uid)
+            .mapTo<Boolean>()
+            .one()
+    }
+
+    override fun addUserToTeam(tid: Int, userToAdd: Int) {
+        handle.createUpdate(
+            """
+                Insert into team_users (tid, uid, role) VALUES (:tid, :uid, :role::team_roles)
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("uid", userToAdd)
+            .bind("role", TeamRoles.LEADER.name)
+    }
 }

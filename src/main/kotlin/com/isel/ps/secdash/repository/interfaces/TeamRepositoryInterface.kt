@@ -17,4 +17,8 @@ interface TeamRepositoryInterface {
     fun checkUserTeamLeader(uid: Int, tid: Int): Boolean
 
     fun deleteTeam(tid: Int)
+
+    fun checkUserAlreadyOnTeam(tid: Int, uid: Int): Boolean
+
+    fun addUserToTeam(tid: Int, userToAdd: Int)
 }

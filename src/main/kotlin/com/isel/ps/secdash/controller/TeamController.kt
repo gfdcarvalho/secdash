@@ -3,7 +3,9 @@ package com.isel.ps.secdash.controller
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.teams.SimpleTeamsListOutput
 import com.isel.ps.secdash.model.teams.TeamCreationInput
+import com.isel.ps.secdash.model.teams.TeamUserInput
 import com.isel.ps.secdash.model.users.AuthenticatedUser
+import com.isel.ps.secdash.service.AddUserToTeamError
 import com.isel.ps.secdash.service.CreateTeamError
 import com.isel.ps.secdash.service.DeleteTeamError
 import com.isel.ps.secdash.service.GetTeamError
@@ -84,8 +86,27 @@ class TeamController(
             is Success -> ResponseEntity.noContent().build<Any>()
             is Failure ->
                 when (result.value) {
-                    DeleteTeamError.TeamNotFound -> Problem.response(400, Problem.TeamNotFound)
+                    DeleteTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                     DeleteTeamError.OnlyTeamLeader -> Problem.response(401, Problem.onlyTeamLeader)
+                }
+        }
+    }
+
+    @PostMapping("/{tid}/users")
+    fun addUserToTeam(
+        user: AuthenticatedUser,
+        @PathVariable tid: Int,
+        @RequestBody userToAdd: TeamUserInput
+    ): ResponseEntity<*> {
+        val result = teamServices.addUserToTeam(user.user.uid, tid, userToAdd.userId)
+        return when (result) {
+            is Success -> ResponseEntity.ok().build<Any>()
+            is Failure ->
+                when (result.value) {
+                    AddUserToTeamError.OnlyTeamLeader -> Problem.response(401, Problem.onlyTeamLeader) // 401 ou 403 ?
+                    AddUserToTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
+                    AddUserToTeamError.UserAlreadyOnTeam -> Problem.response(400, Problem.userAlreadyOnTeam) // 400 ou 409 ?
+                    AddUserToTeamError.UserNotFound -> Problem.response(400, Problem.UserNotFound)
                 }
         }
     }
