@@ -1,4 +1,4 @@
-@token = luK2qgMPk5mYmlZSWMzbNpZRPQVSHEkJvpYtsvafIK0=
+@token = GovkCK71HEvNRMBFKVSIcJyxX28z8yb6y1T0ngnXK6s=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -15,6 +15,16 @@ Content-Type: application/json
   "username": "testeteste",
   "password": "testestestes",
   "email": "teste@testes"
+}
+
+### create another user
+POST http://localhost:8080/users/register
+Content-Type: application/json
+
+{
+  "username": "testetesteas",
+  "password": "testestestesas",
+  "email": "teste@testesas"
 }
 
 ### login
@@ -102,6 +112,16 @@ Content-Type: application/json
   "description": "testes"
 }
 
+### Create another team
+POST http://localhost:8080/teams
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "grandaEquipa2",
+  "description": "testes2"
+}
+
 ### User Profile information
 GET http://localhost:8080/users/me
 Authorization: Bearer {{token}}
@@ -111,18 +131,22 @@ GET http://localhost:8080/teams
 Authorization: Bearer {{token}}
 
 ### get team information
-GET http://localhost:8080/teams/12
+GET http://localhost:8080/teams/1
 Authorization: Bearer {{token}}
 
 ### Delete a Team
-DELETE http://localhost:8080/teams/11
+DELETE http://localhost:8080/teams/2
 Authorization: Bearer {{token}}
 
 ### Add user to team
-POST http://localhost:8080/teams/12/users
+POST http://localhost:8080/teams/1/users
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "userId": "2"
+  "userId": 2
 }
+
+### remove user from team
+DELETE http://localhost:8080/teams/1/users/2
+Authorization: Bearer {{token}}

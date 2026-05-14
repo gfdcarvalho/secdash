@@ -146,11 +146,23 @@ class TeamRepository(
     override fun addUserToTeam(tid: Int, userToAdd: Int) {
         handle.createUpdate(
             """
-                Insert into team_users (tid, uid, role) VALUES (:tid, :uid, :role::team_roles)
+                INSERT INTO team_users (tid, uid, role) VALUES (:tid, :uid, :role::team_roles)
             """.trimIndent()
         )
             .bind("tid", tid)
             .bind("uid", userToAdd)
-            .bind("role", TeamRoles.LEADER.name)
+            .bind("role", TeamRoles.COLLABORATOR.name)
+            .execute()
+    }
+
+    override fun removeUserFromTeam(tid: Int, userToRemove: Int) {
+        handle.createUpdate(
+            """
+                DELETE FROM team_users WHERE tid = :tid AND uid = :uid
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("uid", userToRemove)
+            .execute()
     }
 }

@@ -140,5 +140,10 @@ class Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "User Already On Team",
             )
+        val userNotOnTeam =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "User is not On Team",
+            )
     }
 }

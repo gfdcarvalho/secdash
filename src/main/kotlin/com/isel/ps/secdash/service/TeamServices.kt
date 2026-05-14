@@ -44,6 +44,15 @@ sealed class AddUserToTeamError {
 
 typealias AddUserToTeamResult = Either<AddUserToTeamError, Unit>
 
+sealed class RemoveUserFromTeamError {
+    data object OnlyTeamLeader: RemoveUserFromTeamError()
+    data object TeamNotFound: RemoveUserFromTeamError()
+    data object UserNotFound: RemoveUserFromTeamError()
+    data object UserNotOnTeam: RemoveUserFromTeamError()
+}
+
+typealias RemoveUserFromTeamResult = Either<RemoveUserFromTeamError, Unit>
+
 @Service
 class TeamServices(
     private val transactionManager: TransactionManager,
@@ -128,10 +137,38 @@ class TeamServices(
             if (!usersRepo.checkIfUserExists(userToAdd)) return@run failure(AddUserToTeamError.UserNotFound)
 
             // check if user is not already on the team
-            if (!teamsRepo.checkUserAlreadyOnTeam(tid, userToAdd)) return@run failure(AddUserToTeamError.UserAlreadyOnTeam)
+            if (teamsRepo.checkUserAlreadyOnTeam(tid, userToAdd)) return@run failure(AddUserToTeamError.UserAlreadyOnTeam)
 
             // add user to team
             teamsRepo.addUserToTeam(tid, userToAdd)
+
+            success(Unit)
+        }
+    }
+
+    fun removeUserFromTeam(
+        uid: Int,
+        tid: Int,
+        userToRemove: Int,
+    ): RemoveUserFromTeamResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+            val usersRepo = it.usersRepository
+
+            // check if team exists
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(RemoveUserFromTeamError.TeamNotFound)
+
+            //check if is team leader
+            if (!teamsRepo.checkUserTeamLeader(uid, tid)) return@run failure(RemoveUserFromTeamError.OnlyTeamLeader)
+
+            // check if user exists
+            if (!usersRepo.checkIfUserExists(userToRemove)) return@run failure(RemoveUserFromTeamError.UserNotFound)
+
+            // check if user is on team
+            if (!teamsRepo.checkUserAlreadyOnTeam(tid, userToRemove)) return@run failure(RemoveUserFromTeamError.UserNotOnTeam)
+
+            // remove user from team
+            teamsRepo.removeUserFromTeam(tid, userToRemove)
 
             success(Unit)
         }

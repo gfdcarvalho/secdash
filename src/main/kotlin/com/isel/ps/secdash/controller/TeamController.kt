@@ -9,9 +9,11 @@ import com.isel.ps.secdash.service.AddUserToTeamError
 import com.isel.ps.secdash.service.CreateTeamError
 import com.isel.ps.secdash.service.DeleteTeamError
 import com.isel.ps.secdash.service.GetTeamError
+import com.isel.ps.secdash.service.RemoveUserFromTeamError
 import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
+import com.isel.ps.secdash.utils.env
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -111,7 +113,25 @@ class TeamController(
         }
     }
 
-    //fun addUserToTeam()
+    @DeleteMapping("/{tid}/users/{uidToRemove}")
+    fun removeUserFromTeam(
+        user: AuthenticatedUser,
+        @PathVariable tid: Int,
+        @PathVariable uidToRemove: Int
+    ): ResponseEntity<*> {
+        val result = teamServices.removeUserFromTeam(user.user.uid, tid, uidToRemove)
+        return when (result) {
+            is Success -> ResponseEntity.noContent().build<Any>()
+            is Failure ->
+                when (result.value) {
+                    RemoveUserFromTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
+                    RemoveUserFromTeamError.OnlyTeamLeader -> Problem.response(401, Problem.onlyTeamLeader)
+                    RemoveUserFromTeamError.UserNotOnTeam -> Problem.response(400 , Problem.userNotOnTeam)
+                    RemoveUserFromTeamError.UserNotFound -> Problem.response(404, Problem.UserNotFound)
+                }
+        }
+    }
+
     //fun removeUserFromTeam()
     //fun makeUserTeamLeader()
     //fun addRepoToTeam()
