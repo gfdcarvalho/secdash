@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.utils
 
 import com.isel.ps.secdash.controller.pipeline.BearerTokenAuthFilter
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -26,6 +27,11 @@ class SecurityConfig(
 //                    .anyRequest().permitAll()
                     .requestMatchers("/auth/**", "/users/register", "/error").permitAll()
                     .anyRequest().authenticated()
+            }
+            .exceptionHandling { ex ->
+                ex.authenticationEntryPoint { _, response, _ ->
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                }
             }
             .oauth2Login { oauth2 ->
                 oauth2.successHandler(oauthSuccessHandler())
