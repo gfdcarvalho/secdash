@@ -24,7 +24,7 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 auth
 //                    .anyRequest().permitAll()
-                    .requestMatchers("/auth/**", "/users/register").permitAll()
+                    .requestMatchers("/auth/**", "/users/register", "/error").permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2Login { oauth2 ->
