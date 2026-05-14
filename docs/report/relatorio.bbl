@@ -112,4 +112,11 @@ R.~Lerman and C.~Zakrzewski. (2021) The {Log4j} vulnerability has the internet
   \url{https://www.armorcode.com/unified-vulnerability-management}
 \BIBentrySTDinterwordspacing
 
+\bibitem{coc}
+\BIBentryALTinterwordspacing
+S.~Square, ``Spring boot benefits: Convention over configuration,'' 2025,
+  acedido em: 14 de maio de 2026. [Online]. Available:
+  \url{https://www.youtube.com/watch?v=KRzVqIRaCtk}
+\BIBentrySTDinterwordspacing
+
 \end{thebibliography}
