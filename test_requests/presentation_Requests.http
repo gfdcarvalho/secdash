@@ -150,3 +150,7 @@ Content-Type: application/json
 ### remove user from team
 DELETE http://localhost:8080/teams/1/users/2
 Authorization: Bearer {{token}}
+
+### promote user to team leader
+PATCH http://localhost:8080/teams/1/users/2
+Authorization: Bearer {{token}}

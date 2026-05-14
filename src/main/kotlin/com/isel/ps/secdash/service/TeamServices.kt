@@ -1,6 +1,5 @@
 package com.isel.ps.secdash.service
 
-import com.isel.ps.secdash.controller.model.Problem.Companion.unauthorized
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
@@ -52,6 +51,16 @@ sealed class RemoveUserFromTeamError {
 }
 
 typealias RemoveUserFromTeamResult = Either<RemoveUserFromTeamError, Unit>
+
+sealed class PromoteUserToLeaderError {
+    data object OnlyTeamLeader: PromoteUserToLeaderError()
+    data object TeamNotFound: PromoteUserToLeaderError()
+    data object UserNotOnTeam: PromoteUserToLeaderError()
+    data object UserAlreadyLeader: PromoteUserToLeaderError()
+}
+
+typealias PromoteUserToLeaderResult = Either<PromoteUserToLeaderError, Unit>
+
 
 @Service
 class TeamServices(
@@ -169,6 +178,29 @@ class TeamServices(
 
             // remove user from team
             teamsRepo.removeUserFromTeam(tid, userToRemove)
+
+            success(Unit)
+        }
+    }
+
+    fun promoteUserToLeader(
+        uid: Int,
+        tid: Int,
+        userToPromote: Int,
+    ): PromoteUserToLeaderResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+            val usersRepo = it.usersRepository
+
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(PromoteUserToLeaderError.TeamNotFound)
+
+            if (!teamsRepo.checkUserTeamLeader(uid, tid)) return@run failure(PromoteUserToLeaderError.OnlyTeamLeader)
+
+            if (!teamsRepo.checkUserAlreadyOnTeam(tid, userToPromote)) return@run failure(PromoteUserToLeaderError.UserNotOnTeam)
+
+            if (teamsRepo.checkUserTeamLeader(userToPromote, tid)) return@run failure(PromoteUserToLeaderError.UserAlreadyLeader)
+
+            teamsRepo.promoteUserToLeader(tid, userToPromote)
 
             success(Unit)
         }

@@ -165,4 +165,16 @@ class TeamRepository(
             .bind("uid", userToRemove)
             .execute()
     }
+
+    override fun promoteUserToLeader(tid: Int, userToPromote: Int) {
+        handle.createUpdate(
+            """
+                update team_users set role = :role::team_roles where tid = :tid and uid = :uid
+            """.trimIndent()
+        )
+            .bind("role", TeamRoles.LEADER.name)
+            .bind("tid", tid)
+            .bind("uid", userToPromote)
+            .execute()
+    }
 }
