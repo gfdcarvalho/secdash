@@ -11,4 +11,10 @@ interface TeamRepositoryInterface {
     fun checkUserHasTeamAccess(tid: Int, uid: Int): Boolean
 
     fun createTeam(uid: Int, teamName: String, description: String?): Int
+
+    fun checkTeamExistence(tid: Int): Boolean
+
+    fun checkUserTeamLeader(uid: Int, tid: Int): Boolean
+
+    fun deleteTeam(tid: Int)
 }

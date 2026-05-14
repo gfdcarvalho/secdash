@@ -28,9 +28,17 @@ sealed class CreateTeamError {
 
 typealias CreateTeamResult = Either<CreateTeamError, Team>
 
+sealed class DeleteTeamError {
+    data object OnlyTeamLeader: DeleteTeamError()
+    data object TeamNotFound: DeleteTeamError()
+}
+
+typealias DeleteTeamResult = Either<DeleteTeamError, Unit>
+
 @Service
 class TeamServices(
-    private val transactionManager: TransactionManager
+    private val transactionManager: TransactionManager,
+    manager: TransactionManager
 ) {
     fun getTeamsByUser(uid: Int): GetTeamsResult {
         return transactionManager.run {
@@ -66,6 +74,29 @@ class TeamServices(
             val tid = teamsRepo.createTeam(uid, teamName, teamDescription)
             val team = teamsRepo.getTeam(tid) ?: return@run failure(CreateTeamError.InternalError)
             success(team)
+        }
+    }
+
+    fun deleteTeam(
+        uid: Int,
+        tid: Int,
+    ): DeleteTeamResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+            val reposRepository = it.repositoriesRepository
+            val team = teamsRepo.getTeam(tid) ?: return@run failure(DeleteTeamError.TeamNotFound)
+
+            if (!teamsRepo.checkUserTeamLeader(uid, tid)) return@run failure(DeleteTeamError.OnlyTeamLeader)
+
+            teamsRepo.deleteTeam(tid)
+
+            team.repos.forEach { repo ->
+                if (!reposRepository.isRepoUsed(repo.rid)){
+                    reposRepository.deleteRepo(repo.rid)
+                }
+            }
+
+            success(Unit)
         }
     }
 }

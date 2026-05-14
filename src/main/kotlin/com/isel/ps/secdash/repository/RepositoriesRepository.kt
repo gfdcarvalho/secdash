@@ -189,4 +189,47 @@ class RepositoriesRepository(
             .list()
             .map { it.toDomain() }
     }
+
+    override fun isRepoUsed(rid: Int): Boolean { // podíamos provavelmente juntar isto numa so query com um join, mas por enquanto acho que esta bem
+        val repoInTeams = handle.createQuery(
+            """
+                SELECT EXISTS(SELECT 1 FROM team_repos WHERE rid = :rid)
+            """.trimIndent()
+        )
+            .bind("rid", rid)
+            .mapTo<Boolean>()
+            .one()
+
+        val repoInUsers = handle.createQuery(
+            """
+                SELECT EXISTS(SELECT 1 FROM user_repositories WHERE rid = :rid)
+            """.trimIndent()
+        )
+            .bind("rid", rid)
+            .mapTo<Boolean>()
+            .one()
+
+        return repoInTeams || repoInUsers
+    }
+
+    /**
+     * Dangerous!...
+     * Deletes a repository and all its associations (team_repos, user_repositories).
+     * Should only be called after confirming the repo is no longer used via [isRepoUsed].
+     *
+     * @param rid the id of the repository to delete
+     */
+    override fun deleteRepo(rid: Int) {
+        handle.createUpdate("DELETE FROM team_repos WHERE rid = :rid")
+            .bind("rid", rid)
+            .execute()
+
+        handle.createUpdate("DELETE FROM user_repositories WHERE rid = :rid")
+            .bind("rid", rid)
+            .execute()
+
+        handle.createUpdate("DELETE FROM repositories WHERE rid = :rid")
+            .bind("rid", rid)
+            .execute()
+    }
 }

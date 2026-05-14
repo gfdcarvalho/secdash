@@ -93,4 +93,41 @@ class TeamRepository(
         return tid
     }
 
+    override fun checkTeamExistence(tid: Int): Boolean { // entre esta maneira com o exists e o que esta acima com o count não sei qual é o melhor
+        return handle.createQuery(
+            """
+                SELECT EXISTS(SELECT 1 FROM teams WHERE tid = :tid)
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<Boolean>()
+            .one()
+    }
+
+    override fun checkUserTeamLeader(uid: Int, tid: Int): Boolean {
+        return handle.createQuery(
+            """
+                SELECT EXISTS(SELECT 1 FROM team_users WHERE tid = :tid AND uid = :uid AND role = :role::team_roles)
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("uid", uid)
+            .bind("role", TeamRoles.LEADER.name)
+            .mapTo<Boolean>()
+            .one()
+    }
+
+    override fun deleteTeam(tid: Int) {
+        handle.createUpdate("DELETE FROM team_repos WHERE tid = :tid")
+            .bind("tid", tid)
+            .execute()
+
+        handle.createUpdate("DELETE FROM team_users WHERE tid = :tid")
+            .bind("tid", tid)
+            .execute()
+
+        handle.createUpdate("DELETE FROM teams WHERE tid = :tid")
+            .bind("tid", tid)
+            .execute()
+    }
 }

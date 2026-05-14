@@ -1,4 +1,4 @@
-@token = pVRUTK2LfmA_aY76NetGEDnvWBD8EJ20TathbvVbZ2k=
+@token = luK2qgMPk5mYmlZSWMzbNpZRPQVSHEkJvpYtsvafIK0=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -102,10 +102,14 @@ Content-Type: application/json
   "description": "testes"
 }
 
-###
+### User Profile information
 GET http://localhost:8080/users/me
 Authorization: Bearer {{token}}
 
-###
+### Get the list of Teams of the User Logged in
 GET http://localhost:8080/teams
+Authorization: Bearer {{token}}
+
+### Delete a Team
+DELETE http://localhost:8080/teams/11
 Authorization: Bearer {{token}}

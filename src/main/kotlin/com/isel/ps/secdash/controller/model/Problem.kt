@@ -101,6 +101,11 @@ class Problem(
         val notFound =
             Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Resource Not Found",
+            )
+        val UserNotFound =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "User Not Found",
             )
         val ownerIsRequired =
@@ -119,6 +124,16 @@ class Problem(
             Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "Invalid Team name",
+            )
+        val onlyTeamLeader =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Only The Team Leader can perform this action",
+            )
+        val TeamNotFound =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Team Not Found",
             )
     }
 }

@@ -5,11 +5,13 @@ import com.isel.ps.secdash.model.teams.SimpleTeamsListOutput
 import com.isel.ps.secdash.model.teams.TeamCreationInput
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.CreateTeamError
+import com.isel.ps.secdash.service.DeleteTeamError
 import com.isel.ps.secdash.service.GetTeamError
 import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -72,9 +74,22 @@ class TeamController(
 
     }
 
-    //fun createTeam()
-    //fun getTeam()
-    //fun deleteTeam()
+    @DeleteMapping("/{teamId}")
+    fun deleteTeam(
+        user: AuthenticatedUser,
+        @PathVariable teamId: Int
+    ): ResponseEntity<*> {
+        val result = teamServices.deleteTeam(user.user.uid, teamId)
+        return when (result) {
+            is Success -> ResponseEntity.noContent().build<Any>()
+            is Failure ->
+                when (result.value) {
+                    DeleteTeamError.TeamNotFound -> Problem.response(400, Problem.TeamNotFound)
+                    DeleteTeamError.OnlyTeamLeader -> Problem.response(401, Problem.onlyTeamLeader)
+                }
+        }
+    }
+
     //fun addUserToTeam()
     //fun removeUserFromTeam()
     //fun makeUserTeamLeader()

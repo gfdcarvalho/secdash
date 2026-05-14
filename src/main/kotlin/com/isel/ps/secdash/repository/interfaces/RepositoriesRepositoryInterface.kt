@@ -25,4 +25,8 @@ interface RepositoriesRepositoryInterface {
     fun getExternalId(rid: Int): String?
 
     fun findAllByUser(uid: Int): List<Repository>
+
+    fun isRepoUsed(rid: Int): Boolean
+
+    fun deleteRepo(rid: Int)
 }
