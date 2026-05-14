@@ -1,4 +1,4 @@
-@token = GovkCK71HEvNRMBFKVSIcJyxX28z8yb6y1T0ngnXK6s=
+@token = x3DFRkQ5pYd5YfBpFNMy3sFOZm-_bBbIMZIp4x-Ysqk=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -154,3 +154,12 @@ Authorization: Bearer {{token}}
 ### promote user to team leader
 PATCH http://localhost:8080/teams/1/users/2
 Authorization: Bearer {{token}}
+
+### add repository to team
+POST http://localhost:8080/teams/1/repository
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "repositoryId": 1
+}

@@ -61,7 +61,7 @@ class GithubServices(
     fun addRepository(
         repo: RepositoryCreationDto,
         userId: Int,
-    ): AddRepositoryResult {
+    ): AddRepositoryResult {  // adicionar verificação para ver se já temos o repo no nosso domínio para não termos de ir buscar de novo ao github
         if (repo.name.isNullOrBlank()) return failure(AddRepositoryError.NameIsRequired) // this should never happen
 
         return transactionManager.run {

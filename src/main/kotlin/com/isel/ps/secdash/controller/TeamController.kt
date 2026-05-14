@@ -3,8 +3,10 @@ package com.isel.ps.secdash.controller
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.teams.SimpleTeamsListOutput
 import com.isel.ps.secdash.model.teams.TeamCreationInput
+import com.isel.ps.secdash.model.teams.TeamRepositoryInput
 import com.isel.ps.secdash.model.teams.TeamUserInput
 import com.isel.ps.secdash.model.users.AuthenticatedUser
+import com.isel.ps.secdash.service.AddRepositoryToTeamError
 import com.isel.ps.secdash.service.AddUserToTeamError
 import com.isel.ps.secdash.service.CreateTeamError
 import com.isel.ps.secdash.service.DeleteTeamError
@@ -14,7 +16,6 @@ import com.isel.ps.secdash.service.RemoveUserFromTeamError
 import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
-import com.isel.ps.secdash.utils.env
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -107,9 +108,9 @@ class TeamController(
             is Success -> ResponseEntity.ok().build<Any>()
             is Failure ->
                 when (result.value) {
-                    AddUserToTeamError.OnlyTeamLeader -> Problem.response(401, Problem.onlyTeamLeader) // 401 ou 403 ?
+                    AddUserToTeamError.OnlyTeamLeader -> Problem.response(403, Problem.onlyTeamLeader)
                     AddUserToTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
-                    AddUserToTeamError.UserAlreadyOnTeam -> Problem.response(400, Problem.userAlreadyOnTeam) // 400 ou 409 ?
+                    AddUserToTeamError.UserAlreadyOnTeam -> Problem.response(409, Problem.userAlreadyOnTeam)
                     AddUserToTeamError.UserNotFound -> Problem.response(400, Problem.UserNotFound)
                 }
         }
@@ -153,7 +154,25 @@ class TeamController(
         }
     }
 
-    //fun makeUserTeamLeader()
+    @PostMapping("/{tid}/repository")
+    fun addRepositoryToTeam(
+        user: AuthenticatedUser,
+        @PathVariable tid: Int,
+        @RequestBody repositoryToAdd: TeamRepositoryInput
+    ): ResponseEntity<*> {
+        val result = teamServices.addRepositoryToTeam(user.user.uid, tid, repositoryToAdd.repositoryId)
+        return when (result) {
+            is Success -> ResponseEntity.ok().build<Any>()
+            is Failure ->
+                when (result.value) {
+                    AddRepositoryToTeamError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                    AddRepositoryToTeamError.OnlyTeamLeader -> Problem.response(403, Problem.onlyTeamLeader)
+                    AddRepositoryToTeamError.RepositoryAlreadyAdded -> Problem.response(409, Problem.repositoryAlreadyAdded)
+                    AddRepositoryToTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
+                }
+        }
+    }
+
     //fun addRepoToTeam()
     //fun removeRepoFromTeam()
 }

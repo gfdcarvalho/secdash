@@ -29,4 +29,6 @@ interface RepositoriesRepositoryInterface {
     fun isRepoUsed(rid: Int): Boolean
 
     fun deleteRepo(rid: Int)
+
+    fun checkRepositoryExistence(rid: Int): Boolean
 }

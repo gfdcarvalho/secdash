@@ -177,4 +177,27 @@ class TeamRepository(
             .bind("uid", userToPromote)
             .execute()
     }
+
+    override fun checkTeamHasRepo(tid: Int, rid: Int): Boolean {
+        return handle.createQuery(
+            """
+                select exists(select 1 from team_repos where tid = :tid and rid = :rid)
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("rid", rid)
+            .mapTo<Boolean>()
+            .one()
+    }
+
+    override fun addRepositoryToTeam(tid: Int, repositoryToAdd: Int) {
+        handle.createUpdate(
+            """
+                insert into team_repos(tid, rid) values (:tid, :rid)
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .bind("rid", repositoryToAdd)
+            .execute()
+    }
 }

@@ -232,4 +232,15 @@ class RepositoriesRepository(
             .bind("rid", rid)
             .execute()
     }
+
+    override fun checkRepositoryExistence(rid: Int): Boolean {
+        return handle.createQuery(
+            """
+                select exists(select 1 from repositories where rid = :rid)
+            """.trimIndent()
+        )
+            .bind("rid", rid)
+            .mapTo<Boolean>()
+            .one()
+    }
 }

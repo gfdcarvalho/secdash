@@ -61,6 +61,14 @@ sealed class PromoteUserToLeaderError {
 
 typealias PromoteUserToLeaderResult = Either<PromoteUserToLeaderError, Unit>
 
+sealed class AddRepositoryToTeamError {
+    data object OnlyTeamLeader: AddRepositoryToTeamError()
+    data object TeamNotFound: AddRepositoryToTeamError()
+    data object RepositoryNotFound: AddRepositoryToTeamError()
+    data object RepositoryAlreadyAdded: AddRepositoryToTeamError()
+}
+
+typealias AddRepositoryToTeamResult = Either<AddRepositoryToTeamError, Unit>
 
 @Service
 class TeamServices(
@@ -190,7 +198,6 @@ class TeamServices(
     ): PromoteUserToLeaderResult {
         return transactionManager.run {
             val teamsRepo = it.teamRepository
-            val usersRepo = it.usersRepository
 
             if (!teamsRepo.checkTeamExistence(tid)) return@run failure(PromoteUserToLeaderError.TeamNotFound)
 
@@ -201,6 +208,32 @@ class TeamServices(
             if (teamsRepo.checkUserTeamLeader(userToPromote, tid)) return@run failure(PromoteUserToLeaderError.UserAlreadyLeader)
 
             teamsRepo.promoteUserToLeader(tid, userToPromote)
+
+            success(Unit)
+        }
+    }
+
+    fun addRepositoryToTeam(
+        uid: Int,
+        tid: Int,
+        repositoryToAdd: Int,
+    ): AddRepositoryToTeamResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+            val reposRepo = it.repositoriesRepository
+
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(AddRepositoryToTeamError.TeamNotFound)
+
+            if (!teamsRepo.checkUserTeamLeader(uid, tid)) return@run failure(AddRepositoryToTeamError.OnlyTeamLeader)
+
+            // check if repo exists
+            if (!reposRepo.checkRepositoryExistence(repositoryToAdd)) return@run failure(AddRepositoryToTeamError.RepositoryNotFound)
+
+            // check if repo is already added
+            if (teamsRepo.checkTeamHasRepo(tid, repositoryToAdd)) return@run failure(AddRepositoryToTeamError.RepositoryAlreadyAdded)
+
+            // add repo
+            teamsRepo.addRepositoryToTeam(tid, repositoryToAdd)
 
             success(Unit)
         }
