@@ -50,6 +50,18 @@ test_requests/http-client.env.json
 .env
 
 ### LaTeX ###
+docs/report/*.log
+docs/report/*.pdf
+docs/report/*.synctex.gz
+docs/report/*.aux
+docs/report/*.toc
+docs/report/*.out
+docs/report/*.fls
+docs/report/*.fdb_latexmk
+docs/report/*.bbl
+docs/report/*.blg
+docs/report/*.bcf
+docs/report/*.run.xml
 frontend/latex/**/*.aux
 frontend/latex/**/*.log
 frontend/latex/**/*.synctex.gz
