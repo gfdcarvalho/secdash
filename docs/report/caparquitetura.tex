@@ -30,4 +30,45 @@ Estes dois últimos provedores de identidade cumprem um papel duplo, pois para a
 
 \section{Tecnologias e linguagens} \label{arquitetura:tecnologias}
 \subsection{Backend} \label{arquitetura:tecnologias:backend}
+\subsubsection{Kotlin}
+A decisão de escolher Kotlin como linguagem utilizada para o desenvolvimento do \textbf{backend} foi tomada, em parte, devido à proficiência nela adquirida ao longo do percurso da licenciatura. Uma vez que foi a linguagem com maior exposição e utilização prática em mais unidades curriculares ao longo do percurso académico deste ciclo de estudos, esta escolha permitiu reduzir a curva de aprendizagem necessária à elaboração do projeto, acelarando assim o seu desenvolvimento. \\
+
+Para além disso, a linguagem Kotlin possui uma série de características que auxiliam o desenvolvimento e fortalecem a robustez da aplicação, de entre as quais se destacam duas:
+
+\begin{itemize}
+	\item \textbf{Segurança de tipos e \textit{Null Safety}:} O sistema de tipos do Kotlin ajuda a prevenir erros comuns de programação, tais como \textit{NullPointerExceptions}, garantindo que a manipulação de dados sensíveis provenientes das APIs externas seja feita de forma segura;
+	
+	\item \textbf{Interoperabilidade com o ecossistema Java Virtual Machine (JVM):} O acesso às bibliotecas e frameworks da JVM não só garante que o sistema assenta numa base tecnológica estável como permite usar ferramentas como Spring Boot ou JDBI, agilizando o desenvolvimento da API e ligação à base de dados;
+\end{itemize}
+
+\subsubsection{Spring Boot}
+
+A framework Spring Boot constitui a base fundamental do \textit{backend}. A sua filosofia \textit{"convention-over-configuration"}\cite{coc}, permite minimizar a preocupação com questões de configuração para que o foco do desenvolvimento possa incidir apenas na lógica aplicacional, tornando o processo de programação mais célere. \\
+
+O Spring Boot é particularmente útil pelos seguintes pontos:
+
+\begin{itemize}
+	\item \textbf{\textit{Inversion of Control} (IoC) e Injeção de Dependências:} O Spring gere automaticamente o ciclo de vida dos componentes da aplicação. No contexto do \textbf{SecDash}, isto permite, por exemplo, que os clientes REST de integração com o GitHub e GitLab sejam injetados nos serviços correspondentes de forma transparente;
+	
+	\item \textbf{Segurança com Spring Security:} A dependência Spring Security facilita a implementação de fluxos de autenticação \textit{OAuth2} e a proteção de determinados \textit{endpoints} através de configurações de autorização granulares, garantindo que dados sensíveis e algumas funcionalidades da aplicação são acedidos apenas por utilizadores com as permissões adequadas;
+	
+	\item \textbf{Servidor embutido:} O Spring Boot permite que a aplicação seja compilada para um único ficheiro executável que inclui um servidor Apache Tomcat embutido. Para além de eliminar a necessidade de configurar um servidor externo, isto poderá facilitar a contentorização da aplicação através da plataforma Docker.
+
+\end{itemize}
+\subsubsection{JDBI}
+Para a camada de interação com a base de dados, optou-se pela utilização da biblioteca \textbf{Jdbi}. Esta biblioteca segue uma filosofia \textit{"SQL-centric"}, conferindo algumas vantagens de conveniência quando comparada com a biblioteca (\textit{Java Database Connectivity (JDBC)}) sobre a qual esta assenta. \\
+
+Esta apresenta duas grandes vantagens sobre o nosso ponto de vista:
+
+\begin{itemize}
+	\item \textbf{Controlo total sobre o SQL:} A JDBI permite escrever maualmente as consultas SQL a serem executadas. Este controlo garante a performance e a correção de consultas complexas;
+	
+	\item \textbf{Mapeamento Nativo para \textit{Data Classes}:} A integração com o Kotlin permite que os resultados das consultas SQL sejam mapeados automaticamente para \textit{Data Classes}. 
+	
+	\item \textbf{Facilidade de \textit{debugging}:} O comportamento da JDBI é inteiramente previsível. Em caso de erro, este é rastreável diretamente até ao SQL executado, simplificando o processo de debugging durante o desenvolvimento;
+	
+	\item \textbf{Eliminação de código repetitivo e gestão automática de recursos:} Em vez de obrigar o programador a gerir manualmente a abertura e fecho de ligações, a criação de \textit{statements} ou a iteração sobre \textit{result sets}, o Jdbi automatiza estas tarefas. O Jdbi garante assim que todos os recursos da base de dados (ligações, \textit{statements} e \textit{result sets}) são libertados corretamente após a execução, mesmo que esta termine em erro. O uso de JDBC puro, comparativamente, requeriria que este tratamento fosse feito de forma explícita em todos pedidos à base de dados; 
+\end{itemize}
+\subsubsection{Postgresql}
+\subsubsection{OAuth 2.0}
 \subsection{Frontend} \label{arquitetura:tecnologias:frontend}
