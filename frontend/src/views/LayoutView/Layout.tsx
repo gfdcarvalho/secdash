@@ -23,7 +23,9 @@ export function Layout() {
             </div>
             <div className={style.body}>
                 <div className={style.sideBar}>
-                    teste
+                    <button> Teams</button>
+                    <button> Repos</button>
+                    <button> Profile</button>
                 </div>
                 <div className={style.content}>
                     <Outlet />
