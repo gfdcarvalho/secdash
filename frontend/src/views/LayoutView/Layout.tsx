@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router'
+import { Outlet, NavLink } from 'react-router'
 import { useAuthentication } from '../../utils/Authentication'
 import { RequireAuthentication } from '../../utils/RequireAuthentication'
 import style from './Layout.module.css' 
@@ -14,7 +14,7 @@ export function Layout() {
     return (
         <RequireAuthentication>
             <div className={style.topBar}>
-                <h1> {t.layout.title} </h1>
+                <NavLink to="/" className={style.titleLink}>{t.layout.title}</NavLink>
                 <div className={style.topBarRight}>
                     <h3> {user?.name} </h3>
                     <ThemeButton />
@@ -23,9 +23,9 @@ export function Layout() {
             </div>
             <div className={style.body}>
                 <div className={style.sideBar}>
-                    <button> Teams</button>
-                    <button> Repos</button>
-                    <button> Profile</button>
+                    <NavLink to="/teams">Teams</NavLink>
+                    <NavLink to="/repos">Repos</NavLink>
+                    <NavLink to="/profile">Profile</NavLink>
                 </div>
                 <div className={style.content}>
                     <Outlet />

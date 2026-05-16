@@ -9,13 +9,35 @@
 }
 
 .sideBar {
-    padding: 3em;
+    padding: 2em;
     background-color: var(--color-sidebar);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 1em;
     align-items: start;
+}
+
+.sideBar a {
+    color: var(--color-text);
+    text-decoration: none;
+    padding: 1em;
+    background-color: var(--input-text-bg);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 1s ease;
+}
+
+.sideBar a:hover,
+.sideBar a.active {
+    background-color: var(--input-text-hover);
+}
+
+.titleLink {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 .topBarRight {

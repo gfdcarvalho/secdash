@@ -7,8 +7,8 @@
 :root,
 [data-theme="light"] {
     --color-error: #d32f2f;
-    --color-topbar: #736B1E;
-    --color-sidebar: #817934;
+    --color-topbar: #f8f6f4;
+    --color-sidebar: #edeae5;
     --color-bg: #D9D2C6;
     --color-text: #261201;
     --input-text-bg: #C6CDD9;
@@ -16,8 +16,8 @@
 }
 
 [data-theme="dark"] {
-    --color-topbar: #AD1D1D;
-    --color-sidebar: #9b1a1a;
+    --color-topbar: #713503;
+    --color-sidebar: #582a02;
     --color-bg: #261201;
     --color-text: #D9D2C6;
     --input-text-bg: #011526;
