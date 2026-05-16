@@ -12,15 +12,17 @@ const providers: { id: Provider; icon: string }[] = [
 ]
 
 interface ProviderLoginButtonsProps {
+    className?: string
     func: (provider: Provider) => void
 }
 
-export function ProviderLoginButtons( {func}: ProviderLoginButtonsProps ) {
+export function ProviderLoginButtons( {className, func}: ProviderLoginButtonsProps ) {
     return (
         <div className={style.providerLoginButtons}>
             {providers.map(p => (
-                <button key={p.id} onClick={() => func(p.id)}>
-                    <Icon icon={p.icon} width="1.5em" />
+                <button className={className} 
+                    key={p.id} onClick={() => func(p.id)}>
+                    <Icon icon={p.icon} width="1.5em" className={p.id === "github" ? style.githubIcon : undefined} />
                 </button>
             ))}
         </div>

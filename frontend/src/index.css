@@ -7,17 +7,29 @@
 :root,
 [data-theme="light"] {
     --color-error: #d32f2f;
-    --color-topbar: #C0C9EE;
-    --color-sidebar: #A2AADB;
-    --color-bg: #FFF6DE;
-    --color-text: #111111;
+    --color-topbar: #736B1E;
+    --color-sidebar: #817934;
+    --color-bg: #D9D2C6;
+    --color-text: #261201;
+    --input-text-bg: #C6CDD9;
+    --input-text-hover: #9ea4ad;
 }
 
 [data-theme="dark"] {
-    --color-topbar: #5C3D2E;
-    --color-sidebar: #B85C38;
-    --color-bg: #2D2424;
-    --color-text: #eeeeee;
+    --color-topbar: #AD1D1D;
+    --color-sidebar: #9b1a1a;
+    --color-bg: #261201;
+    --color-text: #D9D2C6;
+    --input-text-bg: #011526;
+    --input-text-hover: #334351;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px var(--input-text-bg) inset;
+    -webkit-text-fill-color: var(--color-text);
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 body {
@@ -26,6 +38,7 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background-color 1s ease, color 1s ease;
 }
 
 #root {

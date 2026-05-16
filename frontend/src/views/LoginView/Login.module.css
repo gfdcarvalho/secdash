@@ -1,5 +1,11 @@
 
 
+.loginContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .loginTopRow {
     padding: 2em;
     justify-content: space-between;
@@ -22,10 +28,12 @@
 }
 
 .loginRow{
+    flex: 1;
     justify-content: space-evenly;
     align-items: center;
     display: flex;
     flex-direction: row;
+    padding-bottom: 20%;
 }
 
 .registerCard{
@@ -43,11 +51,50 @@
 .providerLoginButtons{
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 0.2em;
+}
+
+[data-theme="dark"] .githubIcon {
+    filter: invert(1);
 }
 
 .error {
     color: var(--color-error);
     margin: 0;
     font-size: 0.75rem;
+}
+
+.inputText {
+    padding: 1em;
+    color: var(--color-text);
+    background-color: var(--input-text-bg);
+    border: 2px solid transparent;
+    outline: none;
+    border-radius: 8px;
+    transition: background-color 0.5s ease, border-color 0.2s ease;
+}
+
+.loginCard button,
+.registerCard button {
+    color: var(--color-text);
+    padding: 0.5em;
+    background-color: var(--input-text-bg);
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+}
+
+.loginCard button:hover,
+.registerCard button:hover {
+    background-color: var(--input-text-hover);
+}
+
+.inputText:hover {
+    background-color: var(--input-text-hover);
+}
+
+.inputText:focus {
+    border: 2px solid var(--input-text-hover);
 }

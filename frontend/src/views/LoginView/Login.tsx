@@ -133,7 +133,7 @@ export function Login() {
     }
 
     return (
-        <div>
+        <div className={style.loginContainer}>
             <div className={style.loginTopRow}>
                 <h1> {t.login.title} </h1>
                 <div className={style.loginTopRowRight}>
@@ -145,16 +145,16 @@ export function Login() {
                 <div className={style.registerCard}>
                     {t.register.register}
                     <ProviderLoginButtons func={handleProviderLogin} />
-                    <UsernameInput value={state.register.username} onChange={e => dispatch(setRegisterField("username", e))} error={state.registerErrors.username && t.register.errors[state.registerErrors.username]}/>
-                    <EmailInput value={state.register.email} onChange={e => dispatch(setRegisterField("email", e))} error={state.registerErrors.email && t.register.errors[state.registerErrors.email]}/>
-                    <PasswordInput value={state.register.password} onChange={e => dispatch(setRegisterField("password", e))} error={state.registerErrors.password && t.register.errors[state.registerErrors.password]}/>
+                    <UsernameInput className={style.inputText} value={state.register.username} onChange={e => dispatch(setRegisterField("username", e))} error={state.registerErrors.username && t.register.errors[state.registerErrors.username]}/>
+                    <EmailInput className={style.inputText} value={state.register.email} onChange={e => dispatch(setRegisterField("email", e))} error={state.registerErrors.email && t.register.errors[state.registerErrors.email]}/>
+                    <PasswordInput className={style.inputText} value={state.register.password} onChange={e => dispatch(setRegisterField("password", e))} error={state.registerErrors.password && t.register.errors[state.registerErrors.password]}/>
                     <button onClick={handleRegister}> {t.register.register} </button>
                 </div>
                 <div className={style.loginCard}>
                     {t.login.login}
                     <ProviderLoginButtons func={handleProviderLogin} />
-                    <UsernameInput value={state.login.username} onChange={e => dispatch(setLoginField("username", e))} error={state.loginErrors.username && t.login.errors[state.loginErrors.username]}/>
-                    <PasswordInput value={state.login.password} onChange={e => dispatch(setLoginField("password", e))} error={state.loginErrors.password && t.login.errors[state.loginErrors.password]}/>
+                    <UsernameInput className={style.inputText} value={state.login.username} onChange={e => dispatch(setLoginField("username", e))} error={state.loginErrors.username && t.login.errors[state.loginErrors.username]}/>
+                    <PasswordInput className={style.inputText} value={state.login.password} onChange={e => dispatch(setLoginField("password", e))} error={state.loginErrors.password && t.login.errors[state.loginErrors.password]}/>
                     <button onClick={handleLogin}> {t.login.login} </button>
                 </div>
             </div>
