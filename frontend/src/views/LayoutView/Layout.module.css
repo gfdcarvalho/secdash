@@ -6,6 +6,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 1s ease;
 }
 
 .sideBar {
@@ -14,15 +15,18 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 1em;
+    gap: 0.5em;
     align-items: start;
+    transition: background-color 1s ease;
 }
 
 .sideBar a {
+    font-weight: bold;
     color: var(--color-text);
     text-decoration: none;
-    padding: 1em;
-    background-color: var(--input-text-bg);
+    width: 8em;
+    padding: 0.5em;
+    background-color: var(--color-sidebar);
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 1s ease;
@@ -30,7 +34,11 @@
 
 .sideBar a:hover,
 .sideBar a.active {
-    background-color: var(--input-text-hover);
+    background-color: var(--sidebar-buttons-hover);
+}
+
+.sideBar a:focus {
+    background-color: var(--sidebar-buttons-hover);
 }
 
 .titleLink {
@@ -38,6 +46,12 @@
     text-decoration: none;
     font-size: 2rem;
     font-weight: bold;
+}
+
+.usernameLink {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 1.2rem;
 }
 
 .topBarRight {
