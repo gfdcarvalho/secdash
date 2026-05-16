@@ -5,6 +5,7 @@ import style from './Layout.module.css'
 import { useTranslation } from '../../i18n/I18nProvider'
 import { FlagButton } from '../../components/FlagButton'
 import { ThemeButton } from '../../components/ThemeButton'
+import { Icon } from '@iconify/react'
 
 export function Layout() {
     const [user] = useAuthentication()
@@ -23,10 +24,10 @@ export function Layout() {
             </div>
             <div className={style.body}>
                 <div className={style.sideBar}>
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/teams">Teams</NavLink>
-                    <NavLink to="/repos">Repos</NavLink>
-                    <NavLink to="/profile">Profile</NavLink>
+                    <NavLink to="/">        <Icon icon={"material-symbols-light:home-outline-rounded"} width="1.5em"/>  Home</NavLink>
+                    <NavLink to="/teams">   <Icon icon={"ri:team-line"} width="1.5em"/>                                 Teams</NavLink>
+                    <NavLink to="/repos">   <Icon icon={"eos-icons:repositories"} width="1.5em"/>                       Repos</NavLink>
+                    <NavLink to="/profile"> <Icon icon={"line-md:account"} width="1.5em"/>                              Profile</NavLink>
                 </div>
                 <div className={style.content}>
                     <Outlet />
