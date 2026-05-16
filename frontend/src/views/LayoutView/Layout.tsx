@@ -24,10 +24,10 @@ export function Layout() {
             </div>
             <div className={style.body}>
                 <div className={style.sideBar}>
-                    <NavLink to="/">        <Icon icon={"material-symbols-light:home-outline-rounded"} width="1.5em"/>  Home</NavLink>
-                    <NavLink to="/teams">   <Icon icon={"ri:team-line"} width="1.5em"/>                                 Teams</NavLink>
-                    <NavLink to="/repos">   <Icon icon={"eos-icons:repositories"} width="1.5em"/>                       Repos</NavLink>
-                    <NavLink to="/profile"> <Icon icon={"line-md:account"} width="1.5em"/>                              Profile</NavLink>
+                    <NavLink to="/"><Icon icon="material-symbols-light:home-outline-rounded" width="1.5em"/>{t.layout.nav.home}</NavLink>
+                    <NavLink to="/teams"><Icon icon="ri:team-line" width="1.5em"/>{t.layout.nav.teams}</NavLink>
+                    <NavLink to="/repos"><Icon icon="eos-icons:repositories" width="1.5em"/>{t.layout.nav.repos}</NavLink>
+                    <NavLink to="/profile"><Icon icon="line-md:account" width="1.5em"/>{t.layout.nav.profile}</NavLink>
                 </div>
                 <div className={style.content}>
                     <Outlet />

@@ -8,6 +8,12 @@ export const en = {
     },
     layout: {
         title: "SecDash",
+        nav: {
+            home: "Home",
+            teams: "Teams",
+            repos: "Repositories",
+            profile: "Profile",
+        }
     },
     login: {
         title: "SecDash",

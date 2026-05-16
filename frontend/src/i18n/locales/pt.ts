@@ -8,6 +8,12 @@ export const pt = {
     },
     layout: {
         title: "SecDash",
+        nav: {
+            home: "Início",
+            teams: "Equipas",
+            repos: "Repositórios",
+            profile: "Perfil",
+        }
     },
     login: {
         title: "SecDash",

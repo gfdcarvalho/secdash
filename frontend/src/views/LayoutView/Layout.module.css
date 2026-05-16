@@ -71,7 +71,7 @@
 }
 
 .content {
-    padding: 1em;
+    padding: 2em;
     flex: 1;
     overflow: auto;
 }
