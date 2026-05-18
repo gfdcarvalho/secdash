@@ -81,5 +81,22 @@ Um destes propósitos é a delegação da gestão de identidades a entidades ext
 Para além disso, a funcionalidade principal da aplicação está dependente deste protocolo: sendo o \textit{SecDash} um agregador de vulnerabilidades, a aplicação necessita de consultar dados privados guardados no GitHub e GitLab, sendo o Oauth2.0 a forma como o acesso a estes é concedido. \\
 
 \subsection{Frontend} \label{arquitetura:tecnologias:frontend}
+
 \subsubsection{Typescript}
+A linguagem escolhida para o \textit{frontend} foi \textit{\textbf{Typescript}}. \\
+
+A escolha desta em detrimento de Javascript puro deveu-se ao facto de Typescript possuir tipagem estática. Não só isto facilita a transposição dos modelos de dados utilizados no backend para a lógica do frontend como também garante que qualquer erro de correspondência de dados possa ser detetado imediatamente em tempo de compilação, e não em tempo de execução no navegador do utilizador. \\
+
+\subsubsection{React}
+Como biblioteca principal para a construção da interface do utilizador, adotou-se \textbf{React}. \\
+
+Os fatore que motivaram esta escolha foram os seguintes:
+
+\begin{itemize}
+	\item \textbf{Arquitetura Baseada em Componentes:} O React permite decompor a interface visal em peças de código modulares, isoladas e reutilizáveis. Esta modularidade facilita a manutenção do código e permite que múltiplos elementos partilhem a mesma lógica visual e a sua reutilização;
+	
+	\item \textbf{Gestão de Estado com \textit{Hooks}:} A utilização de \textit{Hooks} como \texttt{useState} e \texttt{useEffect} permitem controlar o fluxo de dados na aplicação e gerir operações como o estado de carregamento de componentes, por exemplo;
+\end{itemize}
+
 \subsubsection{Vite}
+idk isto é contigo rodrigo \\
