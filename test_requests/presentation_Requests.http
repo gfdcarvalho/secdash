@@ -1,4 +1,4 @@
-@token = x3DFRkQ5pYd5YfBpFNMy3sFOZm-_bBbIMZIp4x-Ysqk=
+@token = uBGYIZnTnEB_88TcyVa_qYperuvu-xzjPLmD2PQnX_o=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -12,8 +12,8 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "testeteste",
-  "password": "testestestes",
+  "username": "testes",
+  "password": "testes",
   "email": "teste@testes"
 }
 
@@ -22,8 +22,8 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "testetesteas",
-  "password": "testestestesas",
+  "username": "testes",
+  "password": "testes",
   "email": "teste@testesas"
 }
 
@@ -32,8 +32,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "testeteste",
-  "password": "testestestes"
+  "username": "testes",
+  "password": "testes"
 }
 
 ### add github dependabot repository

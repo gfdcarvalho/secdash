@@ -1,0 +1,79 @@
+
+
+.teamsContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+}
+
+
+.topSection {
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.buttomSection {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    flex: 1;
+    gap: 1em;
+}
+
+.searchBarDiv {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.teamsListDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    flex: 1;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    outline: none;
+    border-radius: 8px;
+    transition: background-color 1s ease, border-color 0.2s ease;
+}
+
+.searchBar {
+    width: 100%;
+    padding: 1em;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    outline: none;
+    border-radius: 8px;
+    transition: background-color 1s ease, border-color 0.2s ease;
+}
+
+.teamCard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1em;
+    border-radius: 8px;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.teamCard:hover {
+    background-color: var(--input-text-hover);
+}
+
+.searchBar:hover {
+    background-color: var(--input-text-hover);
+}
+
+.searchBar:focus {
+    border: 2px solid var(--input-text-hover);
+}

@@ -2,7 +2,7 @@ import { type Either } from "./Either"
 
 export const BASE_URL = "http://localhost:5173/api"
 
-type Method = 'GET' | 'POST' | 'PUT' | 'DELETE'
+type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 
 type Request = {
     method: Method,
@@ -58,8 +58,8 @@ export const api = {
     post: <T>(uri: string, body?: object, headers?: Record<string, string>) =>
         fetchApi<T>({ method: 'POST', uri, body, headers }),
 
-    put: <T>(uri: string, body?: object, headers?: Record<string, string>) =>
-        fetchApi<T>({ method: 'PUT', uri, body, headers }),
+    patch: <T>(uri: string, body?: object, headers?: Record<string, string>) =>
+        fetchApi<T>({ method: 'PATCH', uri, body, headers }),
 
     delete: <T>(uri: string, headers?: Record<string, string>) =>
         fetchApi<T>({ method: 'DELETE', uri, headers }),

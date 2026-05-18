@@ -9,11 +9,11 @@
     --color-error: #d32f2f;
     --color-topbar: #f8f6f4;
     --color-sidebar: #edeae5;
-    --sidebar-buttons-hover: #bd6606;
+    --sidebar-buttons-hover: #ed3f1c;
     --color-bg: #D9D2C6;
     --color-text: #261201;
-    --input-text-bg: #C6CDD9;
-    --input-text-hover: #9ea4ad;
+    --input-text-bg: #aba678;
+    --input-text-hover: #8f884a;
 }
 
 [data-theme="dark"] {
@@ -22,8 +22,8 @@
     --sidebar-buttons-hover: #8a1717;
     --color-bg: #261201;
     --color-text: #D9D2C6;
-    --input-text-bg: #011526;
-    --input-text-hover: #334351;
+    --input-text-bg: #B56576;
+    --input-text-hover: #8d4c5a;
 }
 
 input:-webkit-autofill,
