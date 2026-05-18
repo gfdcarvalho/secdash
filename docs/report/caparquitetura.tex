@@ -3,7 +3,104 @@
 %
 \chapter{Arquitetura e tecnologias} \label{cap:arquitetura}
 
-O presente capítulo pretende expor uma visão geral da organização técnica do projeto, os diferentes módulos que o compõem e suas intedependências, bem como as linguagem de programação e \textit{frameworks} usadas no seu desenvolvimento.\\
+O presente capítulo pretende expor uma visão geral dos requisitos da aplicação e da organização técnica do projeto, os diferentes módulos que o compõem e suas intedependências, bem como as linguagem de programação e \textit{frameworks} usadas no seu desenvolvimento.\\
+
+\section{Requisitos funcionais} \label{intro:requisitos}
+
+De forma a responder satisfatoriamente ao problema que o SecDash pretende resolver, foi definida uma lista de requisitos funcionais considerados essenciais para o sistema. Estes requisitos representam as funcionalidades mínimas necessárias para permitir a agregação, normalização e visualização centralizada de vulnerabilidades provenientes de múltiplos repositórios e plataformas. \\
+
+\subsection{Integração de repositórios}
+
+A aplicação deve ser capaz de obter repositórios alojados nas plataformas \textit{GitHub} e \textit{GitLab} através das respetivas APIs. \\
+
+Após a autenticação do utilizador e obtenção das permissões necessárias, o sistema deverá conseguir:
+\begin{itemize}
+	\item Obter a lista de repositórios associados ao utilizador;
+	\item Persistir a informação dos repositórios a ser vigiados pela aplicação numa base de dados;
+	\item Associar os repositórios ao utilizador autenticado;
+\end{itemize}
+
+
+\subsection{Autenticação de utilizadores}
+
+A plataforma deve disponibilizar mecanismos de autenticação que permitam aos utilizadores vigiar de forma persistente os seus repositórios escolhidos garantindo ao mesmo tempo a sua confidencialidade.\\
+
+Para isso deverá existir suporte à autenticação através do protocolo OAuth2, recorrendo aos serviços disponibilizados pelo \textit{GitHub} e \textit{GitLab}. Este mecanismo permitirá:
+\begin{itemize}
+	\item Autenticar utilizadores sem necessidade de credenciais locais;
+	\item Garantir o acesso autenticado às APIs externa, obtendo assim permissão para acesso aos repositórios privados de um utilizador;
+	\item Simplificar o processo de registo e login.
+\end{itemize}
+
+Após autenticação bem sucedida, o utilizador deverá poder consultar os seus repositórios previamente guardados sem necessidade de repetir o processo de autorização às plataformas externas. \\
+
+\subsection{Controlo de acesso com base em papéis}
+
+O sistema deverá implementar um mecanismo de controlo de acesso baseados em papéis (\textit{Role-Based Access Control} ou \textit{RBAC}), permitindo restringir funcionalidades de acordo com o tipo de utilizador.\\
+
+Deverão ser suportados os seguintes papéis:
+\begin{itemize}
+	\item \textbf{?????}: Temos de ver bem isto
+	\item \textbf{?????}: Idem
+\end{itemize}
+
+Este mecanismo permitirá uma organização em equipas dentro da plataforma, bem como uma gestão do acesso aos dados conforme determido por role idk temos de ver. \\
+
+\subsection{Agregação de vulnerabilidades}
+
+Uma das funcionalidades mais importantes do SecDash deverá ser a capacidade de recolher e consolidar vulnerabilidades provenientes das análises feitas pelo GitHub Dependabot, GitLab Dependency Scanning e relatórios SAST de ambas as plataformas.\\
+
+A informação obtida deverá ser convertida para um modelo de dados interno normalizado, independentemente do formato original utilizado pela plataforma de origem. O sistema deverá então:
+\begin{itemize}
+	\item Importar relatórios de vulnerabilidades de ambas as plataformas \textit{GitHub} e \textit{GitLab};
+	\item Identificar e exibir as vulnerabilidades associadas a cada repositório;
+	\item Normalizar os dados heterogéneos provenientes de cada plataforma externa;
+	\item Permitir a consulta agregada e centralizada dos relatórios e findings provenientes de cada plataforma externa.
+\end{itemize}
+
+Este requisito constitui um dos principais desafios técnicos do projeto devido à heterogeneidade dos formatos produzidos pelas diferentes ferramentas de cada plataforma. \\
+
+\subsection{Dashboard Web}
+
+A plataforma deverá disponibilizar uma interface web que permita aos utilizadores visualizar o estado de segurança dos repositórios monitorizados.\\
+
+O dashboard deverá incluir:
+\begin{itemize}
+	\item Listagem de vulnerabilidades;
+	\item Temos de ver o resto idk
+\end{itemize}
+
+Pretende-se que a interface seja visualmente clara e de fácil acessibilidade, permitindo-lhes identificar rapidamente problemas de segurança relevantes identificados pelas ferramentas de segurança da plataforma originária de cada repositório. \\
+
+\subsection{Exportação de relatórios}
+
+O sistema deverá permitir exportar relatórios de vulnerabilidades para formatos externos, possibilitando a sua partilha e integração com outros sistemas.\\
+
+Inicialmente, deverá ser suportada exportação em formato ??????, podendo futuramente ser adicionados outros formatos, tais como ???????.\\
+
+Os relatórios exportados deverão incluir:
+\begin{itemize}
+	\item Informação do(s) repositório(s) analisado(s);
+	\item Resumo das vulnerabilidades identificadas;
+	\item Data de geração do relatório.
+\end{itemize}
+\section{Objetivos opcionais}
+No caso de a calendarização o permitir, pretendem-se implementar os seguintes objetivos opcionais, considerados \textit{stretch goals}. Consideramos que estes objetivos poderiam acrescentar mais alguma usabilidade à aplicação, embora não sejam estritamente necessários para responder ao problema que esta pretende desenvolver. \\
+
+\subsection{Integração com Jenkins}
+Pretende-se acrescentar uma nova possível fonte de dados para além das plataformas GitHub e GitLab, integrando o \textbf{SecDash} com o Jenkins, um dos servidores de automação mais utilizados na indústria para CI/CD. \\
+
+\subsection{Deployment em contentores}
+De forma a validar a viabilidade operacional da plataforma, pretende-se realizar o \textit{deployment} do \textbf{SecDash} alojando-o num servidor pessoal. \\
+
+Este processo envolveria a configuração e gestão de redes para exposição controlada do serviço e a orquestração via \textit{Docker}. O objetivo é que a aplicação possa ser demonstrada num ambiente que mais se assemelharia a um ambiente real e não apenas no ambiente de desenvolvimento local, passando a aplicação a estar acessível de forma remota. \\
+
+Pretende-se deste modo alargar o âmbito do projeto para lá de apenas desenvolvimento de software, passando pela gestão de regras de \textit{firewall} e exposição segura de serviços para acesso remoto. \\
+
+\subsection{Tracking de \textit{Findings}}
+Este objetivo visa dotar o \textbf{SecDash} de capacidades \textit{tracking} sobre as vulnerabilidades detetadas. \\
+
+Pretende-se implementar um sistema de acompanhamento que permita verificar se determinadada vulnerabilidade já se encontra ao encargo de algum desenvolvedor da equipa ou se esta já se encontra resolvida e, em caso afirmativo, desde quando. \\
 
 \section{Visão geral do sistema} \label{arquitetura:visão}
 O projeto encontra-se dividido em dois blocos principais, \textit{frontend} e \textit{backend}, interligados entre si. \\
