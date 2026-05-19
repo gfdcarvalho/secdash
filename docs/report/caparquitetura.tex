@@ -3,7 +3,104 @@
 %
 \chapter{Arquitetura e tecnologias} \label{cap:arquitetura}
 
-O presente capítulo pretende expor uma visão geral da organização técnica do projeto, os diferentes módulos que o compõem e suas intedependências, bem como as linguagem de programação e \textit{frameworks} usadas no seu desenvolvimento.\\
+O presente capítulo pretende expor uma visão geral dos requisitos da aplicação e da organização técnica do projeto, os diferentes módulos que o compõem e suas intedependências, bem como as linguagem de programação e \textit{frameworks} usadas no seu desenvolvimento.\\
+
+\section{Requisitos funcionais} \label{intro:requisitos}
+
+De forma a responder satisfatoriamente ao problema que o SecDash pretende resolver, foi definida uma lista de requisitos funcionais considerados essenciais para o sistema. Estes requisitos representam as funcionalidades mínimas necessárias para permitir a agregação, normalização e visualização centralizada de vulnerabilidades provenientes de múltiplos repositórios e plataformas. \\
+
+\subsection{Integração de repositórios}
+
+A aplicação deve ser capaz de obter repositórios alojados nas plataformas \textit{GitHub} e \textit{GitLab} através das respetivas APIs. \\
+
+Após a autenticação do utilizador e obtenção das permissões necessárias, o sistema deverá conseguir:
+\begin{itemize}
+	\item Obter a lista de repositórios associados ao utilizador;
+	\item Persistir a informação dos repositórios a ser vigiados pela aplicação numa base de dados;
+	\item Associar os repositórios ao utilizador autenticado;
+\end{itemize}
+
+
+\subsection{Autenticação de utilizadores}
+
+A plataforma deve disponibilizar mecanismos de autenticação que permitam aos utilizadores vigiar de forma persistente os seus repositórios escolhidos garantindo ao mesmo tempo a sua confidencialidade.\\
+
+Para isso deverá existir suporte à autenticação através do protocolo OAuth2, recorrendo aos serviços disponibilizados pelo \textit{GitHub} e \textit{GitLab}. Este mecanismo permitirá:
+\begin{itemize}
+	\item Autenticar utilizadores sem necessidade de credenciais locais;
+	\item Garantir o acesso autenticado às APIs externa, obtendo assim permissão para acesso aos repositórios privados de um utilizador;
+	\item Simplificar o processo de registo e login.
+\end{itemize}
+
+Após autenticação bem sucedida, o utilizador deverá poder consultar os seus repositórios previamente guardados sem necessidade de repetir o processo de autorização às plataformas externas. \\
+
+\subsection{Controlo de acesso com base em papéis}
+
+O sistema deverá implementar um mecanismo de controlo de acesso baseados em papéis (\textit{Role-Based Access Control} ou \textit{RBAC}), permitindo restringir funcionalidades de acordo com o tipo de utilizador.\\
+
+Deverão ser suportados os seguintes papéis:
+\begin{itemize}
+	\item \textbf{?????}: Temos de ver bem isto
+	\item \textbf{?????}: Idem
+\end{itemize}
+
+Este mecanismo permitirá uma organização em equipas dentro da plataforma, bem como uma gestão do acesso aos dados conforme determido por role idk temos de ver. \\
+
+\subsection{Agregação de vulnerabilidades}
+
+Uma das funcionalidades mais importantes do SecDash deverá ser a capacidade de recolher e consolidar vulnerabilidades provenientes das análises feitas pelo GitHub Dependabot, GitLab Dependency Scanning e relatórios SAST de ambas as plataformas.\\
+
+A informação obtida deverá ser convertida para um modelo de dados interno normalizado, independentemente do formato original utilizado pela plataforma de origem. O sistema deverá então:
+\begin{itemize}
+	\item Importar relatórios de vulnerabilidades de ambas as plataformas \textit{GitHub} e \textit{GitLab};
+	\item Identificar e exibir as vulnerabilidades associadas a cada repositório;
+	\item Normalizar os dados heterogéneos provenientes de cada plataforma externa;
+	\item Permitir a consulta agregada e centralizada dos relatórios e findings provenientes de cada plataforma externa.
+\end{itemize}
+
+Este requisito constitui um dos principais desafios técnicos do projeto devido à heterogeneidade dos formatos produzidos pelas diferentes ferramentas de cada plataforma. \\
+
+\subsection{Dashboard Web}
+
+A plataforma deverá disponibilizar uma interface web que permita aos utilizadores visualizar o estado de segurança dos repositórios monitorizados.\\
+
+O dashboard deverá incluir:
+\begin{itemize}
+	\item Listagem de vulnerabilidades;
+	\item Temos de ver o resto idk
+\end{itemize}
+
+Pretende-se que a interface seja visualmente clara e de fácil acessibilidade, permitindo-lhes identificar rapidamente problemas de segurança relevantes identificados pelas ferramentas de segurança da plataforma originária de cada repositório. \\
+
+\subsection{Exportação de relatórios}
+
+O sistema deverá permitir exportar relatórios de vulnerabilidades para formatos externos, possibilitando a sua partilha e integração com outros sistemas.\\
+
+Inicialmente, deverá ser suportada exportação em formato ??????, podendo futuramente ser adicionados outros formatos, tais como ???????.\\
+
+Os relatórios exportados deverão incluir:
+\begin{itemize}
+	\item Informação do(s) repositório(s) analisado(s);
+	\item Resumo das vulnerabilidades identificadas;
+	\item Data de geração do relatório.
+\end{itemize}
+\section{Objetivos opcionais}
+No caso de a calendarização o permitir, pretendem-se implementar os seguintes objetivos opcionais, considerados \textit{stretch goals}. Consideramos que estes objetivos poderiam acrescentar mais alguma usabilidade à aplicação, embora não sejam estritamente necessários para responder ao problema que esta pretende desenvolver. \\
+
+\subsection{Integração com Jenkins}
+Pretende-se acrescentar uma nova possível fonte de dados para além das plataformas GitHub e GitLab, integrando o \textbf{SecDash} com o Jenkins, um dos servidores de automação mais utilizados na indústria para CI/CD. \\
+
+\subsection{Deployment em contentores}
+De forma a validar a viabilidade operacional da plataforma, pretende-se realizar o \textit{deployment} do \textbf{SecDash} alojando-o num servidor pessoal. \\
+
+Este processo envolveria a configuração e gestão de redes para exposição controlada do serviço e a orquestração via \textit{Docker}. O objetivo é que a aplicação possa ser demonstrada num ambiente que mais se assemelharia a um ambiente real e não apenas no ambiente de desenvolvimento local, passando a aplicação a estar acessível de forma remota. \\
+
+Pretende-se deste modo alargar o âmbito do projeto para lá de apenas desenvolvimento de software, passando pela gestão de regras de \textit{firewall} e exposição segura de serviços para acesso remoto. \\
+
+\subsection{Tracking de \textit{Findings}}
+Este objetivo visa dotar o \textbf{SecDash} de capacidades \textit{tracking} sobre as vulnerabilidades detetadas. \\
+
+Pretende-se implementar um sistema de acompanhamento que permita verificar se determinadada vulnerabilidade já se encontra ao encargo de algum desenvolvedor da equipa ou se esta já se encontra resolvida e, em caso afirmativo, desde quando. \\
 
 \section{Visão geral do sistema} \label{arquitetura:visão}
 O projeto encontra-se dividido em dois blocos principais, \textit{frontend} e \textit{backend}, interligados entre si. \\
@@ -69,6 +166,34 @@ Esta apresenta duas grandes vantagens sobre o nosso ponto de vista:
 	
 	\item \textbf{Eliminação de código repetitivo e gestão automática de recursos:} Em vez de obrigar o programador a gerir manualmente a abertura e fecho de ligações, a criação de \textit{statements} ou a iteração sobre \textit{result sets}, o Jdbi automatiza estas tarefas. O Jdbi garante assim que todos os recursos da base de dados (ligações, \textit{statements} e \textit{result sets}) são libertados corretamente após a execução, mesmo que esta termine em erro. O uso de JDBC puro, comparativamente, requeriria que este tratamento fosse feito de forma explícita em todos pedidos à base de dados; 
 \end{itemize}
-\subsubsection{Postgresql}
+
+\subsubsection{PostgreSQL}
+Para persistência de dados decidiu-se utilizar uma base de dados relacional, uma vez que os dados com os quais a aplicação trabalha são altamente estruturados e com dependências e relações claras entre si (por exemplo, um utilizador possui múltiplos repositórios associados e cada repositório agrupa um conjunto delimitado de vulnerabilidades). O PostgreSQL permite mapear este modelo de dados de forma direta, utilizando chaves primárias e estrangeiras para refletir fielmente a lógica de negócio. Este fator, aliado à simplicidade no mapeamento com a Jdbi e integração com o ecossistema Kotlin/JVM, levaram à escolha de PostgreSQL. \\
+
 \subsubsection{OAuth 2.0}
+A utilização do protocolo \textbf{OAuth 2.0} no \textbf{SecDash} cumpre um propósito duplo. \\
+
+Um destes propósitos é a delegação da gestão de identidades a entidades externas confiáveis, não sendo assim necessário que um utilizador se registe diretamente no \textbf{SecDash}. Os utilizadores podem assim criar conta e aceder à plataforma com apenas um clique, utilizando contas já existentes em outras plataformas, o que pode melhorar significativamente a experiência de utilização. As plataformas suportadas como provedores de identidade sãp Google, GitHub e GitLab. \\
+
+Para além disso, a funcionalidade principal da aplicação está dependente deste protocolo: sendo o \textit{SecDash} um agregador de vulnerabilidades, a aplicação necessita de consultar dados privados guardados no GitHub e GitLab, sendo o Oauth2.0 a forma como o acesso a estes é concedido. \\
+
 \subsection{Frontend} \label{arquitetura:tecnologias:frontend}
+
+\subsubsection{Typescript}
+A linguagem escolhida para o \textit{frontend} foi \textit{\textbf{Typescript}}. \\
+
+A escolha desta em detrimento de Javascript puro deveu-se ao facto de Typescript possuir tipagem estática. Não só isto facilita a transposição dos modelos de dados utilizados no backend para a lógica do frontend como também garante que qualquer erro de correspondência de dados possa ser detetado imediatamente em tempo de compilação, e não em tempo de execução no navegador do utilizador. \\
+
+\subsubsection{React}
+Como biblioteca principal para a construção da interface do utilizador, adotou-se \textbf{React}. \\
+
+Os fatore que motivaram esta escolha foram os seguintes:
+
+\begin{itemize}
+	\item \textbf{Arquitetura Baseada em Componentes:} O React permite decompor a interface visal em peças de código modulares, isoladas e reutilizáveis. Esta modularidade facilita a manutenção do código e permite que múltiplos elementos partilhem a mesma lógica visual e a sua reutilização;
+	
+	\item \textbf{Gestão de Estado com \textit{Hooks}:} A utilização de \textit{Hooks} como \texttt{useState} e \texttt{useEffect} permitem controlar o fluxo de dados na aplicação e gerir operações como o estado de carregamento de componentes, por exemplo;
+\end{itemize}
+
+\subsubsection{Vite}
+idk isto é contigo rodrigo \\
