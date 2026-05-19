@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { NavLink } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import Style from './Teams.module.css'
 import type { SimpleTeam, SimpleTeamsListOutput } from '../../model/teams/teams'
@@ -29,17 +30,19 @@ export function Teams() {
     return (
         <div className={Style.teamsContent}>
             <div className={Style.topSection}>
-                <h2> Teams</h2>
-                <button> Create New Team</button>
+                <h2> {t.teams.title}</h2>
+                <NavLink to='/teams/create' className={Style.createTeamButton}>
+                    {t.teams.createTeam}
+                </NavLink>
             </div>
-            <div className={Style.buttomSection}>
+            <div className={Style.bottomSection}>
                 <div className={Style.searchBarDiv}>
-                    <input className={Style.searchBar} type="text" placeholder="search in your teams"/>
+                    <input className={Style.searchBar} type="text" placeholder={t.teams.searchPlaceholder}/>
                 </div>
                 <div className={Style.teamsListDiv}>
-                    {error && <p>Failed to load teams</p>}
-                    {!error && teams === undefined && <p>Loading...</p>}
-                    {teams?.length === 0 && <p>No teams yet</p>}
+                    {error && <TeamsMessage text={t.teams.error} />}
+                    {!error && teams === undefined && <TeamsMessage text={t.teams.loading} />}
+                    {teams?.length === 0 && <TeamsMessage text={t.teams.noTeams} />}
                     {teams?.map(team => (
                         <div key={team.tid} className={Style.teamCard}>
                             <h3>{team.name}</h3>
@@ -48,6 +51,15 @@ export function Teams() {
                     ))}
                 </div>
             </div>
+        </div>
+    )
+}
+
+
+function TeamsMessage({ text }: { text: string }) {
+    return (
+        <div className={Style.errorMessageCard}>
+            <p>{text}</p>
         </div>
     )
 }

@@ -11,6 +11,7 @@ export const pt = {
         nav: {
             home: "Início",
             teams: "Equipas",
+            createTeam: "Nova Equipa",
             repos: "Repositórios",
             profile: "Perfil",
         }
@@ -30,5 +31,13 @@ export const pt = {
             blankPassword: "password é obrigatória",
             blankEmail: "email é obrigatório",
         }
-    }
+    },
+    teams: {
+        title: "Equipas",
+        createTeam: "Criar Nova Equipa",
+        searchPlaceholder: "Pesquisa nas tuas Equipas",
+        error: "Erro a carregar Equipas",
+        loading: "A Carregar...",
+        noTeams: "Ainda não tem Equipas",
+    },
 }

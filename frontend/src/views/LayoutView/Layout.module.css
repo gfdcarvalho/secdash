@@ -40,6 +40,20 @@
     background-color: var(--sidebar-buttons-hover);
 }
 
+.navDropDown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    padding-left: 1em;
+    margin-top: -0.25em;
+}
+
+.navDropDown a {
+    font-size: 0.85em;
+    font-weight: normal ;
+    width: 7em ;
+}
+
 .sideBar a:focus {
     background-color: var(--sidebar-buttons-hover);
 }

@@ -1,4 +1,4 @@
-import { Outlet, NavLink } from 'react-router'
+import { Outlet, NavLink, useMatch } from 'react-router'
 import { useAuthentication } from '../../utils/Authentication'
 import { RequireAuthentication } from '../../utils/RequireAuthentication'
 import style from './Layout.module.css' 
@@ -10,6 +10,7 @@ import { Icon } from '@iconify/react'
 export function Layout() {
     const [user] = useAuthentication()
     const { t } = useTranslation()
+    const isTeamsActive = useMatch("/teams/*")
     
 
     return (
@@ -26,6 +27,12 @@ export function Layout() {
                 <div className={style.sideBar}>
                     <NavLink to="/"><Icon icon="material-symbols-light:home-outline-rounded" width="1.5em"/>{t.layout.nav.home}</NavLink>
                     <NavLink to="/teams"><Icon icon="ri:team-line" width="1.5em"/>{t.layout.nav.teams}</NavLink>
+                    <div className={style.navDropDown}>
+                        { isTeamsActive &&
+                            (<NavLink to="/teams/create">{t.layout.nav.createTeam} </NavLink>)
+                        }
+                    </div>
+
                     <NavLink to="/repos"><Icon icon="eos-icons:repositories" width="1.5em"/>{t.layout.nav.repos}</NavLink>
                     <NavLink to="/profile"><Icon icon="line-md:account" width="1.5em"/>{t.layout.nav.profile}</NavLink>
                 </div>

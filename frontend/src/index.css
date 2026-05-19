@@ -14,6 +14,7 @@
     --color-text: #261201;
     --input-text-bg: #aba678;
     --input-text-hover: #8f884a;
+    --create-button: #ed8008;
 }
 
 [data-theme="dark"] {
@@ -24,6 +25,7 @@
     --color-text: #D9D2C6;
     --input-text-bg: #B56576;
     --input-text-hover: #8d4c5a;
+    --create-button:#aab7bf;
 }
 
 input:-webkit-autofill,

@@ -8,6 +8,7 @@ import { Profile } from './views/ProfileView/Profile'
 import { Repos } from './views/ReposView/Repos'
 import { Teams } from './views/TeamsView/Teams'
 import './App.css'
+import { CreateTeam } from './views/CreateTeam/CreateTeam';
 
 const router = createBrowserRouter ([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter ([
       { path: '/profile', element: <Profile/>},
       { path: '/repos', element: <Repos/>},
       { path: '/teams', element: <Teams/>},
+      { path: '/teams/create', element: <CreateTeam/>}
       // { path: '/repositories', element: (...) },
     ],
   },

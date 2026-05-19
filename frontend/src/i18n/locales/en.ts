@@ -11,6 +11,7 @@ export const en = {
         nav: {
             home: "Home",
             teams: "Teams",
+            createTeam: "New Team",
             repos: "Repositories",
             profile: "Profile",
         }
@@ -30,5 +31,13 @@ export const en = {
             blankPassword: "password is required",
             blankEmail: "email is required",
         }
-    }
+    },
+    teams: {
+        title: "Teams",
+        createTeam: "Create New Team",
+        searchPlaceholder: "Search in your teams",
+        error: "Failed to load Teams",
+        loading: "Loading...",
+        noTeams: "No teams yet",
+    },
 }
