@@ -104,5 +104,5 @@
 }
 
 .searchBar:focus {
-    border: 2px solid var(--input-text-hover);
+    border-color: var(--input-text-hover);
 }

@@ -40,4 +40,14 @@ export const en = {
         loading: "Loading...",
         noTeams: "No teams yet",
     },
+    createTeam: {
+        title: "Create Team",
+        myTeams: "My Teams",
+        namePlaceholder: "Team Name",
+        descriptionPlaceholder: "Team Description (optional)",
+        submit: "Create Team",
+        errors: {
+            blankName: "Team name is required",
+        }
+    },
 }

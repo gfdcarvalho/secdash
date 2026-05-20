@@ -148,16 +148,16 @@ export function Login() {
                 <div className={style.registerCard}>
                     {t.register.register}
                     <ProviderLoginButtons func={handleProviderLogin} isLoading={state.isLoading}/>
-                    <UsernameInput className={style.inputText} value={state.register.username} onChange={e => dispatch(setRegisterField("username", e))} error={state.registerErrors.username && t.register.errors[state.registerErrors.username]}/>
-                    <EmailInput className={style.inputText} value={state.register.email} onChange={e => dispatch(setRegisterField("email", e))} error={state.registerErrors.email && t.register.errors[state.registerErrors.email]}/>
-                    <PasswordInput className={style.inputText} value={state.register.password} onChange={e => dispatch(setRegisterField("password", e))} error={state.registerErrors.password && t.register.errors[state.registerErrors.password]}/>
+                    <UsernameInput className="inputText" value={state.register.username} onChange={e => dispatch(setRegisterField("username", e))} error={state.registerErrors.username && t.register.errors[state.registerErrors.username]}/>
+                    <EmailInput className="inputText" value={state.register.email} onChange={e => dispatch(setRegisterField("email", e))} error={state.registerErrors.email && t.register.errors[state.registerErrors.email]}/>
+                    <PasswordInput className="inputText" value={state.register.password} onChange={e => dispatch(setRegisterField("password", e))} error={state.registerErrors.password && t.register.errors[state.registerErrors.password]}/>
                     <button onClick={handleRegister} disabled={state.isLoading}> {t.register.register} </button>
                 </div>
                 <div className={style.loginCard}>
                     {t.login.login}
                     <ProviderLoginButtons func={handleProviderLogin} isLoading={state.isLoading} />
-                    <UsernameInput className={style.inputText} value={state.login.username} onChange={e => dispatch(setLoginField("username", e))} error={state.loginErrors.username && t.login.errors[state.loginErrors.username]}/>
-                    <PasswordInput className={style.inputText} value={state.login.password} onChange={e => dispatch(setLoginField("password", e))} error={state.loginErrors.password && t.login.errors[state.loginErrors.password]}/>
+                    <UsernameInput className="inputText" value={state.login.username} onChange={e => dispatch(setLoginField("username", e))} error={state.loginErrors.username && t.login.errors[state.loginErrors.username]}/>
+                    <PasswordInput className="inputText" value={state.login.password} onChange={e => dispatch(setLoginField("password", e))} error={state.loginErrors.password && t.login.errors[state.loginErrors.password]}/>
                     <button onClick={handleLogin} disabled={state.isLoading}> {t.login.login} </button>
                 </div>
             </div>

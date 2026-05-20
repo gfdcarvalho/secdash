@@ -40,4 +40,14 @@ export const pt = {
         loading: "A Carregar...",
         noTeams: "Ainda não tem Equipas",
     },
+    createTeam: {
+        title: "Criar Equipa",
+        myTeams: "As Minhas Equipas",
+        namePlaceholder: "Nome da Equipa",
+        descriptionPlaceholder: "Descrição da Equipa (opcional)",
+        submit: "Criar Equipa",
+        errors: {
+            blankName: "O nome da equipa é obrigatório",
+        }
+    },
 }

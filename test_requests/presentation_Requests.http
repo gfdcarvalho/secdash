@@ -1,4 +1,4 @@
-@token = uBGYIZnTnEB_88TcyVa_qYperuvu-xzjPLmD2PQnX_o=
+@token = w7N0vTYKgb0RXwpY2BsLAFKMDCte8a0bywJ52GVHWVs=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -22,9 +22,9 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "testes",
+  "username": "testes11",
   "password": "testes",
-  "email": "teste@testesas"
+  "email": "teste@testesas1"
 }
 
 ### login
@@ -32,7 +32,7 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "testes",
+  "username": "testes11",
   "password": "testes"
 }
 
