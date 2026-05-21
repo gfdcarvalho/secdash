@@ -13,6 +13,8 @@ export const en = {
             teams: "Teams",
             createTeam: "New Team",
             repos: "Repositories",
+            github: "GitHub",
+            gitlab: "GitLab",
             profile: "Profile",
         }
     },

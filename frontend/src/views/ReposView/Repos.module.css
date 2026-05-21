@@ -1,0 +1,57 @@
+
+
+.repositoriesContent{
+    composes: content from '../../styles/shared.module.css'
+}
+
+.topSection{
+    composes: topBar from '../../styles/shared.module.css'
+}
+
+
+.topSectionButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.addRepositoriesButtons {
+    padding: 1em;
+    color: var(--color-text);
+    padding: 0.5em;
+    background-color: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    outline: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 1s ease;
+    text-decoration: none;
+}
+
+.addRepositoriesButtons:hover {
+    background-color: var(--create-button);
+}
+
+.bottomSection {
+    composes: bottomSection from '../../styles/shared.module.css';
+}
+
+.searchBarDiv {
+    composes: searchBarDiv from '../../styles/shared.module.css';
+}
+
+.searchBar {
+    composes: searchBar from '../../styles/shared.module.css';
+}
+
+.reposListDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    flex: 1;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    outline: none;
+    border-radius: 8px;
+    transition: background-color 1s ease, border-color 0.2s ease;
+}

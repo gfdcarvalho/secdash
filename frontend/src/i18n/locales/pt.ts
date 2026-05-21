@@ -13,6 +13,8 @@ export const pt = {
             teams: "Equipas",
             createTeam: "Nova Equipa",
             repos: "Repositórios",
+            github: "GitHub",
+            gitlab: "GitLab",
             profile: "Perfil",
         }
     },

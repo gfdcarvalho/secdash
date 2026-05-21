@@ -11,6 +11,7 @@ export function Layout() {
     const [user] = useAuthentication()
     const { t } = useTranslation()
     const isTeamsActive = useMatch("/teams/*")
+    const isReposActive = useMatch("/repos/*")
     
 
     return (
@@ -34,6 +35,15 @@ export function Layout() {
                     </div>
 
                     <NavLink to="/repos"><Icon icon="eos-icons:repositories" width="1.5em"/>{t.layout.nav.repos}</NavLink>
+                    <div className={style.navDropDown}>
+                        { isReposActive &&
+                            <>
+                                <NavLink to="/repos/github">{t.layout.nav.github}</NavLink>
+                                <NavLink to="/repos/gitlab">{t.layout.nav.gitlab}</NavLink>
+                            </>
+                        }
+                    </div>
+
                     <NavLink to="/profile"><Icon icon="line-md:account" width="1.5em"/>{t.layout.nav.profile}</NavLink>
                 </div>
                 <div className={style.content}>
