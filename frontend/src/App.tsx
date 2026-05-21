@@ -9,6 +9,8 @@ import { Repos } from './views/ReposView/Repos'
 import { Teams } from './views/TeamsView/Teams'
 import './App.css'
 import { CreateTeam } from './views/CreateTeam/CreateTeam';
+import { Github } from './views/GithubView/Github';
+import { Gitlab } from './views/GitlabView/Gitlab';
 
 const router = createBrowserRouter ([
   {
@@ -16,6 +18,8 @@ const router = createBrowserRouter ([
       { index: true, element: <Home/>, },  // "path" = '/' (home page)
       { path: '/profile', element: <Profile/>},
       { path: '/repos', element: <Repos/>},
+      { path: '/repos/github', element: <Github/>},
+      { path: '/repos/gitlab', element: <Gitlab/>},
       { path: '/teams', element: <Teams/>},
       { path: '/teams/create', element: <CreateTeam/>}
       // { path: '/repositories', element: (...) },

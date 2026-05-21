@@ -23,16 +23,16 @@ export function Repos() {
                 <h2> Repos </h2>
                 <div className={Style.topSectionButtons}>
                     <NavLink to='/repos/github' className={Style.addRepositoriesButtons}>  
-                        Add Team from GitHub 
+                        Add repositories from GitHub 
                     </NavLink>
                     <NavLink to='/repos/gitlab' className={Style.addRepositoriesButtons}>  
-                        Add Team from GitLab 
+                        Add repositories from GitLab 
                     </NavLink>
                 </div>
             </div>
             <div className={Style.bottomSection}>
                 <div className={Style.searchBarDiv}>
-                    <input className={Style.searchBar} type="text" placeholder="Search GitHub repositories"/>
+                    <input className={Style.searchBar} type="text" placeholder="Search your repositories"/>
                 </div>
                 <div className={Style.reposListDiv}>
 

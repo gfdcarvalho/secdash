@@ -3,11 +3,14 @@ package com.isel.ps.secdash.controller
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.controller.pipeline.RequestTokenProcessor
 import com.isel.ps.secdash.model.AuthProvider
+import com.isel.ps.secdash.model.Platform
+import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel
 import com.isel.ps.secdash.service.AuthServices
 import com.isel.ps.secdash.service.AuthorizationError
+import com.isel.ps.secdash.service.AuthorizationResult
 import com.isel.ps.secdash.service.ExternalUserLoginError
 import com.isel.ps.secdash.service.ExternalUserLoginResult
 import com.isel.ps.secdash.service.GithubServices
@@ -16,6 +19,7 @@ import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
@@ -55,9 +59,8 @@ class AuthController(
         }
     }
 
-    // login com o GitHub
     @PostMapping("/logout")
-    fun logoutUser() {
+    fun logoutUser() { // implementar !!!
     }
 
     @GetMapping("/login/google")
@@ -148,13 +151,7 @@ class AuthController(
         val accessToken = authorizedClient.accessToken?.tokenValue
             ?: return Problem.response(401, Problem.unauthorized)
         val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
-        return when (result) {
-            is Success -> ResponseEntity.ok(UserOutputDto(user.user.uid, user.user.name, user.user.email, user.user.role))
-            is Failure -> when (result.value) {
-                AuthorizationError.InvalidToken -> Problem.response(400, Problem.invalidRequest)
-                AuthorizationError.Unknown -> Problem.response(500, Problem.internalServerError)
-            }
-        }
+        return handleAuthorizationResponse(user, result, Platform.GITHUB)
     }
 
     @GetMapping("/authorize/gitlab")
@@ -168,8 +165,17 @@ class AuthController(
         val accessToken = authorizedClient?.accessToken?.tokenValue
             ?: return Problem.response(401, Problem.unauthorized)
         val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITLAB, accessToken)
+        return handleAuthorizationResponse(user, result, Platform.GITLAB)
+    }
+
+    private fun handleAuthorizationResponse(user: AuthenticatedUser,result: AuthorizationResult, provider: Platform): ResponseEntity<*> {
         return when (result) {
-            is Success -> ResponseEntity.ok(UserOutputDto(user.user.uid, user.user.name, user.user.email, user.user.role))
+            is Success -> {
+                ResponseEntity.ok(UserOutputDto(user.user.uid, user.user.name, user.user.email, user.user.role))
+//                ResponseEntity.status(302)
+//                    .header(HttpHeaders.LOCATION, "http://localhost:5173/repos/${provider.name.lowercase()}")
+//                    .body(UserOutputDto(user.user.uid, user.user.name, user.user.email, user.user.role))
+            }
             is Failure -> when (result.value) {
                 AuthorizationError.InvalidToken -> Problem.response(400, Problem.invalidRequest)
                 AuthorizationError.Unknown -> Problem.response(500, Problem.internalServerError)
