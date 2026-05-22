@@ -12,6 +12,7 @@ export function Github() {
     const [repositories, setRepositories] = useState<Array<ExternalRepository>>()
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
+    const [search, setSearch] = useState("")
 
     const getRepos = async () => {
         const response = await api.get<Array<ExternalRepository>>("github/repos")
@@ -40,13 +41,13 @@ export function Github() {
             </div>
             <div className={Style.bottomSection}>
                 <div className={Style.searchBarDiv}>
-                    <input className={Style.searchBar} type="text" placeholder="search in your github repositories"/>
+                    <input className={Style.searchBar} type="text" placeholder="search in your github repositories" value={search} onChange={e => setSearch(e.target.value)}/>
                 </div>
                 <div className={Style.reposListDiv}>
                     {error && <RepoMessage text={errorMessage} />}
                     {!error && repositories === undefined && <RepoMessage text="Loading..." />}
                     {repositories?.length === 0 && <RepoMessage text="No repositories found." />}
-                    {repositories?.map(repo => repositoryCard(repo))}
+                    {repositories?.filter(repo => repo.name.toLowerCase().includes(search.toLowerCase())).map(repo => repositoryCard(repo))}
                 </div>
             </div>
         </div>
