@@ -17,6 +17,7 @@ import com.isel.ps.secdash.service.GithubServices
 import com.isel.ps.secdash.service.UserLoginError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
+import com.isel.ps.secdash.controller.pipeline.SESSION_OAUTH_REDIRECT_URI
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -151,7 +152,7 @@ class AuthController(
         val accessToken = authorizedClient.accessToken?.tokenValue
             ?: return Problem.response(401, Problem.unauthorized)
         val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
-        return handleAuthorizationResponse(user, result, Platform.GITHUB)
+        return handleAuthorizationResponse(user, result, Platform.GITHUB, request)
     }
 
     @GetMapping("/authorize/gitlab")
@@ -165,16 +166,23 @@ class AuthController(
         val accessToken = authorizedClient?.accessToken?.tokenValue
             ?: return Problem.response(401, Problem.unauthorized)
         val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITLAB, accessToken)
-        return handleAuthorizationResponse(user, result, Platform.GITLAB)
+        return handleAuthorizationResponse(user, result, Platform.GITLAB, request)
     }
 
-    private fun handleAuthorizationResponse(user: AuthenticatedUser,result: AuthorizationResult, provider: Platform): ResponseEntity<*> {
+    private fun handleAuthorizationResponse(
+        user: AuthenticatedUser,
+        result: AuthorizationResult,
+        provider: Platform,
+        request: HttpServletRequest
+    ): ResponseEntity<*> {
         return when (result) {
             is Success -> {
-                ResponseEntity.ok(UserOutputDto(user.user.uid, user.user.name, user.user.email, user.user.role))
-//                ResponseEntity.status(302)
-//                    .header(HttpHeaders.LOCATION, "http://localhost:5173/repos/${provider.name.lowercase()}")
-//                    .body(UserOutputDto(user.user.uid, user.user.name, user.user.email, user.user.role))
+                val redirectUri = request.session.getAttribute(SESSION_OAUTH_REDIRECT_URI) as? String
+                    ?: "http://localhost:5173/repos/${provider.name.lowercase()}"
+                request.session.removeAttribute(SESSION_OAUTH_REDIRECT_URI)
+                ResponseEntity.status(302)
+                    .header(HttpHeaders.LOCATION, redirectUri)
+                    .build<Unit>()
             }
             is Failure -> when (result.value) {
                 AuthorizationError.InvalidToken -> Problem.response(400, Problem.invalidRequest)

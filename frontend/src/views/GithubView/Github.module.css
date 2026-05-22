@@ -1,0 +1,117 @@
+.content {
+    composes: content from '../../styles/shared.module.css';
+}
+
+.topSection {
+    composes: topBar from '../../styles/shared.module.css';
+}
+
+.bottomSection {
+    composes: bottomSection from '../../styles/shared.module.css';
+}
+
+.searchBarDiv {
+    composes: searchBarDiv from '../../styles/shared.module.css';
+}
+
+.searchBar {
+    composes: searchBar from '../../styles/shared.module.css';
+}
+
+.reposListDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    flex: 1;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    outline: none;
+    border-radius: 8px;
+    transition: background-color 1s ease, border-color 0.2s ease;
+}
+
+.repoCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+}
+
+.repoCard:last-child {
+    border-bottom: none;
+}
+
+.repoCardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.repoCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.repoName {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.repoVisibility {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    text-transform: lowercase;
+}
+
+.repoDescription {
+    font-size: 0.82rem;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.repoCardMeta {
+    display: flex;
+    gap: 12px;
+    font-size: 0.78rem;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.repoCardActions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-left: 16px;
+    flex-shrink: 0;
+}
+
+.addRepoButton, .addToTeamButton {
+    font-size: 0.78rem;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+}
+
+.addRepoButton:hover, .addToTeamButton:hover {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.repoMessage {
+    padding: 16px;
+    text-align: center;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}

@@ -26,7 +26,7 @@ export function Layout() {
             </div>
             <div className={style.body}>
                 <div className={style.sideBar}>
-                    <NavLink to="/"><Icon icon="material-symbols-light:home-outline-rounded" width="1.5em"/>{t.layout.nav.home}</NavLink>
+                    <NavLink to="/"><Icon icon="line-md:home" width="1.5em"/>{t.layout.nav.home}</NavLink>
                     <NavLink to="/teams"><Icon icon="ri:team-line" width="1.5em"/>{t.layout.nav.teams}</NavLink>
                     <div className={style.navDropDown}>
                         { isTeamsActive &&

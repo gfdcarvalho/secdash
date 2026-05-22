@@ -40,3 +40,8 @@ export async function registerAndAuthenticate( username: string, email: string, 
 export function authenticateWithProvider(provider: Provider): void {
     window.location.href = `/api/oauth2/authorization/${provider}`
 }
+
+export function authorizeWithProvider(provider: Provider, redirectUri: string = window.location.href): void {
+    const encoded = encodeURIComponent(redirectUri)
+    window.location.href = `/api/oauth2/authorization/${provider}-api?redirect_uri=${encoded}`
+}

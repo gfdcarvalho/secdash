@@ -11,10 +11,11 @@ import './App.css'
 import { CreateTeam } from './views/CreateTeam/CreateTeam';
 import { Github } from './views/GithubView/Github';
 import { Gitlab } from './views/GitlabView/Gitlab';
+import { RequireAuthentication } from './utils/RequireAuthentication';
 
 const router = createBrowserRouter ([
   {
-    path: '/', element: <Layout/>, children: [
+    path: '/', element: <RequireAuthentication><Layout/></RequireAuthentication>, children: [
       { index: true, element: <Home/>, },  // "path" = '/' (home page)
       { path: '/profile', element: <Profile/>},
       { path: '/repos', element: <Repos/>},

@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.utils
 
 import com.isel.ps.secdash.controller.pipeline.BearerTokenAuthFilter
+import com.isel.ps.secdash.controller.pipeline.OAuthRedirectFilter
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,12 +16,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class SecurityConfig(
     private val bearerTokenAuthFilter: BearerTokenAuthFilter,
+    private val oAuthRedirectFilter: OAuthRedirectFilter,
 ) {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
+            .addFilterBefore(oAuthRedirectFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(bearerTokenAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeHttpRequests { auth ->
                 auth

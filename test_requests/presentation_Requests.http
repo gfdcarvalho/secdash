@@ -1,4 +1,4 @@
-@token = w7N0vTYKgb0RXwpY2BsLAFKMDCte8a0bywJ52GVHWVs=
+@token = 3pLz_CkEb60C3hy5dlrIz_aLgU0jxgbmZHmZco6_s08=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -6,6 +6,11 @@
 // http://localhost:8080/oauth2/authorization/github-api   authorize with github for api access
 
 // http://localhost:8080/github/repos
+
+### list github/repos
+GET http://localhost:8080/github/repos
+Authorization: Bearer {{token}}
+
 
 ### create a new user
 POST http://localhost:8080/users/register
