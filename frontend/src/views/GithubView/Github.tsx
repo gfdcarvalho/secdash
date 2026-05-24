@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from '../../i18n/I18nProvider'
+import type { Translations } from '../../i18n/I18nProvider'
 import type { ExternalRepository } from '../../model/repository/externalRepository'
 import Style from './Github.module.css'
 import { api } from '../../utils/fetchApi'
@@ -14,6 +15,10 @@ export function Github() {
     const [errorMessage, setErrorMessage] = useState("")
     const [search, setSearch] = useState("")
 
+    const handleRepoClick = (_repo: ExternalRepository) => {
+        // TODO: navegar para repo details — navigate(`/github/repos/${_repo.externalId}`)
+    }
+
     const getRepos = async () => {
         const response = await api.get<Array<ExternalRepository>>("github/repos")
         if (isSuccess(response)) {
@@ -25,7 +30,7 @@ export function Github() {
             }
             if (response.value.status === 404) {
                 setError(true)
-                setErrorMessage("teste!!")
+                setErrorMessage(t.github.error)
             }
         }
     }
@@ -37,17 +42,17 @@ export function Github() {
     return (
         <div className={Style.content}>
             <div className={Style.topSection}>
-                <h2>Github</h2>
+                <h2>{t.github.title}</h2>
             </div>
             <div className={Style.bottomSection}>
                 <div className={Style.searchBarDiv}>
-                    <input className={Style.searchBar} type="text" placeholder="search in your github repositories" value={search} onChange={e => setSearch(e.target.value)}/>
+                    <input className={Style.searchBar} type="text" placeholder={t.github.searchPlaceholder} value={search} onChange={e => setSearch(e.target.value)}/>
                 </div>
                 <div className={Style.reposListDiv}>
                     {error && <RepoMessage text={errorMessage} />}
-                    {!error && repositories === undefined && <RepoMessage text="Loading..." />}
-                    {repositories?.length === 0 && <RepoMessage text="No repositories found." />}
-                    {repositories?.filter(repo => repo.name.toLowerCase().includes(search.toLowerCase())).map(repo => repositoryCard(repo))}
+                    {!error && repositories === undefined && <RepoMessage text={t.github.loading} />}
+                    {repositories?.length === 0 && <RepoMessage text={t.github.noRepositories} />}
+                    {repositories?.filter(repo => repo.name.toLowerCase().includes(search.toLowerCase())).map(repo => repositoryCard(repo, t, handleRepoClick))}
                 </div>
             </div>
         </div>
@@ -55,9 +60,14 @@ export function Github() {
 }
 
 
-function repositoryCard(repo: ExternalRepository) {
+function repositoryCard(repo: ExternalRepository, t: Translations, onRepoClick: (repo: ExternalRepository) => void) {
+    const owner = repo.externalOwner
     return (
-        <div key={repo.externalId} className={Style.repoCard}>
+        <div key={repo.externalId} className={Style.repoCard} onClick={() => onRepoClick(repo)}>
+            {owner.avatarUrl
+                ? <img className={Style.ownerAvatar} src={owner.avatarUrl} alt={owner.name} />
+                : <div className={Style.ownerAvatarFallback}>{owner.name.charAt(0).toUpperCase()}</div>
+            }
             <div className={Style.repoCardInfo}>
                 <div className={Style.repoCardHeader}>
                     <span className={Style.repoName}>{repo.name}</span>
@@ -65,14 +75,14 @@ function repositoryCard(repo: ExternalRepository) {
                 </div>
                 {repo.description && <p className={Style.repoDescription}>{repo.description}</p>}
                 <div className={Style.repoCardMeta}>
-                    <span>{repo.externalOwner.name}</span>
-                    <span>Forks: {repo.forksCount}</span>
-                    <span>Issues: {repo.issuesCount}</span>
+                    <span>{owner.name}</span>
+                    <span>{t.github.forks}: {repo.forksCount}</span>
+                    <span>{t.github.issues}: {repo.issuesCount}</span>
                 </div>
             </div>
             <div className={Style.repoCardActions}>
-                <button className={Style.addRepoButton}>Add Repository</button>
-                <button className={Style.addToTeamButton}>Add to Team</button>
+                <button className={Style.addRepoButton} onClick={e => { e.stopPropagation(); /* TODO: lógica de adicionar repositório */ }}>{t.github.addRepository}</button>
+                <button className={Style.addToTeamButton} onClick={e => { e.stopPropagation(); /* TODO: lógica de adicionar à equipa */ }}>{t.github.addToTeam}</button>
             </div>
         </div>
     )

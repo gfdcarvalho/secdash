@@ -52,4 +52,15 @@ export const en = {
             blankName: "Team name is required",
         }
     },
+    github: {
+        title: "GitHub",
+        searchPlaceholder: "Search in your GitHub repositories",
+        loading: "Loading...",
+        noRepositories: "No repositories found.",
+        error: "Failed to load repositories.",
+        forks: "Forks",
+        issues: "Issues",
+        addRepository: "Add Repository",
+        addToTeam: "Add to Team",
+    },
 }

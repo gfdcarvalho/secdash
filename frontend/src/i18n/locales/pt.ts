@@ -52,4 +52,15 @@ export const pt = {
             blankName: "O nome da equipa é obrigatório",
         }
     },
+    github: {
+        title: "GitHub",
+        searchPlaceholder: "Pesquisa nos teus repositórios GitHub",
+        loading: "A carregar...",
+        noRepositories: "Nenhum repositório encontrado.",
+        error: "Erro ao carregar repositórios.",
+        forks: "Forks",
+        issues: "Issues",
+        addRepository: "Adicionar Repositório",
+        addToTeam: "Adicionar à Equipa",
+    },
 }
