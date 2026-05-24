@@ -105,7 +105,15 @@ Esta classe serve para que o fluxo de autorização via OAuth2 não afete negati
 A classe \textbf{RequestTokenProcessor} é a principal responsável pela validação e gestão de tokens no \textbf{SecDash}, e atua como uma camada de abstração entre os mecanismos de transporte dos tokens (headers HTTP ou cookies) e o serviço de autenticação. \\
 
 \subsection{Services}
+A camada dos serviços é onde se processa a lógica de negócio da aplicação. Esta camada está organizada de forma semelhante à camada de \textit{controllers} já descrita, com a separação em cinco serviços distintos. \\
+
+Um dos detalhes que vale a pena realçar é o uso que cada um dos serviços faz de uma classe que lhe é injetada com o nome de \textbf{transactionManager}. Trata-se de uma classe implementada com o nome \textbf{JdbiTransactionManager} e tem o propósito de gerir a execução de operações à base de dados dentro de transações na camada de serviços, utilizando a biblioteca JDBI, para não seja esta camada a ter de liderar diretamente com a abertura, commit ou rollback de transações. \\
+
+Tal é feito através do método \textit{inTransaction} da JDBI, que recebe um bloco de código e executa-a dentro de uma transação controlada por essa biblioteca. Se a execução do bloco for bem-sucedida a transação é confirmada automaticamente. Caso contrário, é feito o rollback também automaticamente. \\
+
 \subsection{Repositories e REST Clients}
+
+
 \subsection{Utils}
 
 \section{Frontend} \label{implementacao:frontend}
