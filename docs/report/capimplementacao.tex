@@ -112,7 +112,11 @@ Um dos detalhes que vale a pena realçar é o uso que cada um dos serviços faz 
 Tal é feito através do método \textit{inTransaction} da JDBI, que recebe um bloco de código e executa-a dentro de uma transação controlada por essa biblioteca. Se a execução do bloco for bem-sucedida a transação é confirmada automaticamente. Caso contrário, é feito o rollback também automaticamente. \\
 
 \subsection{Repositories e REST Clients}
+Nesta camada é onde se processa o acesso à base de dados e a APIs externas. \\
 
+A package \textbf{restclient} contém as classes \textbf{GitHubRestClient} e \textbf{GitLabRestClient} onde, através do RestClient nativo do Spring, fazemos as chamadas a estas APIs. A package \textbf{repository} contém as classes onde é acedida a base de dados através de transações JDBI. \\
+
+Devido à hetereogeneidade e às limitações da JDBI, que apenas consegue mapear automaticamente tipos básicos como tipos básicos como String ou Int, em muitas transações foi necessário mapear o \textit{Result Set} obtido através do uso de \textit{Data Transfer Objects} (DTOs) por nós implementados. Estes encontram-se na pacakage \textbf{model}, junto às respetivas classes de destino. \\
 
 \subsection{Utils}
 
