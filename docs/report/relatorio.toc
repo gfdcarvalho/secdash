@@ -48,13 +48,12 @@
 \contentsline {subsection}{\numberline {4.2.4}Repositories e REST Clients}{25}{}%
 \contentsline {subsection}{\numberline {4.2.5}Utils}{26}{}%
 \contentsline {subsubsection}{Sealed Class Either}{26}{}%
-\contentsline {subsubsection}{JdbiExtensions}{26}{}%
 \contentsline {subsubsection}{Security Config}{26}{}%
-\contentsline {section}{\numberline {4.3}Frontend}{26}{}%
-\contentsline {chapter}{\numberline {5}Deployment}{27}{}%
-\contentsline {chapter}{\numberline {6}Conclusão}{29}{}%
-\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{29}{}%
-\contentsline {section}{\numberline {6.2}Considerações finais}{29}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{32}{}%
-\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{33}{}%
-\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{37}{}%
+\contentsline {section}{\numberline {4.3}Frontend}{27}{}%
+\contentsline {chapter}{\numberline {5}Deployment}{29}{}%
+\contentsline {chapter}{\numberline {6}Conclusão}{31}{}%
+\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{31}{}%
+\contentsline {section}{\numberline {6.2}Considerações finais}{31}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{34}{}%
+\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{35}{}%
+\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{39}{}%
