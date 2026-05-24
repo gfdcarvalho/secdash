@@ -49,7 +49,33 @@ O diagrama do modelo obtido encontra-se apresentado na figura abaixo. É importa
 
 \section{Backend} \label{implementacao:backend}
 O backend do \textbf{SecDash} encontra-se estruturado com o padrão de desenho Controller-Service-Repository (CSR). Pretende-se deste modo isolar o tratamento de pedidos HTTP, a lógica de negócio e operações de base de dados em componentes independentes. Organizar a aplicação desta forma tem o intuito de facilitar o seu desenvolvimento e manutenção. \\
+
 \subsection{Controllers}
+A camada dos \textit{controllers} tem como principal objetivo receber pedidos HTTP para consequentemente devolver respostas HTTP. A camada conta com cinco controllers distintos, cada um com endpoints próprios para cada operação suportada pela aplicação: 
+\begin{itemize}
+	\item \textbf{Auth Controller:} Responsável por receber pedidos HTTP relacionados com autorização externa , tais como pedidos de \textit{login} através de OAuth 2.0 na aplicação ou conceder acesso aos repositórios de um utilizador de uma das plataformas externas;
+	
+	\item \textbf{GitHub Controller:} Responsável por receber pedidos e emitir as respetivas respostas para tarefas que requiram acesso ao GitHub, tais como adicionar um repositório do GitHub aos repositórios vigiados pelo utilizador com sessão ativa, ou obter análises de vulnerabilidade de um desses repositórios;
+	
+	\item \textbf{GitLab Controller:} Análogo ao controller anterior mas para GitLab;
+	
+	\item \textbf{Team Controller:} Responsável por receber pedidos HTTP e emitir as respetivas respostas para operações relacionadas com equipas no SecDash. Os utilizadores podem criar ou eliminar equipas, adicionar ou remover repositórios e outros utilizadores a equipas ou promover membros de uma equipa a Team Leader.
+	
+	\item \textbf{User Controller:} Responsável por receber e responder a pedidos HTTP para registo na aplicação através do formulário de registo ou de obter informação do utilizador com sessão ativa.
+\end{itemize}
+
+Para manter o isolamento das camadas, nenhuma lógica de negócio ou processamento de dados é executado nesta camada. Esse tipo de tarefas é delegado para a camada dos serviços, que será detalhada na subseção seguinte. \\
+
+Não obstante, para efeitos de organização do código, optou-se por colocar alguns componentes necessários para uma utilização mais eficiente da \textit{framerwork} Spring e evitar repetição de código numa subpackage entitulada \textit{pipeline} na \textit{package} dos controllers. Estes componentes encontram-se explicitados na subsecção Pipeline. \\
+
+\subsection{Pipeline}
+\subsubsection{AuthenticatedUserArgumentResolver}
+\subsubsection{AuthenticationInterceptor}
+\subsubsection{BearerTokenAuthFilter}
+\subsubsection{GlobalExceptionHandler}
+\subsubsection{OAuthRedirectFilter}
+\subsubsection{RequestTokenProcessor}
+
 \subsection{Services}
 \subsection{Repositories e REST Clients}
 \subsection{Utils}

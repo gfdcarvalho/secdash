@@ -37,14 +37,21 @@
 \contentsline {section}{\numberline {4.1}Modelo de dados}{19}{}%
 \contentsline {section}{\numberline {4.2}Backend}{22}{}%
 \contentsline {subsection}{\numberline {4.2.1}Controllers}{22}{}%
-\contentsline {subsection}{\numberline {4.2.2}Services}{22}{}%
-\contentsline {subsection}{\numberline {4.2.3}Repositories e REST Clients}{22}{}%
-\contentsline {subsection}{\numberline {4.2.4}Utils}{22}{}%
-\contentsline {section}{\numberline {4.3}Frontend}{22}{}%
-\contentsline {chapter}{\numberline {5}Deployment}{23}{}%
-\contentsline {chapter}{\numberline {6}Conclusão}{25}{}%
-\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{25}{}%
-\contentsline {section}{\numberline {6.2}Considerações finais}{25}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{28}{}%
-\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{29}{}%
-\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{33}{}%
+\contentsline {subsection}{\numberline {4.2.2}Pipeline}{23}{}%
+\contentsline {subsubsection}{AuthenticatedUserArgumentResolver}{23}{}%
+\contentsline {subsubsection}{AuthenticationInterceptor}{23}{}%
+\contentsline {subsubsection}{BearerTokenAuthFilter}{23}{}%
+\contentsline {subsubsection}{GlobalExceptionHandler}{23}{}%
+\contentsline {subsubsection}{OAuthRedirectFilter}{23}{}%
+\contentsline {subsubsection}{RequestTokenProcessor}{23}{}%
+\contentsline {subsection}{\numberline {4.2.3}Services}{23}{}%
+\contentsline {subsection}{\numberline {4.2.4}Repositories e REST Clients}{23}{}%
+\contentsline {subsection}{\numberline {4.2.5}Utils}{23}{}%
+\contentsline {section}{\numberline {4.3}Frontend}{23}{}%
+\contentsline {chapter}{\numberline {5}Deployment}{25}{}%
+\contentsline {chapter}{\numberline {6}Conclusão}{27}{}%
+\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{27}{}%
+\contentsline {section}{\numberline {6.2}Considerações finais}{27}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{30}{}%
+\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{31}{}%
+\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{35}{}%
