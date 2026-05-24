@@ -48,6 +48,7 @@ O diagrama do modelo obtido encontra-se apresentado na figura abaixo. É importa
 É importante indicar que ao obter os dados das APIs externas, sejam estes referentes a repositórios ou vulnerabilidades, a informação devolvida contém inúmeros campos que não consideramos relevantes de armazenar ou exibir aos utilizadores para os propósitos do \textbf{SecDash}. A título de exemplo, o objeto JSON referente a um repoisitório GitHub devolvido pela sua API contém mais de 80 campos, sendo vários deles objetos que por sua vez contém também múltiplos campos. Um exemplo deste formato pode ser consultado no Apêndice \ref{ap:repogithub}. Como tal, optou-se por filtrar muitos destes campos, sendo apenas armazenados aqueles que considerámos relevantes para o propósito da aplicação.
 
 \section{Backend} \label{implementacao:backend}
+O backend do \textbf{SecDash} encontra-se estruturado com o padrão de desenho Controller-Service-Repository (CSR). Pretende-se deste modo isolar o tratamento de pedidos HTTP, a lógica de negócio e operações de base de dados em componentes independentes. Organizar a aplicação desta forma tem o intuito de facilitar o seu desenvolvimento e manutenção. \\
 \subsection{Controllers}
 \subsection{Services}
 \subsection{Repositories e REST Clients}
