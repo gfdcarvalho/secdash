@@ -43,15 +43,15 @@
 \contentsline {subsubsection}{BearerTokenAuthFilter}{23}{}%
 \contentsline {subsubsection}{GlobalExceptionHandler}{24}{}%
 \contentsline {subsubsection}{OAuthRedirectFilter}{24}{}%
-\contentsline {subsubsection}{RequestTokenProcessor}{24}{}%
-\contentsline {subsection}{\numberline {4.2.3}Services}{24}{}%
-\contentsline {subsection}{\numberline {4.2.4}Repositories e REST Clients}{24}{}%
-\contentsline {subsection}{\numberline {4.2.5}Utils}{24}{}%
-\contentsline {section}{\numberline {4.3}Frontend}{24}{}%
-\contentsline {chapter}{\numberline {5}Deployment}{25}{}%
-\contentsline {chapter}{\numberline {6}Conclusão}{27}{}%
-\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{27}{}%
-\contentsline {section}{\numberline {6.2}Considerações finais}{27}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{30}{}%
-\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{31}{}%
-\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{35}{}%
+\contentsline {subsubsection}{RequestTokenProcessor}{25}{}%
+\contentsline {subsection}{\numberline {4.2.3}Services}{25}{}%
+\contentsline {subsection}{\numberline {4.2.4}Repositories e REST Clients}{25}{}%
+\contentsline {subsection}{\numberline {4.2.5}Utils}{25}{}%
+\contentsline {section}{\numberline {4.3}Frontend}{25}{}%
+\contentsline {chapter}{\numberline {5}Deployment}{27}{}%
+\contentsline {chapter}{\numberline {6}Conclusão}{29}{}%
+\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{29}{}%
+\contentsline {section}{\numberline {6.2}Considerações finais}{29}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{32}{}%
+\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{33}{}%
+\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{37}{}%

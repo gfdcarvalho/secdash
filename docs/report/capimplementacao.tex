@@ -74,7 +74,7 @@ No Spring, a interface HandlerMethodArgumentResolver é utilizada para resolver 
 
 O método \textbf{supportsParameter} determina se o resolver deve ser aplicado a um determinado parâmetro do controlador. Neste caso age apenas sobre parâmetros do tipo AuthenticatedUser. Quando um controller contém um parâmetro deste tipo, o Spring chama o método resolveArgument que irá obter o utilizador autenticado associado ao pedido HTTP a ser recebido. \\
 
-O método \textbf{addUserTo} adiciona o utilizador autenticado ao pedido HTTP para que as restantes camadas do sistema possam ter acesso a essa informação, e é usado pelo AuthenticationInterceptor e pelo BearerTokenAuthFilter.
+O método \textbf{addUserTo} adiciona o utilizador autenticado ao pedido HTTP para que as restantes camadas do sistema possam ter acesso a essa informação, e é usado pelo AuthenticationInterceptor e pelo BearerTokenAuthFilter. \\
 
 \subsubsection{AuthenticationInterceptor}
 O \textbf{AuthenticatedInterceptor} implementa a interface HandlerInterceptor do Spring, permitindo a execução de código antes da invocação dos controllers. Este \textit{interceptor} pode ser visto como o mecanismo central de autenticação da aplicação, sendo responsável por chamar os métodos do RequestTokenProcessor para validar os tokens de acesso e poder assim disponibilizar o utilizador autenticado ao resto do sistema. \\
@@ -97,6 +97,11 @@ O objetivo desta classe é o tratamento de exceções dlançadas por erros não 
 O seu único método, \textbf{handleUnexpected} captura todas as exceções do tipo Exception, funcionando como um \textit{fallback} global para qualquer erro inesperado no decorrer da execução do \textit{backend}. \\
 
 \subsubsection{OAuthRedirectFilter}
+O filtro \textbf{OAuthRedirectFilter} é responsável por preservar o destino final do utilizador durante o fluxo de autenticação OAuth2. Tal como a classe \textbf{BearerTokenAuthFilter}, esta classe também estende a classe do Spring \textbf{OncePerRequestFilter}, garantindo a sua execução apenas uma vez por pedido HTTP. \\
+
+Esta classe serve para que o fluxo de autorização via OAuth2 não afete negativamente a navegação dos utilizadores, para que após a conclusão do fluxo estes possam ser redirecionados para a página específica que pretendiam aceder, atuando apenas em endpoints relacionados com o início do fluxo OAuth2. \\
+
+
 \subsubsection{RequestTokenProcessor}
 
 \subsection{Services}
