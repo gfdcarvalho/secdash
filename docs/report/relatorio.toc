@@ -47,6 +47,9 @@
 \contentsline {subsection}{\numberline {4.2.3}Services}{25}{}%
 \contentsline {subsection}{\numberline {4.2.4}Repositories e REST Clients}{25}{}%
 \contentsline {subsection}{\numberline {4.2.5}Utils}{26}{}%
+\contentsline {subsubsection}{Sealed Class Either}{26}{}%
+\contentsline {subsubsection}{JdbiExtensions}{26}{}%
+\contentsline {subsubsection}{Security Config}{26}{}%
 \contentsline {section}{\numberline {4.3}Frontend}{26}{}%
 \contentsline {chapter}{\numberline {5}Deployment}{27}{}%
 \contentsline {chapter}{\numberline {6}Conclusão}{29}{}%

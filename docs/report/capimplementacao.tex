@@ -119,5 +119,16 @@ A package \textbf{restclient} contém as classes \textbf{GitHubRestClient} e \te
 Devido à hetereogeneidade e às limitações da JDBI, que apenas consegue mapear automaticamente tipos básicos como tipos básicos como String ou Int, em muitas transações foi necessário mapear o \textit{Result Set} obtido através do uso de \textit{Data Transfer Objects} (DTOs) por nós implementados. Estes encontram-se na pacakage \textbf{model}, junto às respetivas classes de destino. \\
 
 \subsection{Utils}
+\subsubsection{Sealed Class Either}
+O SecDash recorre à \textit{sealed class} \textbf{Either} (ou \textit{type aliases} dela derivados) para representar o resultado de qualquer operação que possa terminar em sucesso ou em erro para evitar o uso de exceções e de blocos \textit{try-catch} para controlo da execução. \\
+
+Esta sealed class contém duas \textit{data classes} com dois casos possíveis: \textbf{Left} e \textbf{Right}. \textbf{Left} serve para representar erros e conter a sua informação; \textbf{Right} serve para representar o resultado de uma operação bem-sucedida e conter o valor do resultado. \\
+
+Para facilitar a utilização desta \textit{sealed class}, existem duas funções auxiliares: \textbf{success} e \textbf{failure}. Estas  permitem criar de forma clara e concisa instâncias de resultados bem-sucedidos ou de erro. São também definidos dois type aliases, \textbf{Success} e \textbf{Failure} para melhorar a legibilidade do código ao tornar explícito o significado de cada um dos caso. \\
+
+Este padrão teve por base o código fornecido pelo Professor Pedro Félix, disponibilizado como base de um projeto da unidade curricular de Desenvolvimento de Aplicações Web (DAW) num semestre anterior, tendo sido reaproveitado para o desenvolvimento do SecDash por ser um padrão comum em programação funcional e útil para casos onde é importante representar de forma explícita todos os resultados possíveis de uma operação, como é o caso da nossa camada de serviço. \\
+
+\subsubsection{JdbiExtensions}
+\subsubsection{Security Config}
 
 \section{Frontend} \label{implementacao:frontend}
