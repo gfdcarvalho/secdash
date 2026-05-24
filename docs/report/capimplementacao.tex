@@ -101,8 +101,8 @@ O filtro \textbf{OAuthRedirectFilter} é responsável por preservar o destino fi
 
 Esta classe serve para que o fluxo de autorização via OAuth2 não afete negativamente a navegação dos utilizadores, para que após a conclusão do fluxo estes possam ser redirecionados para a página específica que pretendiam aceder, atuando apenas em endpoints relacionados com o início do fluxo OAuth2. \\
 
-
 \subsubsection{RequestTokenProcessor}
+A classe \textbf{RequestTokenProcessor} é a principal responsável pela validação e gestão de tokens no \textbf{SecDash}, e atua como uma camada de abstração entre os mecanismos de transporte dos tokens (headers HTTP ou cookies) e o serviço de autenticação. \\
 
 \subsection{Services}
 \subsection{Repositories e REST Clients}
