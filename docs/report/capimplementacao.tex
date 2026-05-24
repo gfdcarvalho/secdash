@@ -84,6 +84,10 @@ A lógica principal encontra-se no método \textbf{preHandle}, que é executado 
 Este intercepter começa por procurar o header \textbf{NAME\_AUTHORIZATION\_HEADER}. Se não existir o sistema tenta autenticar o utilizador através dos cookies associados ao pedido. \\
 
 \subsubsection{BearerTokenAuthFilter}
+A classe \textbf{BearerTokenAuthFilter} é um filtro é responsável por autenticar o utilizador em cada pedido HTTP e por estabelecer o contexto de segurança da aplicação. Ela extende a classe do Spring OncePerRequestFilter, garantindo assim que a sua execução ocorre apenas uma única vez por pedido. \\
+
+A função deste filtro é extrair credenciais de autenticação, sejam elas um bearer token presente num cabeçalho HTTP ou uma cookie, validar essas mesmas credenciais para finalmente adicionar o utilizador autenticado ao contexto de segurança do Spring. \\
+
 \subsubsection{GlobalExceptionHandler}
 \subsubsection{OAuthRedirectFilter}
 \subsubsection{RequestTokenProcessor}

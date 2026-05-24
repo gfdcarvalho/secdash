@@ -40,7 +40,7 @@
 \contentsline {subsection}{\numberline {4.2.2}Pipeline}{23}{}%
 \contentsline {subsubsection}{AuthenticatedUserArgumentResolver}{23}{}%
 \contentsline {subsubsection}{AuthenticationInterceptor}{23}{}%
-\contentsline {subsubsection}{BearerTokenAuthFilter}{24}{}%
+\contentsline {subsubsection}{BearerTokenAuthFilter}{23}{}%
 \contentsline {subsubsection}{GlobalExceptionHandler}{24}{}%
 \contentsline {subsubsection}{OAuthRedirectFilter}{24}{}%
 \contentsline {subsubsection}{RequestTokenProcessor}{24}{}%
