@@ -47,3 +47,4 @@
 \contentsline {section}{\numberline {6.2}Considerações finais}{25}{}%
 \contentsline {chapter}{Refer\^{e}ncias}{28}{}%
 \contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{29}{}%
+\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{33}{}%
