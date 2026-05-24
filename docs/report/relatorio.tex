@@ -15,6 +15,16 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage[portuguese]{babel}
+\usepackage{listings}
+
+\lstset{
+	basicstyle=\ttfamily\small, % Fonte monoespaçada para código
+	breaklines=true,            % Quebra linhas compridas automaticamente
+	frame=single,               % Cria uma caixa simples à volta do JSON
+	numbers=left,               % Coloca numeração de linhas à esquerda
+	numberstyle=\tiny,          % Tamanho dos números das linhas
+	showstringspaces=false      % Não mostra espaços visíveis dentro das strings
+}
 \renewcommand{\algorithmicrequire}{\textbf{Dados: }}
 \renewcommand{\algorithmicensure}{\textbf{Resultado: }}
 

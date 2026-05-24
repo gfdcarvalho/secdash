@@ -2,8 +2,12 @@
 \contentsline {chapter}{\numberline {1}Introdução}{1}{}%
 \contentsline {section}{\numberline {1.1}Contextualização do problema}{1}{}%
 \contentsline {chapter}{\numberline {2}Enquadramento e estado da arte}{5}{}%
-\contentsline {subsection}{\numberline {2.0.1}DefectDojo}{5}{}%
-\contentsline {subsection}{\numberline {2.0.2}ArmorCode}{6}{}%
+\contentsline {section}{\numberline {2.1}SAST e análise de dependências}{5}{}%
+\contentsline {subsection}{\numberline {2.1.1}\textit {Static application security testing} (SAST)}{5}{}%
+\contentsline {subsection}{\numberline {2.1.2}Análise de dependências}{5}{}%
+\contentsline {section}{\numberline {2.2}Estado da arte}{5}{}%
+\contentsline {subsection}{\numberline {2.2.1}DefectDojo}{5}{}%
+\contentsline {subsection}{\numberline {2.2.2}ArmorCode}{6}{}%
 \contentsline {chapter}{\numberline {3}Arquitetura e tecnologias}{9}{}%
 \contentsline {section}{\numberline {3.1}Requisitos funcionais}{9}{}%
 \contentsline {subsection}{\numberline {3.1.1}Integração de repositórios}{9}{}%
@@ -31,11 +35,15 @@
 \contentsline {subsubsection}{Vite}{17}{}%
 \contentsline {chapter}{\numberline {4}Implementação}{19}{}%
 \contentsline {section}{\numberline {4.1}Modelo de dados}{19}{}%
-\contentsline {section}{\numberline {4.2}Backend}{19}{}%
-\contentsline {section}{\numberline {4.3}Frontend}{19}{}%
-\contentsline {chapter}{\numberline {5}Deployment}{21}{}%
-\contentsline {chapter}{\numberline {6}Conclusão}{23}{}%
-\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{23}{}%
-\contentsline {section}{\numberline {6.2}Considerações finais}{23}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{26}{}%
-\contentsline {chapter}{\numberline {A}Exemplo de apêndice}{27}{}%
+\contentsline {section}{\numberline {4.2}Backend}{22}{}%
+\contentsline {subsection}{\numberline {4.2.1}Controllers}{22}{}%
+\contentsline {subsection}{\numberline {4.2.2}Services}{22}{}%
+\contentsline {subsection}{\numberline {4.2.3}Repositories e REST Clients}{22}{}%
+\contentsline {subsection}{\numberline {4.2.4}Utils}{22}{}%
+\contentsline {section}{\numberline {4.3}Frontend}{22}{}%
+\contentsline {chapter}{\numberline {5}Deployment}{23}{}%
+\contentsline {chapter}{\numberline {6}Conclusão}{25}{}%
+\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{25}{}%
+\contentsline {section}{\numberline {6.2}Considerações finais}{25}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{28}{}%
+\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{29}{}%
