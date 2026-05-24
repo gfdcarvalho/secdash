@@ -1,8 +1,18 @@
 \chapter{Implementação} \label{cap:implementacao}
 
-A nossa solução é apresentada neste capítulo. A solução consiste em grandes ideias, desenvolvidas e testadas.
+Para facilitar a manutenção e implementação do sistema, bem como a sua compreesão,o \textbf{SecDash} encontra-se decomposto em camadas, seguindo um padrão de desenho \textit{multitier} ou \textit{layered}. \\
 
-Exemplo de indentação do segundo parágrafo.
+A aplicação encontra-se dividida em três níveis, numa estrutura hierárquica, sendo estes a \textit{\textbf{camada de apresentação}}, a \textit{\textbf{camada lógica}} e a \textit{\textbf{camada de dados}}. \\
+
+\begin{itemize}
+	\item A \textbf{camada de apresentação} tem como função principal ser a interface com a qual o utilizador interage com o SecDash, isto é, o nosso \textit{frontend} web;
+
+	\item A \textbf{camada lógica} é o cerne do programa, tratando-se do nosso backend em kotlin onde é implementada toda a lógica de negócio;
+
+	\item A \textbf{camada de dados} persiste os dados a serem armazenados permanentemente, estando esta implementada como uma base de dados PostgreSQL; 
+\end{itemize}
+
+Os detalhes e especifidades da implementação e desenvolvimeto de cada uma destas camadas serão explorados ao longo deste capítulo. \\
 
 \section{Modelo de dados} \label{implementacao:modelo}
 \section{Backend} \label{implementacao:backend}

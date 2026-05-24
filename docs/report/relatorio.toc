@@ -1,42 +1,41 @@
 \babel@toc {portuguese}{}\relax 
 \contentsline {chapter}{\numberline {1}Introdução}{1}{}%
 \contentsline {section}{\numberline {1.1}Contextualização do problema}{1}{}%
-\contentsline {subsection}{\numberline {1.1.1}NO PRESENT DOC O CHAP2 ETC ETC}{2}{}%
-\contentsline {chapter}{\numberline {2}Enquadramento e estado da arte}{3}{}%
-\contentsline {subsection}{\numberline {2.0.1}DefectDojo}{3}{}%
-\contentsline {subsection}{\numberline {2.0.2}ArmorCode}{4}{}%
-\contentsline {chapter}{\numberline {3}Arquitetura e tecnologias}{7}{}%
-\contentsline {section}{\numberline {3.1}Requisitos funcionais}{7}{}%
-\contentsline {subsection}{\numberline {3.1.1}Integração de repositórios}{7}{}%
-\contentsline {subsection}{\numberline {3.1.2}Autenticação de utilizadores}{7}{}%
-\contentsline {subsection}{\numberline {3.1.3}Controlo de acesso com base em papéis}{8}{}%
-\contentsline {subsection}{\numberline {3.1.4}Agregação de vulnerabilidades}{8}{}%
-\contentsline {subsection}{\numberline {3.1.5}Dashboard Web}{9}{}%
-\contentsline {subsection}{\numberline {3.1.6}Exportação de relatórios}{9}{}%
-\contentsline {section}{\numberline {3.2}Objetivos opcionais}{10}{}%
-\contentsline {subsection}{\numberline {3.2.1}Integração com Jenkins}{10}{}%
-\contentsline {subsection}{\numberline {3.2.2}Deployment em contentores}{10}{}%
-\contentsline {subsection}{\numberline {3.2.3}Tracking de \textit {Findings}}{10}{}%
-\contentsline {section}{\numberline {3.3}Visão geral do sistema}{11}{}%
-\contentsline {section}{\numberline {3.4}APIs externas}{12}{}%
-\contentsline {section}{\numberline {3.5}Tecnologias e linguagens}{12}{}%
-\contentsline {subsection}{\numberline {3.5.1}Backend}{12}{}%
-\contentsline {subsubsection}{Kotlin}{12}{}%
-\contentsline {subsubsection}{Spring Boot}{12}{}%
-\contentsline {subsubsection}{JDBI}{13}{}%
-\contentsline {subsubsection}{PostgreSQL}{14}{}%
-\contentsline {subsubsection}{OAuth 2.0}{14}{}%
-\contentsline {subsection}{\numberline {3.5.2}Frontend}{14}{}%
-\contentsline {subsubsection}{Typescript}{14}{}%
-\contentsline {subsubsection}{React}{15}{}%
-\contentsline {subsubsection}{Vite}{15}{}%
-\contentsline {chapter}{\numberline {4}Implementação}{17}{}%
-\contentsline {section}{\numberline {4.1}Modelo de dados}{17}{}%
-\contentsline {section}{\numberline {4.2}Backend}{17}{}%
-\contentsline {section}{\numberline {4.3}Frontend}{17}{}%
-\contentsline {chapter}{\numberline {5}Deployment}{19}{}%
-\contentsline {chapter}{\numberline {6}Conclusão}{21}{}%
-\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{21}{}%
-\contentsline {section}{\numberline {6.2}Considerações finais}{21}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{24}{}%
-\contentsline {chapter}{\numberline {A}Exemplo de apêndice}{25}{}%
+\contentsline {chapter}{\numberline {2}Enquadramento e estado da arte}{5}{}%
+\contentsline {subsection}{\numberline {2.0.1}DefectDojo}{5}{}%
+\contentsline {subsection}{\numberline {2.0.2}ArmorCode}{6}{}%
+\contentsline {chapter}{\numberline {3}Arquitetura e tecnologias}{9}{}%
+\contentsline {section}{\numberline {3.1}Requisitos funcionais}{9}{}%
+\contentsline {subsection}{\numberline {3.1.1}Integração de repositórios}{9}{}%
+\contentsline {subsection}{\numberline {3.1.2}Autenticação de utilizadores}{9}{}%
+\contentsline {subsection}{\numberline {3.1.3}Controlo de acesso com base em papéis}{10}{}%
+\contentsline {subsection}{\numberline {3.1.4}Agregação de vulnerabilidades}{10}{}%
+\contentsline {subsection}{\numberline {3.1.5}Dashboard Web}{11}{}%
+\contentsline {subsection}{\numberline {3.1.6}Exportação de relatórios}{11}{}%
+\contentsline {section}{\numberline {3.2}Objetivos opcionais}{12}{}%
+\contentsline {subsection}{\numberline {3.2.1}Integração com Jenkins}{12}{}%
+\contentsline {subsection}{\numberline {3.2.2}Deployment em contentores}{12}{}%
+\contentsline {subsection}{\numberline {3.2.3}Tracking de \textit {Findings}}{12}{}%
+\contentsline {section}{\numberline {3.3}Visão geral do sistema}{13}{}%
+\contentsline {section}{\numberline {3.4}APIs externas}{14}{}%
+\contentsline {section}{\numberline {3.5}Tecnologias e linguagens}{14}{}%
+\contentsline {subsection}{\numberline {3.5.1}Backend}{14}{}%
+\contentsline {subsubsection}{Kotlin}{14}{}%
+\contentsline {subsubsection}{Spring Boot}{14}{}%
+\contentsline {subsubsection}{JDBI}{15}{}%
+\contentsline {subsubsection}{PostgreSQL}{16}{}%
+\contentsline {subsubsection}{OAuth 2.0}{16}{}%
+\contentsline {subsection}{\numberline {3.5.2}Frontend}{16}{}%
+\contentsline {subsubsection}{Typescript}{16}{}%
+\contentsline {subsubsection}{React}{17}{}%
+\contentsline {subsubsection}{Vite}{17}{}%
+\contentsline {chapter}{\numberline {4}Implementação}{19}{}%
+\contentsline {section}{\numberline {4.1}Modelo de dados}{19}{}%
+\contentsline {section}{\numberline {4.2}Backend}{19}{}%
+\contentsline {section}{\numberline {4.3}Frontend}{19}{}%
+\contentsline {chapter}{\numberline {5}Deployment}{21}{}%
+\contentsline {chapter}{\numberline {6}Conclusão}{23}{}%
+\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{23}{}%
+\contentsline {section}{\numberline {6.2}Considerações finais}{23}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{26}{}%
+\contentsline {chapter}{\numberline {A}Exemplo de apêndice}{27}{}%
