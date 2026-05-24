@@ -3,11 +3,11 @@
 \contentsline {section}{\numberline {1.1}Contextualização do problema}{1}{}%
 \contentsline {chapter}{\numberline {2}Enquadramento e estado da arte}{5}{}%
 \contentsline {section}{\numberline {2.1}SAST e análise de dependências}{5}{}%
-\contentsline {subsection}{\numberline {2.1.1}\textit {Static application security testing} (SAST)}{5}{}%
-\contentsline {subsection}{\numberline {2.1.2}Análise de dependências}{5}{}%
-\contentsline {section}{\numberline {2.2}Estado da arte}{5}{}%
-\contentsline {subsection}{\numberline {2.2.1}DefectDojo}{5}{}%
-\contentsline {subsection}{\numberline {2.2.2}ArmorCode}{6}{}%
+\contentsline {subsection}{\numberline {2.1.1}\textit {Static application security testing} (SAST)}{6}{}%
+\contentsline {subsection}{\numberline {2.1.2}Análise de dependências}{6}{}%
+\contentsline {section}{\numberline {2.2}Estado da arte}{7}{}%
+\contentsline {subsection}{\numberline {2.2.1}DefectDojo}{7}{}%
+\contentsline {subsection}{\numberline {2.2.2}ArmorCode}{8}{}%
 \contentsline {chapter}{\numberline {3}Arquitetura e tecnologias}{9}{}%
 \contentsline {section}{\numberline {3.1}Requisitos funcionais}{9}{}%
 \contentsline {subsection}{\numberline {3.1.1}Integração de repositórios}{9}{}%

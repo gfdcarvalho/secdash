@@ -90,6 +90,48 @@ R.~Lerman and C.~Zakrzewski. (2021) The {Log4j} vulnerability has the internet
   \url{https://archive.epic.org/privacy/data-breach/equifax/}
 \BIBentrySTDinterwordspacing
 
+\bibitem{sonarsource_sast_guide}
+\BIBentryALTinterwordspacing
+{SonarSource}. (2026) What is {SAST}? {S}tatic {A}pplication {S}ecurity
+  {T}esting {D}efinition \& {G}uide. Acedido em: 24 de Maio de 2026. [Online].
+  Available: \url{https://www.sonarsource.com/resources/library/sast/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{gitlab_sast_docs}
+\BIBentryALTinterwordspacing
+{GitLab}. (2026) {Static Application Security Testing (SAST)} documentation.
+  Acedido em: 24 de Maio de 2026. [Online]. Available:
+  \url{https://docs.gitlab.com/user/application_security/sast/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{github_dependabot_quickstart}
+\BIBentryALTinterwordspacing
+{GitHub}. (2026) Dependabot quickstart guide. Acedido em: 24 de Maio de 2026.
+  [Online]. Available:
+  \url{https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide}
+\BIBentrySTDinterwordspacing
+
+\bibitem{gitlab_dependency_scanning_sbom}
+\BIBentryALTinterwordspacing
+{GitLab}. (2026) Dependency {Scanning} using {SBOM} documentation. Acedido em:
+  24 de Maio de 2026. [Online]. Available:
+  \url{https://docs.gitlab.com/user/application_security/dependency_scanning/dependency_scanning_sbom/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{gitlab_continuous_dependency_scanning}
+\BIBentryALTinterwordspacing
+------. (2026) Continuous {Dependency} {Scanning} documentation. Acedido em: 24
+  de Maio de 2026. [Online]. Available:
+  \url{https://docs.gitlab.com/user/application_security/dependency_scanning/continuous_dependency_scanning/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{gitlab_legacy_dependency_scanning}
+\BIBentryALTinterwordspacing
+------. (2026) Legacy {Dependency} {Scanning} documentation. Acedido em: 24 de
+  Maio de 2026. [Online]. Available:
+  \url{https://docs.gitlab.com/user/application_security/dependency_scanning/legacy_dependency_scanning/}
+\BIBentrySTDinterwordspacing
+
 \bibitem{aboutdefectdojo}
 \BIBentryALTinterwordspacing
 {DefectDojo Project}. (2024) About {DefectDojo}: {DevSecOps}, {ASOC}, and
