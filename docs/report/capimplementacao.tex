@@ -70,6 +70,12 @@ Não obstante, para efeitos de organização do código, optou-se por colocar al
 
 \subsection{Pipeline}
 \subsubsection{AuthenticatedUserArgumentResolver}
+No Spring, a interface HandlerMethodArgumentResolver é utilizada para resolver parâmetros de métodos em valores no contexto de um determinado pedido. Com o objetivo de disponibilizar automaticamente a informação do utilizador autenticado na aplicaçã nos métodos dos controllers que fazem uso dessa informação foi implementada essa interface através da classe \textbf{AuthenticatedUserArgumentResolver}. Esta é responsável por identificar parâmetros do tipo AuthenticatedUser e resolver o respetivo valor a partir do contexto de um pedido HTTP. \\
+
+O método \textbf{supportsParameter} determina se o resolver deve ser aplicado a um determinado parâmetro do controlador. Neste caso age apenas sobre parâmetros do tipo AuthenticatedUser. Quando um controller contém um parâmetro deste tipo, o Spring chama o método resolveArgument que irá obter o utilizador autenticado associado ao pedido HTTP a ser recebido. \\
+
+O método addUserTo adiciona o utilizador autenticado ao pedido HTTP para que as restantes camadas do sistema possam ter acesso a essa informação, e é usado pelo AuthenticationInterceptor e pelo BearerTokenAuthFilter.
+
 \subsubsection{AuthenticationInterceptor}
 \subsubsection{BearerTokenAuthFilter}
 \subsubsection{GlobalExceptionHandler}
