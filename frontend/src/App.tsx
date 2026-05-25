@@ -12,6 +12,7 @@ import { CreateTeam } from './views/CreateTeam/CreateTeam';
 import { Github } from './views/GithubView/Github';
 import { Gitlab } from './views/GitlabView/Gitlab';
 import { RepoDetails } from './views/RepoDetails/RepoDetails';
+import { TeamDetails } from './views/TeamDetails/TeamDetails';
 import { RequireAuthentication } from './utils/RequireAuthentication';
 
 const router = createBrowserRouter ([
@@ -24,7 +25,8 @@ const router = createBrowserRouter ([
       { path: '/repos/gitlab', element: <Gitlab/>},
       { path: '/repos/:repoId', element: <RepoDetails/>},
       { path: '/teams', element: <Teams/>},
-      { path: '/teams/create', element: <CreateTeam/>}
+      { path: '/teams/create', element: <CreateTeam/>},
+      { path: '/teams/:teamId', element: <TeamDetails/>}
       // { path: '/repositories', element: (...) },
     ],
   },

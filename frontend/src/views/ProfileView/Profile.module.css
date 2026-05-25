@@ -112,10 +112,17 @@
     gap: 0.2em;
     padding: 0.75em 1em;
     border-bottom: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    border-radius: 0.4em;
 }
 
 .teamCard:last-child {
     border-bottom: none;
+}
+
+.teamCard:hover {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
 }
 
 .teamName {

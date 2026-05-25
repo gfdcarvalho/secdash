@@ -81,6 +81,13 @@ export const pt = {
         teams: "Equipas",
         noTeams: "Ainda não pertence a nenhuma equipa.",
     },
+    teamDetails: {
+        notFound: "Equipa não encontrada.",
+        loading: "A carregar...",
+        members: "Membros",
+        repositories: "Repositórios",
+        noRepositories: "Esta equipa ainda não tem repositórios.",
+    },
     gitlab: {
         title: "GitLab",
         searchPlaceholder: "Pesquisa nos teus repositórios GitLab",

@@ -1,0 +1,142 @@
+.content {
+    composes: content from '../../styles/shared.module.css';
+}
+
+.topSection {
+    composes: topBar from '../../styles/shared.module.css';
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4em;
+}
+
+.teamName {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.description {
+    font-size: 0.9em;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    margin: 0;
+}
+
+.bottomSection {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 2.5em;
+    overflow-y: auto;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.sectionTitle {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    margin: 0;
+}
+
+/* members */
+.membersList {
+    display: flex;
+    flex-direction: column;
+}
+
+.memberCard {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.65em 0.5em;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+}
+
+.memberCard:last-child {
+    border-bottom: none;
+}
+
+.memberAvatarFallback {
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
+    flex-shrink: 0;
+}
+
+.memberInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+    flex: 1;
+}
+
+.memberName {
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.memberEmail {
+    font-size: 0.78em;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.roleBadge {
+    font-size: 1em;
+    padding: 0.40em 0.80em;
+    border-radius: 0.75em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+}
+
+/* repos */
+.reposList {
+    composes: reposListDiv from '../../styles/shared.module.css';
+}
+
+.repoCard {
+    composes: repoCard from '../../styles/shared.module.css';
+}
+
+.ownerAvatar {
+    composes: ownerAvatar from '../../styles/shared.module.css';
+}
+
+.ownerAvatarFallback {
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
+}
+
+.repoCardInfo {
+    composes: repoCardInfo from '../../styles/shared.module.css';
+}
+
+.repoCardHeader {
+    composes: repoCardHeader from '../../styles/shared.module.css';
+}
+
+.repoName {
+    composes: repoName from '../../styles/shared.module.css';
+}
+
+.repoVisibility {
+    composes: repoVisibility from '../../styles/shared.module.css';
+}
+
+.repoDescription {
+    composes: repoDescription from '../../styles/shared.module.css';
+}
+
+.repoCardMeta {
+    composes: repoCardMeta from '../../styles/shared.module.css';
+}
+
+.emptyMessage {
+    font-size: 0.85em;
+    padding: 1em;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    margin: 0;
+}
+
+.message {
+    composes: repoMessage from '../../styles/shared.module.css';
+}

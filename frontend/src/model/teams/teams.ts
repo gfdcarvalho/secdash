@@ -5,7 +5,17 @@ export type Team = {
     name: string,
     description: string | null,
     repos: Repository[],
+    members: TeamMember[],
 }
+
+export type TeamMember = {
+    uid: number,
+    name: string,
+    email: string,
+    teamRole: TeamRole,
+}
+
+export type TeamRole = "LEADER" | "COLLABORATOR"
 
 export type SimpleTeam = {
     tid: number,

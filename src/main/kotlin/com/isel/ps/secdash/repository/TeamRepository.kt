@@ -3,6 +3,7 @@ package com.isel.ps.secdash.repository
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
+import com.isel.ps.secdash.model.teams.TeamMember
 import com.isel.ps.secdash.model.teams.TeamRoles
 import com.isel.ps.secdash.repository.interfaces.TeamRepositoryInterface
 import org.jdbi.v3.core.Handle
@@ -53,7 +54,19 @@ class TeamRepository(
             .list()
             .map { it.toDomain() }
 
-        return Team(tid= team.tid, name = team.name, description = team.description, repos = repos)
+        val members = handle.createQuery(
+            """
+            SELECT u.uid, u.name, u.email, tu.role AS team_role
+            FROM team_users tu
+            JOIN users u ON tu.uid = u.uid
+            WHERE tu.tid = :tid
+            """
+        )
+            .bind("tid", teamId)
+            .mapTo<TeamMember>()
+            .list()
+
+        return Team(tid = team.tid, name = team.name, description = team.description, repos = repos, members = members)
     }
 
     override fun checkUserHasTeamAccess(tid: Int, uid: Int): Boolean {

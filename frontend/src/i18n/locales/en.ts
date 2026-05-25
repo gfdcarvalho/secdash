@@ -81,6 +81,13 @@ export const en = {
         teams: "Teams",
         noTeams: "No teams yet.",
     },
+    teamDetails: {
+        notFound: "Team not found.",
+        loading: "Loading...",
+        members: "Members",
+        repositories: "Repositories",
+        noRepositories: "No repositories in this team yet.",
+    },
     gitlab: {
         title: "GitLab",
         searchPlaceholder: "Search in your GitLab repositories",

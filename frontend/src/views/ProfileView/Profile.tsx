@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import { useAuthentication } from '../../utils/Authentication'
 import type { Repository } from '../../model/repository/repository'
@@ -11,6 +12,7 @@ import Style from './Profile.module.css'
 
 export function Profile() {
     const { t } = useTranslation()
+    const navigate = useNavigate()
     const [user, setUser] = useAuthentication()
 
     const refreshUser = async () => {
@@ -39,7 +41,7 @@ export function Profile() {
                     <h3 className={Style.sectionTitle}>{t.profile.repositories} ({user?.repositories.length ?? 0})</h3>
                     <div className={Style.reposListDiv}>
                         {user?.repositories.length === 0 && <ListMessage text={t.profile.noRepositories} />}
-                        {user?.repositories.map(repo => repositoryCard(repo))}
+                        {user?.repositories.map(repo => repositoryCard(repo, () => navigate(`/repos/${repo.rid}`)))}
                     </div>
                 </div>
 
@@ -47,7 +49,7 @@ export function Profile() {
                     <h3 className={Style.sectionTitle}>{t.profile.teams} ({user?.teams.length ?? 0})</h3>
                     <div className={Style.reposListDiv}>
                         {user?.teams.length === 0 && <ListMessage text={t.profile.noTeams} />}
-                        {user?.teams.map(team => teamCard(team))}
+                        {user?.teams.map(team => teamCard(team, () => navigate(`/teams/${team.tid}`)))}
                     </div>
                 </div>
             </div>
@@ -55,10 +57,10 @@ export function Profile() {
     )
 }
 
-function repositoryCard(repo: Repository) {
+function repositoryCard(repo: Repository, onClick: () => void) {
     const owner = repo.owner
     return (
-        <div key={repo.rid} className={Style.repoCard}>
+        <div key={repo.rid} className={Style.repoCard} onClick={onClick}>
             {owner.avatarUrl
                 ? <img className={Style.ownerAvatar} src={owner.avatarUrl} alt={owner.name} />
                 : <div className={Style.ownerAvatarFallback}>{owner.name.charAt(0).toUpperCase()}</div>
@@ -79,9 +81,9 @@ function repositoryCard(repo: Repository) {
 }
 
 
-function teamCard(team: SimpleTeam) {
+function teamCard(team: SimpleTeam, onClick: () => void) {
     return (
-        <div key={team.tid} className={Style.teamCard}>
+        <div key={team.tid} className={Style.teamCard} onClick={onClick}>
             <span className={Style.teamName}>{team.name}</span>
             {team.description && <p className={Style.teamDescription}>{team.description}</p>}
         </div>
