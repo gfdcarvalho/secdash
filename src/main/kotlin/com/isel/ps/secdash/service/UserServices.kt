@@ -1,6 +1,9 @@
 package com.isel.ps.secdash.service
 
+import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserDomain
+import com.isel.ps.secdash.model.users.UserProfileInformation
+import com.isel.ps.secdash.model.users.UserTeamsAndRepos
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.Either.Left
@@ -8,6 +11,7 @@ import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.success
 import kotlinx.datetime.Clock
 import org.springframework.stereotype.Service
+import java.rmi.server.UID
 
 sealed class UserCreationError {
     data object UserAlreadyExists : UserCreationError()
@@ -44,5 +48,16 @@ class UserServices(
             val id = userRepo.createUser(username, email, passwordValidation )
             success(id)
         }
+    }
+
+    fun getUserInformation(uid: Int): UserTeamsAndRepos {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+            val repositoryRepo = it.repositoriesRepository
+            val teams = teamsRepo.getTeamsByUser(uid)
+            val repos = repositoryRepo.findAllByUser(uid)
+            UserTeamsAndRepos(repos, teams)
+        }
+
     }
 }

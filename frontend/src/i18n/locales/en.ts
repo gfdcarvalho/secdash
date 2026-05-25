@@ -63,6 +63,13 @@ export const en = {
         addRepository: "Add Repository",
         addToTeam: "Add to Team",
     },
+    profile: {
+        title: "Profile",
+        repositories: "Repositories",
+        noRepositories: "No repositories yet.",
+        teams: "Teams",
+        noTeams: "No teams yet.",
+    },
     gitlab: {
         title: "GitLab",
         searchPlaceholder: "Search in your GitLab repositories",

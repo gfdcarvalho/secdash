@@ -81,12 +81,10 @@ typealias RemoveRepoFromTeamResult = Either<RemoveRepoFromTeamError, Unit>
 @Service
 class TeamServices(
     private val transactionManager: TransactionManager,
-    manager: TransactionManager
 ) {
     fun getTeamsByUser(uid: Int): GetTeamsResult {
         return transactionManager.run {
             val teamsRepo = it.teamRepository
-
 
             success(teamsRepo.getTeamsByUser(uid))
         }

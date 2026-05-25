@@ -1,0 +1,130 @@
+.content {
+    composes: content from '../../styles/shared.module.css';
+}
+
+.bottomSection {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: flex-start;
+    flex: 1;
+    gap: 4em;
+    overflow-y: auto;
+}
+
+/* shared repo card classes */
+.reposListDiv {
+    composes: reposListDiv from '../../styles/shared.module.css';
+}
+
+.repoCard {
+    composes: repoCard from '../../styles/shared.module.css';
+}
+
+.ownerAvatar {
+    composes: ownerAvatar from '../../styles/shared.module.css';
+}
+
+.ownerAvatarFallback {
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
+}
+
+.repoCardInfo {
+    composes: repoCardInfo from '../../styles/shared.module.css';
+}
+
+.repoCardHeader {
+    composes: repoCardHeader from '../../styles/shared.module.css';
+}
+
+.repoName {
+    composes: repoName from '../../styles/shared.module.css';
+}
+
+.repoVisibility {
+    composes: repoVisibility from '../../styles/shared.module.css';
+}
+
+.repoDescription {
+    composes: repoDescription from '../../styles/shared.module.css';
+}
+
+.repoCardMeta {
+    composes: repoCardMeta from '../../styles/shared.module.css';
+}
+
+.repoMessage {
+    composes: repoMessage from '../../styles/shared.module.css';
+}
+
+/* profile-specific */
+.userCard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    padding: 1em 1.25em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    border-radius: 0.5em;
+}
+
+.userHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.userName {
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.roleBadge {
+    font-size: 0.7em;
+    padding: 0.15em 0.5em;
+    border-radius: 0.75em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    text-transform: lowercase;
+}
+
+.userEmail {
+    font-size: 0.85em;
+    color: color-mix(in srgb, var(--color-text) 65%, transparent);
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.sectionTitle {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    margin: 0;
+}
+
+/* team card — simpler than repo card, no avatar */
+.teamCard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    padding: 0.75em 1em;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+}
+
+.teamCard:last-child {
+    border-bottom: none;
+}
+
+.teamName {
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.teamDescription {
+    font-size: 0.82em;
+    color: color-mix(in srgb, var(--color-text) 65%, transparent);
+    margin: 0;
+}

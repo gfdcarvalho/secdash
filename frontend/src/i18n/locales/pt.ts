@@ -63,6 +63,13 @@ export const pt = {
         addRepository: "Adicionar Repositório",
         addToTeam: "Adicionar à Equipa",
     },
+    profile: {
+        title: "Perfil",
+        repositories: "Repositórios",
+        noRepositories: "Ainda não tem repositórios.",
+        teams: "Equipas",
+        noTeams: "Ainda não pertence a nenhuma equipa.",
+    },
     gitlab: {
         title: "GitLab",
         searchPlaceholder: "Pesquisa nos teus repositórios GitLab",

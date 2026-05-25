@@ -59,14 +59,15 @@ class UserController(
     fun me(
         user: AuthenticatedUser,
     ): ResponseEntity<*> {
-        val repos: List<Repository> = repositoryServices.findAllByUser(user.user.uid)
+        val teamsAndRepos = userServices.getUserInformation(user.user.uid)
         return ResponseEntity.ok(
             UserProfileInformation(
                 user.user.uid,
                 user.user.name,
                 user.user.email,
                 user.user.role,
-                repos
+                teamsAndRepos.repositories,
+                teamsAndRepos.teams,
             )
         ) // Needs error treatment
     }
