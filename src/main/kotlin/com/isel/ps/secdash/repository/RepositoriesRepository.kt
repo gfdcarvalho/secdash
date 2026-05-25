@@ -243,4 +243,16 @@ class RepositoriesRepository(
             .mapTo<Boolean>()
             .one()
     }
+
+    override fun getRepositoryById(rid: Int): Repository {
+        val repo = handle.createQuery("select * from repositories where rid = :rid")
+            .bind("rid", rid)
+            .mapTo<RepositorySqlDto>()
+            .one()
+        val owner = handle.createQuery("select * from owners where oid = :oid")
+            .bind("oid", repo.ownerId)
+            .mapTo<Owner>()
+            .one()
+        return repo.toDomainRepository(owner)
+    }
 }

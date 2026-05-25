@@ -11,6 +11,7 @@ import './App.css'
 import { CreateTeam } from './views/CreateTeam/CreateTeam';
 import { Github } from './views/GithubView/Github';
 import { Gitlab } from './views/GitlabView/Gitlab';
+import { RepoDetails } from './views/RepoDetails/RepoDetails';
 import { RequireAuthentication } from './utils/RequireAuthentication';
 
 const router = createBrowserRouter ([
@@ -21,6 +22,7 @@ const router = createBrowserRouter ([
       { path: '/repos', element: <Repos/>},
       { path: '/repos/github', element: <Github/>},
       { path: '/repos/gitlab', element: <Gitlab/>},
+      { path: '/repos/:repoId', element: <RepoDetails/>},
       { path: '/teams', element: <Teams/>},
       { path: '/teams/create', element: <CreateTeam/>}
       // { path: '/repositories', element: (...) },

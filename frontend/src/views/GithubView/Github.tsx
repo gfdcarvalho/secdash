@@ -1,22 +1,45 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import type { Translations } from '../../i18n/I18nProvider'
 import type { ExternalRepository } from '../../model/repository/externalRepository'
+import type { Repository } from '../../model/repository/repository'
 import Style from './Github.module.css'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import { authorizeWithProvider } from '../../utils/Authenticate'
+import { ProblemTypes } from '../../utils/ProblemTypes'
+import { Toast } from '../../components/Toast'
 
 
 export function Github() {
     const { t } = useTranslation()
+    const navigate = useNavigate()
     const [repositories, setRepositories] = useState<Array<ExternalRepository>>()
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [search, setSearch] = useState("")
+    const [toastMessage, setToastMessage] = useState<string | null>(null)
 
     const handleRepoClick = (_repo: ExternalRepository) => {
-        // TODO: navegar para repo details — navigate(`/github/repos/${_repo.externalId}`)
+        // TODO: navegar para repo details — navigate(`/repos/${_repo.externalId}`)
+    }
+
+    const handleAddRepo = async (repo: ExternalRepository) => {
+        const response = await api.post<Repository>("/github/repositories", repo)
+        if (isSuccess(response)) {
+            navigate(`/repos/${response.value.data.rid}`)
+        } else {
+            switch (response.value.type){
+                case ProblemTypes.repositoryAlreadyAdded:
+                    setToastMessage(t.github.repositoryAlreadyAdded)
+                    break
+            }
+        }
+    }
+
+    const handleAddToTeam = (_repo: ExternalRepository) => {
+        // TODO: lógica de adicionar à equipa
     }
 
     const getRepos = async () => {
@@ -41,6 +64,7 @@ export function Github() {
 
     return (
         <div className={Style.content}>
+            {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
             <div className={Style.topSection}>
                 <h2>{t.github.title}</h2>
             </div>
@@ -52,7 +76,7 @@ export function Github() {
                     {error && <RepoMessage text={errorMessage} />}
                     {!error && repositories === undefined && <RepoMessage text={t.github.loading} />}
                     {repositories?.length === 0 && <RepoMessage text={t.github.noRepositories} />}
-                    {repositories?.filter(repo => repo.name.toLowerCase().includes(search.toLowerCase())).map(repo => repositoryCard(repo, t, handleRepoClick))}
+                    {repositories?.filter(repo => repo.name.toLowerCase().includes(search.toLowerCase())).map(repo => repositoryCard(repo, t, handleRepoClick, handleAddRepo, handleAddToTeam))}
                 </div>
             </div>
         </div>
@@ -60,7 +84,13 @@ export function Github() {
 }
 
 
-function repositoryCard(repo: ExternalRepository, t: Translations, onRepoClick: (repo: ExternalRepository) => void) {
+function repositoryCard(
+    repo: ExternalRepository,
+    t: Translations,
+    onRepoClick: (repo: ExternalRepository) => void,
+    onAddRepo: (repo: ExternalRepository) => void,
+    onAddToTeam: (repo: ExternalRepository) => void
+) {
     const owner = repo.externalOwner
     return (
         <div key={repo.externalId} className={Style.repoCard} onClick={() => onRepoClick(repo)}>
@@ -81,8 +111,8 @@ function repositoryCard(repo: ExternalRepository, t: Translations, onRepoClick: 
                 </div>
             </div>
             <div className={Style.repoCardActions}>
-                <button className={Style.addRepoButton} onClick={e => { e.stopPropagation(); /* TODO: lógica de adicionar repositório */ }}>{t.github.addRepository}</button>
-                <button className={Style.addToTeamButton} onClick={e => { e.stopPropagation(); /* TODO: lógica de adicionar à equipa */ }}>{t.github.addToTeam}</button>
+                <button className={Style.addRepoButton} onClick={e => { e.stopPropagation(); onAddRepo(repo) }}>{t.github.addRepository}</button>
+                <button className={Style.addToTeamButton} onClick={e => { e.stopPropagation(); onAddToTeam(repo) }}>{t.github.addToTeam}</button>
             </div>
         </div>
     )

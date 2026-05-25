@@ -1,0 +1,124 @@
+.content {
+    composes: content from '../../styles/shared.module.css';
+}
+
+.topSection {
+    composes: topBar from '../../styles/shared.module.css';
+}
+
+.topSectionLeft {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+}
+
+.repoName {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.visibilityBadge, .platformBadge {
+    font-size: 0.7em;
+    padding: 0.15em 0.5em;
+    border-radius: 0.75em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    text-transform: lowercase;
+}
+
+.externalLink {
+    font-size: 0.78em;
+    padding: 0.3em 0.65em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    color: var(--color-text);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+}
+
+.externalLink:hover {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.bottomSection {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+    gap: 1.5em;
+    overflow-y: auto;
+}
+
+.ownerRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+}
+
+.ownerAvatar {
+    composes: ownerAvatar from '../../styles/shared.module.css';
+}
+
+.ownerAvatarFallback {
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
+}
+
+.ownerName {
+    font-size: 0.9em;
+    color: color-mix(in srgb, var(--color-text) 75%, transparent);
+}
+
+.description {
+    font-size: 0.9em;
+    color: color-mix(in srgb, var(--color-text) 75%, transparent);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.statsGrid {
+    display: flex;
+    gap: 2em;
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+
+.statLabel {
+    font-size: 0.72em;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.statValue {
+    font-size: 0.95em;
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    gap: 0.75em;
+}
+
+.addToTeamButton {
+    font-size: 0.85em;
+    padding: 0.4em 0.9em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.addToTeamButton:hover {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.message {
+    composes: repoMessage from '../../styles/shared.module.css';
+}

@@ -62,6 +62,17 @@ export const en = {
         issues: "Issues",
         addRepository: "Add Repository",
         addToTeam: "Add to Team",
+        repositoryAlreadyAdded: "Repository already added.",
+    },
+    repoDetails: {
+        notFound: "Repository not found.",
+        loading: "Loading...",
+        externalLink: "Open on",
+        forks: "Forks",
+        issues: "Issues",
+        createdAt: "Created",
+        updatedAt: "Updated",
+        addToTeam: "Add to Team",
     },
     profile: {
         title: "Profile",

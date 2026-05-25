@@ -31,4 +31,6 @@ interface RepositoriesRepositoryInterface {
     fun deleteRepo(rid: Int)
 
     fun checkRepositoryExistence(rid: Int): Boolean
+
+    fun getRepositoryById(rid: Int): Repository
 }

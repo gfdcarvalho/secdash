@@ -62,6 +62,17 @@ export const pt = {
         issues: "Issues",
         addRepository: "Adicionar Repositório",
         addToTeam: "Adicionar à Equipa",
+        repositoryAlreadyAdded: "Repositório já adicionado.",
+    },
+    repoDetails: {
+        notFound: "Repositório não encontrado.",
+        loading: "A carregar...",
+        externalLink: "Abrir em",
+        forks: "Forks",
+        issues: "Issues",
+        createdAt: "Criado em",
+        updatedAt: "Atualizado em",
+        addToTeam: "Adicionar à Equipa",
     },
     profile: {
         title: "Perfil",
