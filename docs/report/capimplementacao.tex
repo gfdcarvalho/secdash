@@ -38,7 +38,7 @@ O diagrama do modelo obtido encontra-se apresentado na figura abaixo. É importa
 	
  	Os \textit{access tokens} de cada utilizador ficam armazenados na tabela \textbf{USER\_AUTHORIZATION}. Os \textit{tokens} internos gerados e usados pelo próprio \textbf{SecDash}, por sua vez, são armazedados na tabela \textbf{TOKENS}. \\
 	
-	\item Cara repositório vigiado pela aplicação é armazenado na tabela \textbf{REPOSITORIES}. A tabela \textbf{OWNERS} armazena algumas informações referentes aos proprietários dos repositórios nas plataformas de origem, seja ela GitHub ou GitLab. Para fazer a ligação entre os repositórios armazenados e os utilizadores que os vigiam existe a tabela \textbf{USER\_REPOSITORIES}. \\ 
+	\item Cada repositório vigiado pela aplicação é armazenado na tabela \textbf{REPOSITORIES}. A tabela \textbf{OWNERS} armazena algumas informações referentes aos proprietários dos repositórios nas plataformas de origem, seja ela GitHub ou GitLab. Para fazer a ligação entre os repositórios armazenados e os utilizadores que os vigiam existe a tabela \textbf{USER\_REPOSITORIES}. \\ 
 	
 	Os alertas SAST e vulnerabilidades detetadas nas dependências de cada repositório são armazenados nas tabelas \textbf{SAST\_ALERTS} e \textbf{VULNERABILITIES} respetivamente. Esta última tabela encontra-se também ligada à tabela \textbf{VULNERABILITY\_REFERENCES}, que armazena ligações as CVEs onde essas vulnerabilidades estão catalogadas. \\
 	
@@ -70,11 +70,11 @@ Não obstante, para efeitos de organização do código, optou-se por colocar al
 
 \subsection{Pipeline}
 \subsubsection{AuthenticatedUserArgumentResolver}
-No Spring, a interface HandlerMethodArgumentResolver é utilizada para resolver parâmetros de métodos em valores no contexto de um determinado pedido. Com o objetivo de disponibilizar automaticamente a informação do utilizador autenticado na aplicaçã nos métodos dos controllers que fazem uso dessa informação foi implementada essa interface através da classe \textbf{AuthenticatedUserArgumentResolver}. Esta é responsável por identificar parâmetros do tipo AuthenticatedUser e resolver o respetivo valor a partir do contexto de um pedido HTTP. \\
+No Spring, a interface HandlerMethodArgumentResolver é utilizada para resolver parâmetros de métodos em valores no contexto de um determinado pedido. Com o objetivo de disponibilizar automaticamente a informação do utilizador autenticado na aplicação nos métodos dos controllers que fazem uso dessa informação foi implementada essa interface através da classe \textbf{AuthenticatedUserArgumentResolver}. Esta é responsável por identificar parâmetros do tipo AuthenticatedUser e resolver o respetivo valor a partir do contexto de um pedido HTTP. \\
 
 O método \textbf{supportsParameter} determina se o resolver deve ser aplicado a um determinado parâmetro do controlador. Neste caso age apenas sobre parâmetros do tipo AuthenticatedUser. Quando um controller contém um parâmetro deste tipo, o Spring chama o método resolveArgument que irá obter o utilizador autenticado associado ao pedido HTTP a ser recebido. \\
 
-O método \textbf{addUserTo} adiciona o utilizador autenticado ao pedido HTTP para que as restantes camadas do sistema possam ter acesso a essa informação, e é usado pelo AuthenticationInterceptor e pelo BearerTokenAuthFilter. \\
+O método \textbf{addUserTo} guarda o utilizador autenticado como atributo do pedido HTTP, permitindo que o \textbf{resolveArgument} o recupere posteriormente através de \textbf{getUserFrom}. Este método é utilizado pelo \textbf{AuthenticationInterceptor} e pelo \textbf{BearerTokenAuthFilter} para disponibilizar o utilizador autenticado ao resolver. \\
 
 \subsubsection{AuthenticationInterceptor}
 O \textbf{AuthenticatedInterceptor} implementa a interface HandlerInterceptor do Spring, permitindo a execução de código antes da invocação dos controllers. Este \textit{interceptor} pode ser visto como o mecanismo central de autenticação da aplicação, sendo responsável por chamar os métodos do RequestTokenProcessor para validar os tokens de acesso e poder assim disponibilizar o utilizador autenticado ao resto do sistema. \\
@@ -84,7 +84,7 @@ A lógica principal encontra-se no método \textbf{preHandle}, que é executado 
 Este intercepter começa por procurar o header \textbf{NAME\_AUTHORIZATION\_HEADER}. Se não existir o sistema tenta autenticar o utilizador através dos cookies associados ao pedido. \\
 
 \subsubsection{BearerTokenAuthFilter}
-A classe \textbf{BearerTokenAuthFilter} é um filtro é responsável por autenticar o utilizador em cada pedido HTTP e por estabelecer o contexto de segurança da aplicação. Ela extende a classe do Spring \textbf{OncePerRequestFilter}, garantindo assim que a sua execução ocorre apenas uma única vez por pedido. \\
+A classe \textbf{BearerTokenAuthFilter} é um filtro que é responsável por autenticar o utilizador em cada pedido HTTP e por estabelecer o contexto de segurança da aplicação. Ele extende a classe do Spring \textbf{OncePerRequestFilter}, garantindo assim que a sua execução ocorre apenas uma única vez por pedido. \\
 
 A função deste filtro é extrair credenciais de autenticação, sejam elas um bearer token presente num cabeçalho HTTP ou uma cookie, validar essas mesmas credenciais para finalmente adicionar o utilizador autenticado ao contexto de segurança do Spring. \\
 
@@ -92,7 +92,7 @@ O utilizador autenticado é associado ao contexto global de segurança da aplica
 \textbf{SecurityContextHolder.getContext().authentication}, permitindo que qualquer componente do Spring Security aceda ao utilizador autenticado durante o processamento do pedido. Para além da integração com o Spring Security, o filtro também preenche o mecanismo de resolução de argumentos utilizado por nós implementado e descrito anteriormente, o AuthenticatedUserArgumentResolver. \\
 
 \subsubsection{GlobalExceptionHandler}
-O objetivo desta classe é o tratamento de exceções dlançadas por erros não tratados. Ao utilizar a anotação \textbf{@RestControllerAdvice} do Spring Boot centralizamos o tratamento de erros não tratados em qualquer ponto da aplicação, garantindo uma resposta consistente para o cliente em caso de erro. \\
+O objetivo desta classe é o tratamento de exceções lançadas por erros não tratados. Ao utilizar a anotação \textbf{@RestControllerAdvice} do Spring Boot centralizamos o tratamento de erros não tratados em qualquer ponto da aplicação, garantindo uma resposta consistente para o cliente em caso de erro. \\
 
 O seu único método, \textbf{handleUnexpected} captura todas as exceções do tipo Exception, funcionando como um \textit{fallback} global para qualquer erro inesperado no decorrer da execução do \textit{backend}. \\
 
@@ -107,7 +107,7 @@ A classe \textbf{RequestTokenProcessor} é a principal responsável pela valida�
 \subsection{Services}
 A camada dos serviços é onde se processa a lógica de negócio da aplicação. Esta camada está organizada de forma semelhante à camada de \textit{controllers} já descrita, com a separação em cinco serviços distintos. \\
 
-Um dos detalhes que vale a pena realçar é o uso que cada um dos serviços faz de uma classe que lhe é injetada com o nome de \textbf{transactionManager}. Trata-se de uma classe implementada com o nome \textbf{JdbiTransactionManager} e tem o propósito de gerir a execução de operações à base de dados dentro de transações na camada de serviços, utilizando a biblioteca JDBI, para não seja esta camada a ter de liderar diretamente com a abertura, commit ou rollback de transações. \\
+Um dos detalhes que vale a pena realçar é o uso que cada um dos serviços faz de uma classe que lhe é injetada com o nome de \textbf{transactionManager}. Trata-se de uma classe implementada com o nome \textbf{JdbiTransactionManager} e tem o propósito de gerir a execução de operações à base de dados dentro de transações na camada de serviços, utilizando a biblioteca JDBI, para que não seja esta camada a ter de liderar diretamente com a abertura, commit ou rollback de transações. \\
 
 Tal é feito através do método \textit{inTransaction} da JDBI, que recebe um bloco de código e executa-a dentro de uma transação controlada por essa biblioteca. Se a execução do bloco for bem-sucedida a transação é confirmada automaticamente. Caso contrário, é feito o rollback também automaticamente. \\
 
