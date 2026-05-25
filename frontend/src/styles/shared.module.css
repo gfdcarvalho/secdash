@@ -57,6 +57,7 @@
     border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
     outline: none;
     border-radius: 0.5em;
+    overflow-y: auto;
     transition: background-color 1s ease, border-color 0.2s ease;
 }
 
@@ -74,18 +75,6 @@
 
 .repoCard:hover {
     background-color: color-mix(in srgb, var(--color-text) 5%, transparent);
-}
-
-.repoCard:last-child {
-    border-bottom: none;
-}
-
-.repoCard:first-child:hover {
-    border-radius: 0.5em 0.5em 0 0;
-}
-
-.repoCard:last-child:hover {
-    border-radius: 0 0 0.5em 0.5em;
 }
 
 .ownerAvatar {

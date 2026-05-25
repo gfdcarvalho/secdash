@@ -34,7 +34,6 @@
 }
 
 .teamsListDiv {
-    /* padding: 1em; */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -43,6 +42,7 @@
     border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
     outline: none;
     border-radius: 8px;
+    overflow-y: auto;
     transition: background-color 1s ease, border-color 0.2s ease;
 }
 
@@ -52,13 +52,17 @@
 
 .teamCard {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 1em;
-    border-radius: 8px;
-    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    flex-direction: column;
+    gap: 0.2em;
+    padding: 0.75em 1em;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.15s ease;
+    border-radius: 0.4em;
+}
+
+.teamCard:hover {
+    background: color-mix(in srgb, var(--color-text) 6%, transparent);
 }
 
 .errorMessageCard {
@@ -66,13 +70,6 @@
     flex-direction: row;
     justify-content: center;
     padding: 1em;
-    border-radius: 8px;
-    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.teamCard:hover {
-    background-color: var(--input-text-hover);
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
 }
 

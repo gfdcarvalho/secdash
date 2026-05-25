@@ -117,10 +117,6 @@
     border-radius: 0.4em;
 }
 
-.teamCard:last-child {
-    border-bottom: none;
-}
-
 .teamCard:hover {
     background: color-mix(in srgb, var(--color-text) 6%, transparent);
 }

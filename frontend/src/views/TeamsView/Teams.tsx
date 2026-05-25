@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router'
+import { NavLink, useNavigate } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import Style from './Teams.module.css'
 import type { SimpleTeam, SimpleTeamsListOutput } from '../../model/teams/teams'
@@ -9,6 +9,7 @@ import { isSuccess } from '../../utils/Either'
 
 export function Teams() {
     const { t } = useTranslation()
+    const navigate = useNavigate()
     const [teams, setTeams] = useState<Array<SimpleTeam>>()
     const [error, setError] = useState(false)
 
@@ -44,7 +45,7 @@ export function Teams() {
                     {!error && teams === undefined && <TeamsMessage text={t.teams.loading} />}
                     {teams?.length === 0 && <TeamsMessage text={t.teams.noTeams} />}
                     {teams?.map(team => (
-                        <div key={team.tid} className={Style.teamCard}>
+                        <div key={team.tid} className={Style.teamCard} onClick={() => navigate(`/teams/${team.tid}`)}>
                             <h3>{team.name}</h3>
                             {team.description && <p>{team.description}</p>}
                         </div>

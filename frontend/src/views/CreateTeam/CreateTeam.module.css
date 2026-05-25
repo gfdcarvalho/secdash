@@ -7,6 +7,29 @@
     composes: topBar from '../../styles/shared.module.css';
 }
 
+.input {
+    width: 100%;
+    padding: 0.75em 1em;
+    color: var(--color-text);
+    background-color: transparent;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    outline: none;
+    border-radius: 8px;
+    transition: background-color 0.15s ease, border-color 0.2s ease;
+}
+
+.input:hover {
+    background-color: color-mix(in srgb, var(--color-text) 6%, transparent);
+}
+
+.input:focus {
+    border-color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.input::placeholder {
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
 .fieldWrapper {
     display: flex;
     flex-direction: column;
@@ -40,19 +63,42 @@
     justify-content: end;
 }
 
-.createTeamButton {
-    padding: 1em;
+.navButton {
+    padding: 0.5em 0.9em;
     color: var(--color-text);
-    padding: 0.5em;
-    background-color: var(--color-bg);
+    background-color: transparent;
     border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
     outline: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 1s ease;
-    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.15s ease;
+}
+
+.navButton:hover {
+    background-color: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.navButton:focus-visible {
+    border-color: color-mix(in srgb, var(--color-text) 40%, transparent);
+}
+
+.createTeamButton {
+    padding: 0.5em 0.9em;
+    color: var(--color-text);
+    background-color: transparent;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    outline: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.15s ease;
 }
 
 .createTeamButton:hover {
-    background-color: var(--create-button);
+    background-color: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.createTeamButton:focus-visible {
+    border-color: color-mix(in srgb, var(--color-text) 60%, transparent);
 }

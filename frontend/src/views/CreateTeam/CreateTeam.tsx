@@ -32,12 +32,12 @@ export function CreateTeam() {
         <div className={style.createTeamContent}>
             <div className={style.topBar}>
                 <h2>{t.createTeam.title}</h2>
-                <button>{t.createTeam.myTeams}</button>
+                <button className={style.navButton} onClick={() => navigate('/teams')}>{t.createTeam.myTeams}</button>
             </div>
             <div className={style.createForm}>
                 <div className={style.fieldWrapper}>
                     <input
-                        className="inputText"
+                        className={style.input}
                         type="text"
                         placeholder={t.createTeam.namePlaceholder}
                         value={name}
@@ -46,7 +46,7 @@ export function CreateTeam() {
                     {nameError && <p className={style.error}>{t.createTeam.errors[nameError]}</p>}
                 </div>
                 <input
-                    className="inputText"
+                    className={style.input}
                     type="text"
                     placeholder={t.createTeam.descriptionPlaceholder}
                     value={description}
