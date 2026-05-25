@@ -2,6 +2,7 @@ This is BibTeX, Version 0.99e (TeX Live 2026/Arch Linux)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: relatorio.aux
 A level-1 auxiliary file: introducao.aux
+A level-1 auxiliary file: capenquadramento.aux
 A level-1 auxiliary file: caparquitetura.aux
 A level-1 auxiliary file: capimplementacao.aux
 A level-1 auxiliary file: capdeployment.aux
@@ -20,44 +21,44 @@ Database file #1: referencias.bib
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
 
 Done.
-You've used 13 entries,
+You've used 19 entries,
             4087 wiz_defined-function locations,
-            909 strings with 10181 characters,
-and the built_in function-call counts, 5902 in all, are:
-= -- 509
-> -- 78
+            933 strings with 11241 characters,
+and the built_in function-call counts, 8266 in all, are:
+= -- 719
+> -- 102
 < -- 9
-+ -- 40
-- -- 17
-* -- 216
-:= -- 1118
-add.period$ -- 36
-call.type$ -- 13
-change.case$ -- 21
++ -- 52
+- -- 23
+* -- 282
+:= -- 1578
+add.period$ -- 54
+call.type$ -- 19
+change.case$ -- 33
 chr.to.int$ -- 24
-cite$ -- 13
-duplicate$ -- 431
-empty$ -- 506
-format.name$ -- 19
-if$ -- 1285
+cite$ -- 19
+duplicate$ -- 611
+empty$ -- 716
+format.name$ -- 25
+if$ -- 1803
 int.to.chr$ -- 0
-int.to.str$ -- 13
-missing$ -- 107
-newline$ -- 88
-num.names$ -- 13
-pop$ -- 287
+int.to.str$ -- 19
+missing$ -- 155
+newline$ -- 118
+num.names$ -- 19
+pop$ -- 419
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 462
+skip$ -- 654
 stack$ -- 0
-substring$ -- 75
-swap$ -- 300
+substring$ -- 87
+swap$ -- 420
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 13
+type$ -- 19
 warning$ -- 0
-while$ -- 17
-width$ -- 15
-write$ -- 168
+while$ -- 23
+width$ -- 21
+write$ -- 234
