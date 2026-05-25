@@ -1,0 +1,75 @@
+.content {
+    composes: content from '../../styles/shared.module.css';
+}
+
+.topSection {
+    composes: topBar from '../../styles/shared.module.css';
+}
+
+.bottomSection {
+    composes: bottomSection from '../../styles/shared.module.css';
+}
+
+.searchBarDiv {
+    composes: searchBarDiv from '../../styles/shared.module.css';
+}
+
+.searchBar {
+    composes: searchBar from '../../styles/shared.module.css';
+}
+
+.reposListDiv {
+    composes: reposListDiv from '../../styles/shared.module.css';
+}
+
+.repoCard {
+    composes: repoCard from '../../styles/shared.module.css';
+}
+
+.ownerAvatar {
+    composes: ownerAvatar from '../../styles/shared.module.css';
+}
+
+.ownerAvatarFallback {
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
+}
+
+.repoCardInfo {
+    composes: repoCardInfo from '../../styles/shared.module.css';
+}
+
+.repoCardHeader {
+    composes: repoCardHeader from '../../styles/shared.module.css';
+}
+
+.repoName {
+    composes: repoName from '../../styles/shared.module.css';
+}
+
+.repoVisibility {
+    composes: repoVisibility from '../../styles/shared.module.css';
+}
+
+.repoDescription {
+    composes: repoDescription from '../../styles/shared.module.css';
+}
+
+.repoCardMeta {
+    composes: repoCardMeta from '../../styles/shared.module.css';
+}
+
+.repoCardActions {
+    composes: repoCardActions from '../../styles/shared.module.css';
+}
+
+.addRepoButton {
+    composes: addRepoButton from '../../styles/shared.module.css';
+}
+
+.addToTeamButton {
+    composes: addToTeamButton from '../../styles/shared.module.css';
+}
+
+.repoMessage {
+    composes: repoMessage from '../../styles/shared.module.css';
+}

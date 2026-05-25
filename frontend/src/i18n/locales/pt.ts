@@ -63,4 +63,15 @@ export const pt = {
         addRepository: "Adicionar Repositório",
         addToTeam: "Adicionar à Equipa",
     },
+    gitlab: {
+        title: "GitLab",
+        searchPlaceholder: "Pesquisa nos teus repositórios GitLab",
+        loading: "A carregar...",
+        noRepositories: "Nenhum repositório encontrado.",
+        error: "Erro ao carregar repositórios.",
+        forks: "Forks",
+        issues: "Issues",
+        addRepository: "Adicionar Repositório",
+        addToTeam: "Adicionar à Equipa",
+    },
 }

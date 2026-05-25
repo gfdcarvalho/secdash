@@ -35,3 +35,11 @@ Authorization: Bearer {{GITHUB_TOKEN}}
 Accept: application/vnd.github+json
 
 >> test_requests/repositories-response-github.json
+
+
+### Gitlab - repositories
+GET https://gitlab.com/api/v4/projects?membership=true&private=true
+Authorization: Bearer {{GITLAB_TOKEN}}
+Accept: application/vnd.github+json
+
+>> test_requests/repositories-response-gitlab.json

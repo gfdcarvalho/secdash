@@ -9,7 +9,7 @@ data class GitlabRepositoryDto(
     @JsonProperty("name_with_namespace") val name: String,
     @JsonProperty("web_url") val htmlUrl: String,
     val description: String?,
-    //@JsonProperty("open_issues_count") val openIssuesCount: Int,
+    @JsonProperty("open_issues_count") val openIssuesCount: Int,
     @JsonProperty("created_at") val createdAt: String,
     @JsonProperty("last_activity_at") val updatedAt: String,
     @JsonProperty("forks_count") val forksCount: Int,
@@ -23,7 +23,7 @@ data class GitlabRepositoryDto(
         externalOwner = namespace.toExternalOwner(),
         htmlUrl = htmlUrl,
         description = description ?: "",
-        issuesCount = 0, // DANGER!!!
+        issuesCount = openIssuesCount, // DANGER!!!
         createdAt = Instant.parse(createdAt),
         updatedAt = Instant.parse(updatedAt),
         forksCount = forksCount,

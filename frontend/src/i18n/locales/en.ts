@@ -63,4 +63,15 @@ export const en = {
         addRepository: "Add Repository",
         addToTeam: "Add to Team",
     },
+    gitlab: {
+        title: "GitLab",
+        searchPlaceholder: "Search in your GitLab repositories",
+        loading: "Loading...",
+        noRepositories: "No repositories found.",
+        error: "Failed to load repositories.",
+        forks: "Forks",
+        issues: "Issues",
+        addRepository: "Add Repository",
+        addToTeam: "Add to Team",
+    },
 }

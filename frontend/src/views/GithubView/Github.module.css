@@ -19,138 +19,57 @@
 }
 
 .reposListDiv {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 100%;
-    flex: 1;
-    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
-    outline: none;
-    border-radius: 8px;
-    transition: background-color 1s ease, border-color 0.2s ease;
+    composes: reposListDiv from '../../styles/shared.module.css';
 }
 
 .repoCard {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.75em;
-    justify-content: space-between;
-    padding: 0.75em 1em;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
-    cursor: pointer;
-    transition: background-color 0.15s ease;
-}
-
-.repoCard:hover {
-    background-color: color-mix(in srgb, var(--color-text) 5%, transparent);
-}
-
-.repoCard:last-child {
-    border-bottom: none;
-}
-
-.repoCard:first-child:hover,
-.repoCard:hover:first-child {
-    border-radius: 8px 8px 0 0;
-}
-
-.repoCard:last-child:hover {
-    border-radius: 0 0 8px 8px;
+    composes: repoCard from '../../styles/shared.module.css';
 }
 
 .ownerAvatar {
-    width: 2.25em;
-    height: 2.25em;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+    composes: ownerAvatar from '../../styles/shared.module.css';
 }
 
 .ownerAvatarFallback {
-    width: 2.25em;
-    height: 2.25em;
-    border-radius: 50%;
-    flex-shrink: 0;
-    background: color-mix(in srgb, var(--color-text) 15%, transparent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85em;
-    font-weight: 600;
-    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
 }
 
 .repoCardInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25em;
-    flex: 1;
-    min-width: 0;
+    composes: repoCardInfo from '../../styles/shared.module.css';
 }
 
 .repoCardHeader {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
+    composes: repoCardHeader from '../../styles/shared.module.css';
 }
 
 .repoName {
-    font-weight: 600;
-    font-size: 0.95em;
+    composes: repoName from '../../styles/shared.module.css';
 }
 
 .repoVisibility {
-    font-size: 0.7em;
-    padding: 0.15em 0.4em;
-    border-radius: 0.75em;
-    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
-    text-transform: lowercase;
+    composes: repoVisibility from '../../styles/shared.module.css';
 }
 
 .repoDescription {
-    font-size: 0.82em;
-    color: color-mix(in srgb, var(--color-text) 70%, transparent);
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    composes: repoDescription from '../../styles/shared.module.css';
 }
 
 .repoCardMeta {
-    display: flex;
-    gap: 0.75em;
-    font-size: 0.78em;
-    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    composes: repoCardMeta from '../../styles/shared.module.css';
 }
 
 .repoCardActions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375em;
-    margin-left: 1em;
-    flex-shrink: 0;
+    composes: repoCardActions from '../../styles/shared.module.css';
 }
 
-.addRepoButton, .addToTeamButton {
-    font-size: 0.78em;
-    padding: 0.3em 0.65em;
-    border-radius: 0.4em;
-    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
-    background: transparent;
-    color: var(--color-text);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.15s ease;
+.addRepoButton {
+    composes: addRepoButton from '../../styles/shared.module.css';
 }
 
-.addRepoButton:hover, .addToTeamButton:hover {
-    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+.addToTeamButton {
+    composes: addToTeamButton from '../../styles/shared.module.css';
 }
 
 .repoMessage {
-    padding: 1em;
-    text-align: center;
-    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    composes: repoMessage from '../../styles/shared.module.css';
 }
