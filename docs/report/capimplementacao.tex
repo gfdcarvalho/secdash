@@ -138,10 +138,15 @@ A anotação \textbf{@EnableWebSecurity} ativa o suporte ao \textbf{Spring Secur
 Os métodos anotados com @Bean são registados no contexto do Spring como beans por ele geridos, permitindo assim que componentes como o \textbf{SecurityFilterChain} e o \textbf{AuthenticationSuccessHandler} sejam instanciados e geridos automaticamente pela framework e injetados onde necessário. Sem esse registo no \textit{startup} da aplicação não seria possível integrar a lógica de autenticação por nós desenvolvida com recurso ao \textbf{BearerTokenAuthFilter} e ao \textbf{OAuthRedirectFilter} anteriormente discutidos no presente capítulo. \\
 
 \section{Frontend} \label{implementacao:frontend}
-tsx
-grhhhd
+A arquitetura do cliente web foi desenvolvida recorrendo à biblioteca \textit{React}, com um foco na modularidade e reatividade da interface de utilizador. \\
+
+O cliente segue uma estrutura \textit{Single Page Application}(SPA) onde inicialmente é carregada uma única página base cujo conteúdo é atualizado dinamicamente em resposta às ações do utilizador. É assim garantida uma experiência de utilização fluida e desacoplada, com o browser do navegador a comunicar de forma assíncrona com a API do \textit{backend} através de pedidos HTTP. \\
+
+Nas subsecções seguintes é detalhada a estrutura interna do cliente Web. \\
+
 \subsection{utils}
 funçoes que vao auxiliar as views
+
 \subsubsection{Custom Hooks}
 <RequireAuthentication><Layout/></RequireAuthentication>, 
 verifica se tamos loged in usando o autentication provider, caso contrar redirect p o login, fazendo pedido ao backend com token q temos no broas p /me
