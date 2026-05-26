@@ -142,22 +142,20 @@ A arquitetura do cliente web foi desenvolvida recorrendo à biblioteca \textit{R
 
 O cliente segue uma estrutura \textit{Single Page Application}(SPA) onde inicialmente é carregada uma única página base cujo conteúdo é atualizado dinamicamente em resposta às ações do utilizador. É assim garantida uma experiência de utilização fluida e desacoplada, com o browser do navegador a comunicar de forma assíncrona com a API do \textit{backend} através de pedidos HTTP. \\
 
-Nas subsecções seguintes é detalhada a estrutura interna do cliente Web. \\
+As subsecções seguintes abordam alguns elementos do cliente Web que julgamos merecerem algum em destaque. \\
 
-\subsection{utils}
-funçoes que vao auxiliar as views
+\subsubsection{RequireAuthentication}
 
-\subsubsection{Custom Hooks}
-<RequireAuthentication><Layout/></RequireAuthentication>, 
-verifica se tamos loged in usando o autentication provider, caso contrar redirect p o login, fazendo pedido ao backend com token q temos no broas p /me
+O componente RequireAuthentication tem como responsabilidade intercetaro os acessos a qualquer URI da aplicação que exija que o utilizador tenha sessão iniciada para que a presença de uma sessão ativa possa ser validada antes de os componentes serem exibidos. Ao tentar aceder a uma rota protegida, caso o utilizador não possua um token válido, este será automaticamente redirecionado para a página de login. \\
 
-<ThemeProvider> tema guardado no local storage p manter tema consistente quando mudamos de view e pagina
-    
+É de realçar alguns cuidados que foram tomados de forma a que a experiência do utilizador seja o mais fluída e intuitiva possível, nomeadamente o uso do hook \textbf{useLocation}, para que a localização do utilizador seja guardada para que assim possa ser redirecionado para a rota protegida que pretendia aceder após o login bem sucedido e o troço de código "replace=\{true\}", que impede que um utilizador possa usar a função de retroceder do seu browser para voltar para a página anterior após ter sido redirecionado para a página de login. \\
+
+
+\subsection{AuthenticationProvider}
 <AuthenticationProvider> só p disponibilizar o usar que está logged para as views todas ????
 
-
-<RouterProvider router={router} /> é mesmo do react, n ta implementado em lado nenhum
-
+\subsubsection{ThemeProvider}
+<ThemeProvider> tema guardado no local storage p manter tema consistente quando mudamos de view e pagina
 
 \subsection{i18n}
 taruçoes

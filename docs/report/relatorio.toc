@@ -50,8 +50,9 @@
 \contentsline {subsubsection}{Sealed Class Either}{26}{}%
 \contentsline {subsubsection}{Security Config}{26}{}%
 \contentsline {section}{\numberline {4.3}Frontend}{27}{}%
-\contentsline {subsection}{\numberline {4.3.1}utils}{27}{}%
-\contentsline {subsubsection}{Custom Hooks}{27}{}%
+\contentsline {subsubsection}{RequireAuthentication}{27}{}%
+\contentsline {subsection}{\numberline {4.3.1}AuthenticationProvider}{28}{}%
+\contentsline {subsubsection}{ThemeProvider}{28}{}%
 \contentsline {subsection}{\numberline {4.3.2}i18n}{28}{}%
 \contentsline {chapter}{\numberline {5}Deployment}{29}{}%
 \contentsline {chapter}{\numberline {6}Conclusão}{31}{}%
