@@ -40,8 +40,9 @@ O sistema deverá implementar um mecanismo de controlo de acesso baseados em pap
 
 Deverão ser suportados os seguintes papéis:
 \begin{itemize}
-	\item \textbf{?????}: Temos de ver bem isto
-	\item \textbf{?????}: Idem
+	\item \textbf{ADMIN}: Utilizador com funções de administração. Pode adicionar e remover utilizadores e repositórios de equipas às quais não pertence, pode eliminar utilizadores, etc...
+	
+	\item \textbf{USER}: Utilizador comum da aplicação.
 \end{itemize}
 
 Este mecanismo permitirá uma organização em equipas dentro da plataforma, bem como uma gestão do acesso aos dados conforme determido por role idk temos de ver. \\
@@ -76,7 +77,7 @@ Pretende-se que a interface seja visualmente clara e de fácil acessibilidade, p
 
 O sistema deverá permitir exportar relatórios de vulnerabilidades para formatos externos, possibilitando a sua partilha e integração com outros sistemas.\\
 
-Inicialmente, deverá ser suportada exportação em formato ??????, podendo futuramente ser adicionados outros formatos, tais como ???????.\\
+Inicialmente, deverá ser suportada exportação em formato CSV, podendo futuramente ser adicionados outros formatos.\\
 
 Os relatórios exportados deverão incluir:
 \begin{itemize}
@@ -196,4 +197,4 @@ Os fatore que motivaram esta escolha foram os seguintes:
 \end{itemize}
 
 \subsubsection{Vite}
-idk isto é contigo rodrigo \\
+Como \textit{module bundler} optou-se pela utilização de \textbf{Vite} em alternativa a Webpack, por ser o standard \textit{de facto} para projetos em React. O Vite utiliza \textit{ES Modules} nativos do browser ao correr o servidor de desenvolvimento em vez de fazer bundle de todo o código, tornando o seu arranque e \textit{hot reloading} mais rápido. \\

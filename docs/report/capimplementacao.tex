@@ -138,3 +138,21 @@ A anotação \textbf{@EnableWebSecurity} ativa o suporte ao \textbf{Spring Secur
 Os métodos anotados com @Bean são registados no contexto do Spring como beans por ele geridos, permitindo assim que componentes como o \textbf{SecurityFilterChain} e o \textbf{AuthenticationSuccessHandler} sejam instanciados e geridos automaticamente pela framework e injetados onde necessário. Sem esse registo no \textit{startup} da aplicação não seria possível integrar a lógica de autenticação por nós desenvolvida com recurso ao \textbf{BearerTokenAuthFilter} e ao \textbf{OAuthRedirectFilter} anteriormente discutidos no presente capítulo. \\
 
 \section{Frontend} \label{implementacao:frontend}
+tsx
+grhhhd
+\subsection{utils}
+funçoes que vao auxiliar as views
+\subsubsection{Custom Hooks}
+<RequireAuthentication><Layout/></RequireAuthentication>, 
+verifica se tamos loged in usando o autentication provider, caso contrar redirect p o login, fazendo pedido ao backend com token q temos no broas p /me
+
+<ThemeProvider> tema guardado no local storage p manter tema consistente quando mudamos de view e pagina
+    
+<AuthenticationProvider> só p disponibilizar o usar que está logged para as views todas ????
+
+
+<RouterProvider router={router} /> é mesmo do react, n ta implementado em lado nenhum
+
+
+\subsection{i18n}
+taruçoes
