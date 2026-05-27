@@ -151,11 +151,16 @@ O componente RequireAuthentication tem como responsabilidade intercetaro os aces
 É de realçar alguns cuidados que foram tomados de forma a que a experiência do utilizador seja o mais fluída e intuitiva possível, nomeadamente o uso do hook \textbf{useLocation}, para que a localização do utilizador seja guardada para que assim possa ser redirecionado para a rota protegida que pretendia aceder após o login bem sucedido e o troço de código "replace=\{true\}", que impede que um utilizador possa usar a função de retroceder do seu browser para voltar para a página anterior após ter sido redirecionado para a página de login. \\
 
 
-\subsection{AuthenticationProvider}
-<AuthenticationProvider> só p disponibilizar o usar que está logged para as views todas ????
-
 \subsubsection{ThemeProvider}
-<ThemeProvider> tema guardado no local storage p manter tema consistente quando mudamos de view e pagina
+
+O \textbf{ThemeProvider} é o componente responsável por gerir e persistir o esquema de cores da aplicação, contanto com dois temas: escuro e cladro. \\
+
+É garantida uma experiência visual consistente ao longo de toda a Single Page Application. Para evitar o efeito visual desagradável de possivelmente carregar inicialmente o tema claro e só depois ser carregado o escuro que um utilizador tenha ativado ao mudar de página, o estado inicial do tema é determinado através de uma função de iniciação lazy no \textbf{useState}, que verifica qual o tema selecionado pelo utilizador, armazenado no localStorage. \\
+
+O tema atual é disponibilizado a todo o frontend através do \textbf{ThemeContext}. \\
 
 \subsection{i18n}
-taruçoes
+
+O frontend do \textbf{SecDash} foi implementado tendo em vista a possibilidade de exibir uma interface com várias línguas distintas. \\
+
+A lógica de implementação desta funcionalidade está centrada no componente \textbf{I18nProvider}, que recorre à \textit{Context API} do React para armazenar o idioma ativo (Locale) e expor o seu dicionário de traduções. \\
