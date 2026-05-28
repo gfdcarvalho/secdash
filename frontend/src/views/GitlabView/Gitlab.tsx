@@ -6,18 +6,45 @@ import Style from './Gitlab.module.css'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import { authorizeWithProvider } from '../../utils/Authenticate'
+import type { Repository } from '../../model/repository/repository'
+import { ProblemTypes } from '../../utils/ProblemTypes'
+import { useNavigate } from 'react-router'
+import { Toast } from '../../components/Toast'
+
 
 
 export function Gitlab() {
     const { t } = useTranslation()
+    const navigate = useNavigate()
     const [repositories, setRepositories] = useState<Array<ExternalRepository>>()
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [search, setSearch] = useState("")
+    const [toastMessage, setToastMessage] = useState<string | null>(null)
+
 
     const handleRepoClick = (_repo: ExternalRepository) => {
         // TODO: navegar para repo details — navigate(`/gitlab/repos/${_repo.externalId}`)
     }
+
+    const handleAddRepo = async (repo: ExternalRepository) => {
+        const response = await api.post<Repository>("/gitlab/repositories", repo)
+        if (isSuccess(response)) {
+            console.log("rid " + response.value.data.rid)
+            navigate(`/repos/${response.value.data.rid}`)
+        } else {
+            switch (response.value.type){
+                case ProblemTypes.repositoryAlreadyAdded:
+                    setToastMessage(t.gitlab.repositoryAlreadyAdded)
+                    break
+            }
+        }
+    }
+
+    const handleAddToTeam = (_repo: ExternalRepository) => {
+        // TODO: lógica de adicionar à equipa
+    }
+
 
     const getRepos = async () => {
         const response = await api.get<Array<ExternalRepository>>("gitlab/repos")
@@ -41,6 +68,7 @@ export function Gitlab() {
 
     return (
         <div className={Style.content}>
+            {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
             <div className={Style.topSection}>
                 <h2>{t.gitlab.title}</h2>
             </div>
@@ -52,7 +80,7 @@ export function Gitlab() {
                     {error && <RepoMessage text={errorMessage} />}
                     {!error && repositories === undefined && <RepoMessage text={t.gitlab.loading} />}
                     {repositories?.length === 0 && <RepoMessage text={t.gitlab.noRepositories} />}
-                    {repositories?.filter(repo => repo.name.toLowerCase().includes(search.toLowerCase())).map(repo => repositoryCard(repo, t, handleRepoClick))}
+                    {repositories?.filter(repo => repo.name.toLowerCase().includes(search.toLowerCase())).map(repo => repositoryCard(repo, t, handleRepoClick, handleAddRepo, handleAddToTeam))}
                 </div>
             </div>
         </div>
@@ -60,7 +88,13 @@ export function Gitlab() {
 }
 
 
-function repositoryCard(repo: ExternalRepository, t: Translations, onRepoClick: (repo: ExternalRepository) => void) {
+function repositoryCard(
+    repo: ExternalRepository, 
+    t: Translations, 
+    onRepoClick: (repo: ExternalRepository) => void,
+    onAddRepo: (repo: ExternalRepository) => void,
+    onAddToTeam: (repo: ExternalRepository) => void
+) {
     const owner = repo.externalOwner
     return (
         <div key={repo.externalId} className={Style.repoCard} onClick={() => onRepoClick(repo)}>
@@ -81,8 +115,8 @@ function repositoryCard(repo: ExternalRepository, t: Translations, onRepoClick: 
                 </div>
             </div>
             <div className={Style.repoCardActions}>
-                <button className={Style.addRepoButton} onClick={e => { e.stopPropagation(); /* TODO: lógica de adicionar repositório */ }}>{t.gitlab.addRepository}</button>
-                <button className={Style.addToTeamButton} onClick={e => { e.stopPropagation(); /* TODO: lógica de adicionar à equipa */ }}>{t.gitlab.addToTeam}</button>
+                <button className={Style.addRepoButton} onClick={e => { e.stopPropagation(); onAddRepo(repo) }}>{t.gitlab.addRepository}</button>
+                <button className={Style.addToTeamButton} onClick={e => { e.stopPropagation(); onAddToTeam(repo) }}>{t.gitlab.addToTeam}</button>
             </div>
         </div>
     )

@@ -118,6 +118,16 @@ class Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "Owner Not Found",
             )
+        val repoDoesNotHaveSastFeatureEnabled =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Invalid Team name",
+            )
+        val repoDoesNotHaveDependabotFeatureEnabled =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "Invalid Team name",
+            )
 
         // ---------------- teams
         val invalidTeamName =

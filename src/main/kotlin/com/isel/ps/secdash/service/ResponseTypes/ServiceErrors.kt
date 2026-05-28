@@ -35,6 +35,7 @@ sealed class SastError {
     data object Unauthorized : SastError()
     data object NotFound : SastError()
     data object RepositoryNotFound : SastError()
+    data object RepoDoesNotHaveSastFeatureEnabled : SastError()
 }
 
 typealias SastResult = Either<SastError, RepositorySast>

@@ -98,5 +98,6 @@ export const en = {
         issues: "Issues",
         addRepository: "Add Repository",
         addToTeam: "Add to Team",
+        repositoryAlreadyAdded: "Repository already added.",
     },
 }

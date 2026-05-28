@@ -98,5 +98,6 @@ export const pt = {
         issues: "Issues",
         addRepository: "Adicionar Repositório",
         addToTeam: "Adicionar à Equipa",
+        repositoryAlreadyAdded: "Repositorio já adicionado.",
     },
 }

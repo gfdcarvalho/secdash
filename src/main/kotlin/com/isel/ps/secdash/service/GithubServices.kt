@@ -18,7 +18,9 @@ import com.isel.ps.secdash.service.ResponseTypes.SastResult
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.client.HttpClientErrorException
 
 sealed class DependabotError {
     data object Unauthorized : DependabotError()
@@ -108,8 +110,17 @@ class GithubServices(
             val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(SastError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(SastError.Unauthorized)
             val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(SastError.Unauthorized)
-            val externalSastAlerts = githubClient.getSastAlerts(fullName, accessToken)
-            success(RepositorySast(rid, externalSastAlerts))
+            try {
+                val externalSastAlerts = githubClient.getSastAlerts(fullName, accessToken)
+                success(RepositorySast(rid, externalSastAlerts))
+
+            }catch (e: HttpClientErrorException) {
+                when (e.statusCode) {
+                    HttpStatus.NOT_FOUND -> failure(SastError.NotFound)
+                    HttpStatus.FORBIDDEN -> failure(SastError.RepoDoesNotHaveSastFeatureEnabled)
+                    else -> failure(SastError.Unauthorized)
+                }
+            }
         }
     }
 }

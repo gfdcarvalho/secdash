@@ -72,7 +72,7 @@ class GitlabController(
     ): ResponseEntity<*> {
         val result = gitlabServices.addRepository(repo, user.user.uid)
         return when (result) {
-            is Success -> ResponseEntity.status(200).body(result)
+            is Success -> ResponseEntity.status(200).body(result.value)
             is Failure -> {
                 when (result.value) {
                     AddRepositoryError.RepositoryAlreadyAdded -> Problem.response(400, Problem.repositoryAlreadyAdded)
@@ -119,6 +119,7 @@ class GitlabController(
                     SastError.Unauthorized -> Problem.response(401, Problem.unauthorized)
                     SastError.NotFound -> Problem.response(404, Problem.notFound)
                     SastError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                    SastError.RepoDoesNotHaveSastFeatureEnabled -> Problem.response(403, Problem.repoDoesNotHaveDependabotFeatureEnabled)
                 }
         }
     }

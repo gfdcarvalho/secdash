@@ -1,4 +1,4 @@
-@token = 3pLz_CkEb60C3hy5dlrIz_aLgU0jxgbmZHmZco6_s08=
+@token = VX7kf9HeW1g82XonLZ-I87tru6_Apy3mTuQec4h6yf0=
 
 
 // http://localhost:8080/oauth2/authorization/github   login with github
@@ -37,8 +37,8 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "username": "testes11",
-  "password": "testes"
+  "username": "teste",
+  "password": "teste"
 }
 
 ### add github dependabot repository
@@ -88,17 +88,17 @@ Content-Type: application/json
 
 
 ### Github dependabot
-GET http://localhost:8080/github/repositories/1/dependabot
+GET http://localhost:8080/github/repositories/5/dependabot
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 
 ### Gitlab dependancy-scanning
-GET http://localhost:8080/gitlab/repositories/3/dependency-scanning
+GET http://localhost:8080/gitlab/repositories/1/dependency-scanning
 Authorization: Bearer {{token}}
 
 ### Github sast
-GET http://localhost:8080/github/repositories/2/sast
+GET http://localhost:8080/github/repositories/4/sast
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
