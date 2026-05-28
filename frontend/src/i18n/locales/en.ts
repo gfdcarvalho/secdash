@@ -73,6 +73,10 @@ export const en = {
         createdAt: "Created",
         updatedAt: "Updated",
         addToTeam: "Add to Team",
+        dependabotReport: "Dependabot Report",
+        codeScanningReport: "Code Scanning Report",
+        dependencyScanningReport: "Dependency Scanning Report",
+        sastReport: "SAST Report",
     },
     profile: {
         title: "Profile",

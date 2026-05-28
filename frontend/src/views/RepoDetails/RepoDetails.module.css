@@ -119,6 +119,14 @@
     background: color-mix(in srgb, var(--color-text) 10%, transparent);
 }
 
+.reportsButtons {
+    composes: addToTeamButton;
+}
+
+.reportsButtons:hover {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
 .message {
     composes: repoMessage from '../../styles/shared.module.css';
 }

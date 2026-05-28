@@ -43,8 +43,25 @@ export function RepoDetails() {
     }
 
     const owner = repo.owner
+    const platform = repo.platform
     const createdAt = new Date(repo.createdAt).toLocaleDateString()
     const updatedAt = new Date(repo.updatedAt).toLocaleDateString()
+
+    const getDependabot = async () => {
+        let uri 
+        if(platform === 'GITHUB'){
+            uri = `/repositories/${repo.rid}/dependabot`
+        }else {
+            uri = `/repositories/${repo.rid}/dependency-scanning`
+        }
+
+    }
+
+    
+    const getSast = async () => {
+
+    }
+    
 
     return (
         <div className={Style.content}>
@@ -91,6 +108,12 @@ export function RepoDetails() {
                 <div className={Style.actions}>
                     <button className={Style.addToTeamButton} onClick={() => { /* TODO: lógica de adicionar à equipa */ }}>
                         {t.repoDetails.addToTeam}
+                    </button>
+                    <button className={Style.reportsButtons} onClick={() => {}}>
+                        {platform === 'GITHUB' ? t.repoDetails.dependabotReport : t.repoDetails.dependencyScanningReport}
+                    </button>
+                    <button className={Style.reportsButtons} onClick={() => {}}>
+                        {platform === 'GITHUB' ? t.repoDetails.codeScanningReport : t.repoDetails.sastReport}
                     </button>
                 </div>
             </div>

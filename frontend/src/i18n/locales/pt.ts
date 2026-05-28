@@ -73,6 +73,10 @@ export const pt = {
         createdAt: "Criado em",
         updatedAt: "Atualizado em",
         addToTeam: "Adicionar à Equipa",
+        dependabotReport: "Relatório Dependabot",
+        codeScanningReport: "Relatório Code Scanning",
+        dependencyScanningReport: "Relatório Dependency Scanning",
+        sastReport: "Relatório SAST",
     },
     profile: {
         title: "Perfil",
