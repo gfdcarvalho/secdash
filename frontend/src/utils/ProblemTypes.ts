@@ -24,6 +24,8 @@ export const ProblemTypes = {
     userAuthorizationRequired:`${BASE}/example-problem`,
     ownerIsRequired:          `${BASE}/example-problem`,
     ownerNotFound:            `${BASE}/example-problem`,
+    repoDoesNotHaveSastFeatureEnabled:       `${BASE}/example-problem`,
+    repoDoesNotHaveDependabotFeatureEnabled: `${BASE}/example-problem`,
 
     // teams
     invalidTeamName:          `${BASE}/example-problem`,

@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import type { Repository } from '../../model/repository/repository'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './RepoDetails.module.css'
+import type { RepositoryVulnerabilities } from '../../model/vulnerabilities/vulnerabilities'
+import { ProblemTypes } from '../../utils/ProblemTypes'
 
 
 export function RepoDetails() {
     const { t } = useTranslation()
+    const navigate = useNavigate()
     const { repoId } = useParams()
     const [repo, setRepo] = useState<Repository>()
     const [notFound, setNotFound] = useState(false)
@@ -53,6 +56,15 @@ export function RepoDetails() {
             uri = `/repositories/${repo.rid}/dependabot`
         }else {
             uri = `/repositories/${repo.rid}/dependency-scanning`
+        }
+        const response = await api.get<RepositoryVulnerabilities>(uri)
+        if (isSuccess(response)) {
+            navigate(`/repos/${repo.rid}/vulnerabilities`, { state: {vulnerabilities: response.value}})
+        } else {
+            switch(response.value.type) {
+                case ProblemTypes.repoDoesNotHaveDependabotFeatureEnabled:
+                    // setToast 
+            }
         }
 
     }

@@ -14,6 +14,7 @@ import { Gitlab } from './views/GitlabView/Gitlab';
 import { RepoDetails } from './views/RepoDetails/RepoDetails';
 import { TeamDetails } from './views/TeamDetails/TeamDetails';
 import { RequireAuthentication } from './utils/RequireAuthentication';
+import { RepoVulnerabilities } from './views/RepoVulnerabilities/RepoVulnerabilities';
 
 const router = createBrowserRouter ([
   {
@@ -24,6 +25,7 @@ const router = createBrowserRouter ([
       { path: '/repos/github', element: <Github/>},
       { path: '/repos/gitlab', element: <Gitlab/>},
       { path: '/repos/:repoId', element: <RepoDetails/>},
+      { path: '/repos/:repoId/vulnerabilities', element: <RepoVulnerabilities/>},
       { path: '/teams', element: <Teams/>},
       { path: '/teams/create', element: <CreateTeam/>},
       { path: '/teams/:teamId', element: <TeamDetails/>}

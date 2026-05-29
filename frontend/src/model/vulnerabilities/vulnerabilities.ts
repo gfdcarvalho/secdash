@@ -1,0 +1,29 @@
+export type VulnerabilitySeverity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'UNKNOWN'
+
+export type VulnerabilityState = 'OPEN' | 'FIXED' | 'DISMISSED'
+
+export interface ExternalVulnerability {
+  externalId: string
+  title: string
+  description: string | null
+  severity: VulnerabilitySeverity
+  state: VulnerabilityState
+  cveId: string | null
+  ghsaId: string | null
+  packageName: string
+  packageVersion: string | null
+  vulnerableVersionRange: string | null
+  fixedVersion: string | null
+  manifestPath: string | null
+  cvssScore: number | null
+  cvssVector: string | null
+  references: string[]
+  platform: string
+  detectedAt: string | null
+  updatedAt: string | null
+}
+
+export interface RepositoryVulnerabilities {
+  rid: number
+  vulnerabilities: ExternalVulnerability[]
+}
