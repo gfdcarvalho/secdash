@@ -1,6 +1,7 @@
 -- Drop Tables
 DROP TABLE IF EXISTS vulnerability_references;
 DROP TABLE IF EXISTS sast_alerts;
+DROP TABLE IF EXISTS repo_vulnerability_scans;
 DROP TABLE IF EXISTS vulnerabilities;
 DROP TABLE IF EXISTS user_repositories;
 DROP TABLE IF EXISTS team_repos;

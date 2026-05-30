@@ -100,7 +100,17 @@ class GitlabServices(
             val externalId = repositoriesRepo.getExternalId(rid) ?: return@run failure(DependencyScanError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(uid, rid)) return@run failure(DependencyScanError.Unauthorized)
             val accessToken = userRepo.getAccessToken(uid, AuthProvider.GITLAB) ?: return@run failure(DependencyScanError.Unauthorized)
-            val vulnerabilities = gitlabClient.getDependencyScan(externalId, accessToken)
+
+            val externalVulnerabilities = try {
+                gitlabClient.getDependencyScan(externalId, accessToken)
+            } catch(e: HttpClientErrorException){
+                return@run when (e.statusCode) {
+                    HttpStatus.NOT_FOUND -> failure(DependencyScanError.NotFound)
+                    HttpStatus.UNAUTHORIZED -> failure(DependencyScanError.Unauthorized)
+                    else -> failure(DependencyScanError.Unauthorized)
+                }
+            }
+            val vulnerabilities = repositoriesRepo.storeVulnerabilities(rid, externalVulnerabilities)
             success(RepositoryVulnerabilities(rid, vulnerabilities))
         }
     }

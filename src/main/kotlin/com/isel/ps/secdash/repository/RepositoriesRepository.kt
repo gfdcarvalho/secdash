@@ -7,7 +7,10 @@ import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositorySqlDto
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
+import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
+import com.isel.ps.secdash.model.vulnerability.Vulnerability
 import com.isel.ps.secdash.repository.interfaces.RepositoriesRepositoryInterface
+import java.time.Instant
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
 
@@ -254,5 +257,78 @@ class RepositoriesRepository(
             .mapTo<Owner>()
             .one()
         return repo.toDomainRepository(owner)
+    }
+
+    override fun storeVulnerabilities(rid: Int, vulnerabilities: List<ExternalVulnerability>): List<Vulnerability> {
+        val now = Instant.now()
+        val result = vulnerabilities.map { vuln ->
+            val vid = handle.createQuery(
+                """
+                INSERT INTO vulnerabilities (
+                    external_id, title, description, severity, state, cve_id, ghsa_id,
+                    package_name, package_version, vulnerable_version_range, fixed_version,
+                    manifest_path, cvss_score, cvss_vector, platform, rid, detected_at, updated_at
+                ) VALUES (
+                    :external_id, :title, :description, :severity::vulnerability_severity,
+                    :state::vulnerability_state, :cve_id, :ghsa_id, :package_name,
+                    :package_version, :vulnerable_version_range, :fixed_version, :manifest_path,
+                    :cvss_score, :cvss_vector, :platform::platform, :rid, :detected_at, :updated_at
+                )
+                ON CONFLICT (external_id, platform, rid) DO UPDATE SET
+                    state      = EXCLUDED.state,
+                    severity   = EXCLUDED.severity,
+                    title      = EXCLUDED.title,
+                    description = EXCLUDED.description,
+                    package_version = EXCLUDED.package_version,
+                    fixed_version   = EXCLUDED.fixed_version,
+                    cvss_score      = EXCLUDED.cvss_score,
+                    cvss_vector     = EXCLUDED.cvss_vector,
+                    updated_at      = EXCLUDED.updated_at
+                RETURNING vid
+                """.trimIndent()
+            )
+                .bind("external_id", vuln.externalId)
+                .bind("title", vuln.title)
+                .bind("description", vuln.description)
+                .bind("severity", vuln.severity.name)
+                .bind("state", vuln.state.name)
+                .bind("cve_id", vuln.cveId)
+                .bind("ghsa_id", vuln.ghsaId)
+                .bind("package_name", vuln.packageName)
+                .bind("package_version", vuln.packageVersion)
+                .bind("vulnerable_version_range", vuln.vulnerableVersionRange)
+                .bind("fixed_version", vuln.fixedVersion)
+                .bind("manifest_path", vuln.manifestPath)
+                .bind("cvss_score", vuln.cvssScore)
+                .bind("cvss_vector", vuln.cvssVector)
+                .bind("platform", vuln.platform.name)
+                .bind("rid", rid)
+                .bind("detected_at", vuln.detectedAt ?: now)
+                .bind("updated_at", vuln.updatedAt ?: now)
+                .mapTo<Int>()
+                .one()
+
+            handle.createUpdate("DELETE FROM vulnerability_references WHERE vuln_id = :vid")
+                .bind("vid", vid)
+                .execute()
+
+            vuln.references.forEach { url ->
+                handle.createUpdate("INSERT INTO vulnerability_references (vuln_id, url) VALUES (:vid, :url)")
+                    .bind("vid", vid)
+                    .bind("url", url)
+                    .execute()
+            }
+
+            vuln.toVulnerability(vid, rid)
+        }
+
+        handle.createUpdate(
+            "INSERT INTO repo_vulnerability_scans (rid, vulnerability_count) VALUES (:rid, :count)"
+        )
+            .bind("rid", rid)
+            .bind("count", result.size)
+            .execute()
+
+        return result
     }
 }

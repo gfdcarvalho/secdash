@@ -8,7 +8,6 @@ CREATE TYPE sast_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
 CREATE TYPE auth_provider AS ENUM ('GOOGLE', 'GITHUB', 'GITLAB');
 CREATE TYPE app_roles as ENUM ('ADMIN', 'USER');
 CREATE TYPE team_roles as ENUM ('LEADER', 'COLLABORATOR');
-
 -- Users
 CREATE TABLE users (
     uid                     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -91,7 +90,16 @@ CREATE TABLE vulnerabilities (
     platform                 platform               NOT NULL,
     rid                      INT                    NOT NULL REFERENCES repositories(rid),
     detected_at              TIMESTAMP              NOT NULL,
-    updated_at               TIMESTAMP              NOT NULL
+    updated_at               TIMESTAMP              NOT NULL,
+    UNIQUE (external_id, platform, rid)
+);
+
+-- Vulnerability Scan History
+CREATE TABLE repo_vulnerability_scans (
+    scan_id             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    rid                 INT         NOT NULL REFERENCES repositories(rid),
+    scanned_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    vulnerability_count INT         NOT NULL
 );
 
 -- Vulnerability References
