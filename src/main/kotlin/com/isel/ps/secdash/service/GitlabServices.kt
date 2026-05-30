@@ -42,10 +42,19 @@ class GitlabServices(
             val usersRepo = it.usersRepository
             val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITLAB) ?: return@run failure(
                 GetRepositoriesError.UserAuthorizationIsRequired)
-            val repositories = gitlabClient.getRepositoriesFromAuthenticatedUser(accessToken)?: return@run failure(
-                GetRepositoriesError.RepositoryNotFound
-            )
-            success(repositories)
+            try {
+                val repositories = gitlabClient.getRepositoriesFromAuthenticatedUser(accessToken) ?: return@run failure(
+                    GetRepositoriesError.RepositoryNotFound
+                )
+                success(repositories)
+            } catch (e: HttpClientErrorException) {
+                when (e.statusCode) {
+                    HttpStatus.NOT_FOUND -> failure(GetRepositoriesError.RepositoryNotFound)
+                    HttpStatus.UNAUTHORIZED -> failure(GetRepositoriesError.Unauthorized)
+                    else -> failure(GetRepositoriesError.Unauthorized)
+                }
+            }
+
         }
     }
 

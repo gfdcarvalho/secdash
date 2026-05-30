@@ -43,6 +43,7 @@ class GitlabController(
                 when (result.value) {
                     GetRepositoriesError.RepositoryNotFound -> Problem.response( 404, Problem.repositoryNotFound)
                     GetRepositoriesError.UserAuthorizationIsRequired -> Problem.response( 401, Problem.userAuthorizationRequired)
+                    GetRepositoriesError.Unauthorized -> Problem.response(401, Problem.unauthorized)
                 }
         }
     }

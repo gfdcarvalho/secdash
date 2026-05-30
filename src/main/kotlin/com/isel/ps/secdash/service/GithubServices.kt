@@ -46,10 +46,18 @@ class GithubServices(
             val usersRepo = it.usersRepository
             val accessToken = usersRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(
                 GetRepositoriesError.UserAuthorizationIsRequired)
-            val repositories = githubClient.getRepositoriesFromAuthenticatedUser(accessToken) ?: return@run failure(
-                GetRepositoriesError.RepositoryNotFound
-            )
-            success(repositories)
+            try {
+                val repositories = githubClient.getRepositoriesFromAuthenticatedUser(accessToken) ?: return@run failure(
+                    GetRepositoriesError.RepositoryNotFound
+                )
+                success(repositories)
+            } catch (e: HttpClientErrorException) {
+                when (e.statusCode) {
+                    HttpStatus.NOT_FOUND -> failure(GetRepositoriesError.RepositoryNotFound)
+                    HttpStatus.UNAUTHORIZED -> failure(GetRepositoriesError.Unauthorized)
+                    else -> failure(GetRepositoriesError.Unauthorized)
+                }
+            }
         }
     }
 

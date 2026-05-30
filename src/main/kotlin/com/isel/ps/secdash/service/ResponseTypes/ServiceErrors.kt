@@ -8,6 +8,7 @@ import com.isel.ps.secdash.utils.Either
 sealed class GetRepositoriesError {
     data object UserAuthorizationIsRequired : GetRepositoriesError()
     data object RepositoryNotFound : GetRepositoriesError()
+    data object Unauthorized : GetRepositoriesError()
 }
 
 typealias GetRepositoriesResult = Either<GetRepositoriesError, List<ExternalRepository>>
