@@ -95,7 +95,7 @@ class GitlabController(
     ): ResponseEntity<*> {
         val result = gitlabServices.getDependencyScan(user.user.uid, rid)
         return when (result) {
-            is Success -> ResponseEntity.status(200).body(result)
+            is Success -> ResponseEntity.status(200).body(result.value)
             is Failure ->
                 when (result.value) {
                     DependencyScanError.NotFound -> Problem.response(404, Problem.notFound)
