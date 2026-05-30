@@ -53,13 +53,13 @@ export function RepoDetails() {
     const getDependabot = async () => {
         let uri 
         if(platform === 'GITHUB'){
-            uri = `/repositories/${repo.rid}/dependabot`
+            uri = `/github/repositories/${repo.rid}/dependabot`
         }else {
-            uri = `/repositories/${repo.rid}/dependency-scanning`
+            uri = `/gitlab/repositories/${repo.rid}/dependency-scanning`
         }
         const response = await api.get<RepositoryVulnerabilities>(uri)
         if (isSuccess(response)) {
-            navigate(`/repos/${repo.rid}/vulnerabilities`, { state: {vulnerabilities: response.value}})
+            navigate(`/repos/${repo.rid}/vulnerabilities/${platform.toLowerCase()}`, { state: {vulnerabilities: response.value}})
         } else {
             switch(response.value.type) {
                 case ProblemTypes.repoDoesNotHaveDependabotFeatureEnabled:
@@ -121,7 +121,7 @@ export function RepoDetails() {
                     <button className={Style.addToTeamButton} onClick={() => { /* TODO: lógica de adicionar à equipa */ }}>
                         {t.repoDetails.addToTeam}
                     </button>
-                    <button className={Style.reportsButtons} onClick={() => {}}>
+                    <button className={Style.reportsButtons} onClick={() => {getDependabot()}}>
                         {platform === 'GITHUB' ? t.repoDetails.dependabotReport : t.repoDetails.dependencyScanningReport}
                     </button>
                     <button className={Style.reportsButtons} onClick={() => {}}>

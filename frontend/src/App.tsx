@@ -25,7 +25,7 @@ const router = createBrowserRouter ([
       { path: '/repos/github', element: <Github/>},
       { path: '/repos/gitlab', element: <Gitlab/>},
       { path: '/repos/:repoId', element: <RepoDetails/>},
-      { path: '/repos/:repoId/vulnerabilities', element: <RepoVulnerabilities/>},
+      { path: '/repos/:repoId/vulnerabilities/:platform', element: <RepoVulnerabilities/>},
       { path: '/teams', element: <Teams/>},
       { path: '/teams/create', element: <CreateTeam/>},
       { path: '/teams/:teamId', element: <TeamDetails/>}
