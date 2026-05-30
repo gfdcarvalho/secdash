@@ -64,6 +64,17 @@ export const pt = {
         addToTeam: "Adicionar à Equipa",
         repositoryAlreadyAdded: "Repositório já adicionado.",
     },
+    repos: {
+        title: "Repositórios",
+        searchPlaceholder: "Pesquisa nos teus repositórios",
+        loading: "A carregar...",
+        error: "Erro ao carregar repositórios.",
+        noRepositories: "Ainda não tens repositórios.",
+        addFromGithub: "Adicionar repositórios do GitHub",
+        addFromGitlab: "Adicionar repositórios do GitLab",
+        forks: "Forks",
+        issues: "Issues",
+    },
     repoDetails: {
         notFound: "Repositório não encontrado.",
         loading: "A carregar...",

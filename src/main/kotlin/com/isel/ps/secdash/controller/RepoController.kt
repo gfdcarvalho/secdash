@@ -36,4 +36,12 @@ class RepoController(
 
         }
     }
+
+    @GetMapping
+    fun getRepos(
+        user: AuthenticatedUser,
+    ): ResponseEntity<*> {
+        val result = repoServices.findAllByUser(user.user.uid)
+        return ResponseEntity.ok(result)
+    }
 }

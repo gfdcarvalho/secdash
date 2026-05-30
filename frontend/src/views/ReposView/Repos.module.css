@@ -44,6 +44,54 @@
     composes: searchBar from '../../styles/shared.module.css';
 }
 
+.message {
+    composes: repoMessage from '../../styles/shared.module.css';
+}
+
+.repoCard {
+    composes: repoCard from '../../styles/shared.module.css';
+}
+
+.repoCard:hover {
+    background-color: color-mix(in srgb, var(--color-text) 5%, transparent);
+}
+
+.ownerAvatar {
+    composes: ownerAvatar from '../../styles/shared.module.css';
+}
+
+.ownerAvatarFallback {
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
+}
+
+.repoCardInfo {
+    composes: repoCardInfo from '../../styles/shared.module.css';
+}
+
+.repoCardHeader {
+    composes: repoCardHeader from '../../styles/shared.module.css';
+}
+
+.repoName {
+    composes: repoName from '../../styles/shared.module.css';
+}
+
+.repoBadge {
+    composes: repoVisibility from '../../styles/shared.module.css';
+}
+
+.repoDescription {
+    composes: repoDescription from '../../styles/shared.module.css';
+    min-height: 1.23em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.repoCardMeta {
+    composes: repoCardMeta from '../../styles/shared.module.css';
+}
+
 .reposListDiv {
     display: flex;
     flex-direction: column;

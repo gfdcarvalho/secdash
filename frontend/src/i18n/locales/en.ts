@@ -64,6 +64,17 @@ export const en = {
         addToTeam: "Add to Team",
         repositoryAlreadyAdded: "Repository already added.",
     },
+    repos: {
+        title: "Repositories",
+        searchPlaceholder: "Search your repositories",
+        loading: "Loading...",
+        error: "Failed to load repositories.",
+        noRepositories: "No repositories yet.",
+        addFromGithub: "Add repositories from GitHub",
+        addFromGitlab: "Add repositories from GitLab",
+        forks: "Forks",
+        issues: "Issues",
+    },
     repoDetails: {
         notFound: "Repository not found.",
         loading: "Loading...",
