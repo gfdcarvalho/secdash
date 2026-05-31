@@ -1,17 +1,13 @@
 package com.isel.ps.secdash.service
 
-import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserDomain
-import com.isel.ps.secdash.model.users.UserProfileInformation
 import com.isel.ps.secdash.model.users.UserTeamsAndRepos
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
-import com.isel.ps.secdash.utils.Either.Left
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.success
 import kotlinx.datetime.Clock
 import org.springframework.stereotype.Service
-import java.rmi.server.UID
 
 sealed class UserCreationError {
     data object UserAlreadyExists : UserCreationError()
@@ -22,6 +18,13 @@ sealed class UserCreationError {
 }
 
 typealias UserCreationResult = Either<UserCreationError, Int>
+
+sealed class UserDeletionError {
+    data object UserNotFound : UserDeletionError()
+    data object Forbidden : UserDeletionError()
+}
+
+typealias UserDeletionResult = Either<UserDeletionError, Unit>
 
 @Service
 class UserServices(
@@ -58,6 +61,15 @@ class UserServices(
             val repos = repositoryRepo.findAllByUser(uid)
             UserTeamsAndRepos(repos, teams)
         }
-
     }
+
+    fun deleteUser(targetUid: Int): UserDeletionResult {
+        return transactionManager.run {
+            val userRepo = it.usersRepository
+            if (!userRepo.checkIfUserExists(targetUid)) return@run Failure(UserDeletionError.UserNotFound)
+            userRepo.deleteUser(targetUid)
+            success(Unit)
+        }
+    }
+
 }

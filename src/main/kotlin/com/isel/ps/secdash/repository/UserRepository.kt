@@ -222,4 +222,10 @@ class UserRepository(
                 )
     }
 
+    override fun deleteUser(uid: Int) {
+        handle.createUpdate("DELETE FROM users WHERE uid = :uid")
+            .bind("uid", uid)
+            .execute()
+    }
+
 }

@@ -3,7 +3,6 @@ package com.isel.ps.secdash.repository.interfaces
 import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.users.PasswordValidationInfo
 import com.isel.ps.secdash.model.users.Token
-import com.isel.ps.secdash.model.users.TokenExternalInfo
 import com.isel.ps.secdash.model.users.TokenValidationInfo
 import com.isel.ps.secdash.model.users.User
 import kotlinx.datetime.Instant
@@ -64,4 +63,6 @@ interface UserRepositoryInterface {
     fun checkIfUserAlreadyExists(email: String): Boolean
 
     fun checkIfUserExists(uid: Int): Boolean
+
+    fun deleteUser(uid: Int)
 }

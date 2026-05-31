@@ -160,5 +160,11 @@ class Problem(
                 typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
                 detail = "User is Already a Team Leader",
             )
+
+        val forbidden =
+            Problem(
+                typeUri = URI("https://github.com/gfdcarvalho/secdash/tree/master/docs/problems/example-problem"),
+                detail = "User is not Authorized",
+            )
     }
 }

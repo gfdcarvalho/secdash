@@ -2,19 +2,21 @@ package com.isel.ps.secdash.controller
 
 
 import com.isel.ps.secdash.controller.model.Problem
-import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserCreationModel
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
 import com.isel.ps.secdash.model.users.UserProfileInformation
 import com.isel.ps.secdash.service.RepositoryServices
-import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.service.UserCreationError
+import com.isel.ps.secdash.service.UserDeletionError
 import com.isel.ps.secdash.service.UserServices
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -70,6 +72,21 @@ class UserController(
                 teamsAndRepos.teams,
             )
         ) // Needs error treatment
+    }
+
+
+    @DeleteMapping("/delete/{uid}")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun deleteUser(
+        @PathVariable uid: Int
+    ): ResponseEntity<*> {
+        return when (val result = userServices.deleteUser(uid)) {
+            is Success -> ResponseEntity.noContent().build<Unit>()
+            is Failure -> when (result.value) {
+                UserDeletionError.UserNotFound -> Problem.response(404, Problem.UserNotFound)
+                UserDeletionError.Forbidden -> Problem.response(403, Problem.forbidden)
+            }
+        }
     }
 
 }
