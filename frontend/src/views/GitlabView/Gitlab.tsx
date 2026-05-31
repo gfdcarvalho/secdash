@@ -47,7 +47,7 @@ export function Gitlab() {
 
 
     const getRepos = async () => {
-        const response = await api.get<Array<ExternalRepository>>("gitlab/repos")
+        const response = await api.get<Array<ExternalRepository>>("/gitlab/repos")
         if (isSuccess(response)) {
             setRepositories(response.value.data)
             setError(false)

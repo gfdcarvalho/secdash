@@ -104,6 +104,7 @@ class GithubController(
                     DependabotError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
                     DependabotError.NotFound -> Problem.response(404, Problem.notFound)
                     DependabotError.Unauthorized -> Problem.response(401, Problem.unauthorized)
+                    DependabotError.RepoDoesNotHaveDependabotFeature -> Problem.response(403, Problem.repoDoesNotHaveDependabotFeatureEnabled)
                 }
         }
     }

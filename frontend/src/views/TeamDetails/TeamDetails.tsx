@@ -16,7 +16,7 @@ export function TeamDetails() {
     const [notFound, setNotFound] = useState(false)
 
     const getTeam = async () => {
-        const response = await api.get<Team>(`teams/${teamId}`)
+        const response = await api.get<Team>(`/teams/${teamId}`)
         if (isSuccess(response)) {
             setTeam(response.value.data)
         } else {

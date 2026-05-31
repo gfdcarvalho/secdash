@@ -18,7 +18,7 @@ export function RepoDetails() {
     const [notFound, setNotFound] = useState(false)
 
     const getRepo = async () => {
-        const response = await api.get<Repository>(`repos/${repoId}`)
+        const response = await api.get<Repository>(`/repos/${repoId}`)
         if (isSuccess(response)) {
             setRepo(response.value.data)
         } else {

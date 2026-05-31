@@ -26,6 +26,7 @@ sealed class DependabotError {
     data object Unauthorized : DependabotError()
     data object NotFound : DependabotError()
     data object RepositoryNotFound : DependabotError()
+    data object RepoDoesNotHaveDependabotFeature: DependabotError()
 }
 
 typealias DependabotResult = Either<DependabotError, RepositoryVulnerabilities>
@@ -109,6 +110,7 @@ class GithubServices(
                 return@run when (e.statusCode) {
                     HttpStatus.NOT_FOUND -> failure(DependabotError.NotFound)
                     HttpStatus.UNAUTHORIZED -> failure(DependabotError.Unauthorized)
+                    HttpStatus.FORBIDDEN -> failure(DependabotError.RepoDoesNotHaveDependabotFeature)
                     else -> failure(DependabotError.Unauthorized)
                 }
             }

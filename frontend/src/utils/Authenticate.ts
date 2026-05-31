@@ -8,7 +8,7 @@ import { failure, isSuccess, success, type Either } from "./Either";
 import { api, type ApiError } from "./fetchApi";
 
 export async function authenticate(username: string, password: string): Promise<Either<ApiError, User>> {
-    const response = await api.post<UserToken>("auth/login", {username, password})
+    const response = await api.post<UserToken>("/auth/login", {username, password})
     if (isSuccess(response)){
         const userResponse = await api.get<User>("users/me")
         if (isSuccess(userResponse)){
@@ -24,7 +24,7 @@ export async function authenticate(username: string, password: string): Promise<
 
 
 export async function registerAndAuthenticate( username: string, email: string, password: string): Promise<Either<ApiError, User>> {
-    const registerResponse = await api.post<number>("users/register", {username, password, email })
+    const registerResponse = await api.post<number>("/users/register", {username, password, email })
     if (isSuccess(registerResponse)){
         const loginResponse = await authenticate(username, password)
         if (isSuccess(loginResponse)) {
