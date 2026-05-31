@@ -74,7 +74,6 @@ class UserController(
         ) // Needs error treatment
     }
 
-
     @DeleteMapping("/delete/{uid}")
     @PreAuthorize("hasRole('ADMIN')") // isto funciona o user não tem que estar authenticato ?
     fun deleteUser(
