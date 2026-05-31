@@ -2,6 +2,7 @@ package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
+import com.isel.ps.secdash.model.users.AppRole
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.failure
@@ -28,7 +29,7 @@ sealed class CreateTeamError {
 typealias CreateTeamResult = Either<CreateTeamError, Team>
 
 sealed class DeleteTeamError {
-    data object OnlyTeamLeader: DeleteTeamError()
+    data object OnlyTeamLeaderOrAdmin: DeleteTeamError()
     data object TeamNotFound: DeleteTeamError()
 }
 
@@ -120,6 +121,7 @@ class TeamServices(
 
     fun deleteTeam(
         uid: Int,
+        userRole: AppRole,
         tid: Int,
     ): DeleteTeamResult {
         return transactionManager.run {
@@ -127,7 +129,7 @@ class TeamServices(
             val reposRepository = it.repositoriesRepository
             val team = teamsRepo.getTeam(tid) ?: return@run failure(DeleteTeamError.TeamNotFound)
 
-            if (!teamsRepo.checkUserTeamLeader(uid, tid)) return@run failure(DeleteTeamError.OnlyTeamLeader)
+            if (!teamsRepo.checkUserTeamLeader(uid, tid) && userRole != AppRole.ADMIN) return@run failure(DeleteTeamError.OnlyTeamLeaderOrAdmin)
 
             teamsRepo.deleteTeam(tid)
 

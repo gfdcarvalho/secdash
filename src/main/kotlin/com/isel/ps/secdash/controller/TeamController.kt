@@ -87,13 +87,13 @@ class TeamController(
         user: AuthenticatedUser,
         @PathVariable teamId: Int
     ): ResponseEntity<*> {
-        val result = teamServices.deleteTeam(user.user.uid, teamId)
+        val result = teamServices.deleteTeam(user.user.uid, user.user.role, teamId)
         return when (result) {
             is Success -> ResponseEntity.noContent().build<Any>()
             is Failure ->
                 when (result.value) {
                     DeleteTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
-                    DeleteTeamError.OnlyTeamLeader -> Problem.response(401, Problem.onlyTeamLeader)
+                    DeleteTeamError.OnlyTeamLeaderOrAdmin -> Problem.response(401, Problem.onlyTeamLeader)
                 }
         }
     }
