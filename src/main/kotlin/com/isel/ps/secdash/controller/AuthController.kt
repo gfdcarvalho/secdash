@@ -19,6 +19,7 @@ import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import com.isel.ps.secdash.controller.pipeline.SESSION_OAUTH_REDIRECT_URI
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -40,6 +41,9 @@ class AuthController(
     private val githubServices: GithubServices,
     private val requestTokenProcessor: RequestTokenProcessor
 ) {
+
+    @Value("\${frontend.url}")
+    private lateinit var frontendUrl: String
 
     @PostMapping("/login") // login com tokens
     fun loginUser(
@@ -130,7 +134,7 @@ class AuthController(
                 val responseCookie = requestTokenProcessor.createCookie(result.value)
                 ResponseEntity.status(302)
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .header(HttpHeaders.LOCATION, "http://localhost:5173/") // had to add this for the oauth process to work
+                    .header(HttpHeaders.LOCATION, "$frontendUrl/") // had to add this for the oauth process to work
 //                    .build<Unit>()
                     .body(UserTokenOutputModel(result.value.token))
             }
@@ -178,7 +182,7 @@ class AuthController(
         return when (result) {
             is Success -> {
                 val redirectUri = request.session.getAttribute(SESSION_OAUTH_REDIRECT_URI) as? String
-                    ?: "http://localhost:5173/repos/${provider.name.lowercase()}"
+                    ?: "$frontendUrl/repos/${provider.name.lowercase()}"
                 request.session.removeAttribute(SESSION_OAUTH_REDIRECT_URI)
                 ResponseEntity.status(302)
                     .header(HttpHeaders.LOCATION, redirectUri)

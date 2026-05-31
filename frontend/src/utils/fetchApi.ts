@@ -1,6 +1,6 @@
 import { type Either } from "./Either"
 
-export const BASE_URL = "http://localhost:5173/api"
+export const BASE_URL = "/api"
 
 type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 

@@ -76,7 +76,7 @@ class UserController(
 
 
     @DeleteMapping("/delete/{uid}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // isto funciona o user não tem que estar authenticato ?
     fun deleteUser(
         @PathVariable uid: Int
     ): ResponseEntity<*> {

@@ -16,7 +16,7 @@ export function Profile() {
     const [user, setUser] = useAuthentication()
 
     const refreshUser = async () => {
-        const response = await api.get<User>("users/me")
+        const response = await api.get<User>("/users/me")
         if (isSuccess(response)) {
             setUser(response.value.data)
         }

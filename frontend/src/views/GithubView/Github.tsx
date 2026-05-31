@@ -43,7 +43,7 @@ export function Github() {
     }
 
     const getRepos = async () => {
-        const response = await api.get<Array<ExternalRepository>>("github/repos")
+        const response = await api.get<Array<ExternalRepository>>("/github/repos")
         if (isSuccess(response)) {
             setRepositories(response.value.data)
             setError(false)
