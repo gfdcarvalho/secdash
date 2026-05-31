@@ -2,7 +2,9 @@ export type VulnerabilitySeverity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'UN
 
 export type VulnerabilityState = 'OPEN' | 'FIXED' | 'DISMISSED'
 
-export interface ExternalVulnerability {
+export interface Vulnerability {
+  vid: number
+  rid: number
   externalId: string
   title: string
   description: string | null
@@ -19,11 +21,11 @@ export interface ExternalVulnerability {
   cvssVector: string | null
   references: string[]
   platform: string
-  detectedAt: string | null
-  updatedAt: string | null
+  detectedAt: string
+  updatedAt: string
 }
 
 export interface RepositoryVulnerabilities {
   rid: number
-  vulnerabilities: ExternalVulnerability[]
+  vulnerabilities: Vulnerability[]
 }

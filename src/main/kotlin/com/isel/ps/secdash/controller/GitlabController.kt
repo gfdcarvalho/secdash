@@ -113,7 +113,7 @@ class GitlabController(
         val result = gitlabServices.getSast(user.user.uid, rid)
         return when (result) {
             is Success ->
-                ResponseEntity.status(200).body(result)
+                ResponseEntity.status(200).body(result.value)
 
             is Failure ->
                 when (result.value) {

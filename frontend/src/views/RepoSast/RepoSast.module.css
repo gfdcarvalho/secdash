@@ -1,0 +1,225 @@
+.content {
+    composes: content from '../../styles/shared.module.css';
+}
+
+.topSection {
+    composes: topBar from '../../styles/shared.module.css';
+    align-items: center;
+    gap: 0.75em;
+}
+
+.backButton {
+    font-size: 0.85em;
+    padding: 0.4em 0.9em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.backButton:hover {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.count {
+    font-size: 0.78em;
+    padding: 0.15em 0.5em;
+    border-radius: 0.75em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+/* ── filters ── */
+
+.filterSection {
+    padding: 0 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+}
+
+.searchBar {
+    composes: searchBar from '../../styles/shared.module.css';
+}
+
+.filterRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    flex-wrap: wrap;
+}
+
+.severityChips {
+    display: flex;
+    gap: 0.4em;
+    flex-wrap: wrap;
+}
+
+.severityChip {
+    font-size: 0.72em;
+    padding: 0.2em 0.6em;
+    border-radius: 0.75em;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: lowercase;
+    background: color-mix(in srgb, var(--color-text) 8%, transparent);
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.chip_critical { --chip-color: #e53e3e; }
+.chip_high     { --chip-color: #dd6b20; }
+.chip_medium   { --chip-color: #d69e2e; }
+.chip_low      { --chip-color: #38a169; }
+.chip_unknown  { --chip-color: var(--color-text); }
+
+.chipActive {
+    background: color-mix(in srgb, var(--chip-color) 20%, transparent);
+    color: var(--chip-color);
+    border-color: color-mix(in srgb, var(--chip-color) 40%, transparent);
+}
+
+.severityChip:hover:not(.chipActive) {
+    background: color-mix(in srgb, var(--chip-color, var(--color-text)) 12%, transparent);
+    color: color-mix(in srgb, var(--chip-color, var(--color-text)) 80%, transparent);
+}
+
+.dateSelect {
+    font-size: 0.82em;
+    padding: 0.35em 0.7em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    background: var(--color-bg);
+    color: var(--color-text);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.dateSelect:hover {
+    border-color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.selects {
+    display: flex;
+    gap: 0.5em;
+}
+
+/* ── list ── */
+
+.listSection {
+    padding: 0 1em 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.alertCard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    padding: 0.9em 1em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+    border-radius: 0.5em;
+    transition: background-color 0.15s ease;
+}
+
+.alertCard:hover {
+    background-color: color-mix(in srgb, var(--color-text) 3%, transparent);
+}
+
+.alertHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+}
+
+.alertTitle {
+    font-size: 0.95em;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+}
+
+.badges {
+    display: flex;
+    gap: 0.4em;
+    flex-shrink: 0;
+}
+
+.severityBadge, .stateBadge {
+    font-size: 0.7em;
+    padding: 0.15em 0.5em;
+    border-radius: 0.75em;
+    text-transform: lowercase;
+    font-weight: 600;
+}
+
+.severity_critical { background: color-mix(in srgb, #e53e3e 20%, transparent); color: #e53e3e; }
+.severity_high     { background: color-mix(in srgb, #dd6b20 20%, transparent); color: #dd6b20; }
+.severity_medium   { background: color-mix(in srgb, #d69e2e 20%, transparent); color: #d69e2e; }
+.severity_low      { background: color-mix(in srgb, #38a169 20%, transparent); color: #38a169; }
+.severity_unknown  { background: color-mix(in srgb, var(--color-text) 15%, transparent); color: color-mix(in srgb, var(--color-text) 60%, transparent); }
+
+.state_open      { background: color-mix(in srgb, #e53e3e 15%, transparent); color: #e53e3e; }
+.state_fixed     { background: color-mix(in srgb, #38a169 15%, transparent); color: #38a169; }
+.state_dismissed { background: color-mix(in srgb, var(--color-text) 15%, transparent); color: color-mix(in srgb, var(--color-text) 60%, transparent); }
+
+.alertMessage {
+    font-size: 0.85em;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    margin: 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.alertMeta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2em;
+}
+
+.metaItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+}
+
+.metaLabel {
+    font-size: 0.68em;
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metaValue {
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.alertLink {
+    font-size: 0.85em;
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.alertLink:hover {
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.message {
+    composes: repoMessage from '../../styles/shared.module.css';
+}

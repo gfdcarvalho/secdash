@@ -127,17 +127,17 @@ class GithubServices(
             val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(SastError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(SastError.Unauthorized)
             val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(SastError.Unauthorized)
-            try {
-                val externalSastAlerts = githubClient.getSastAlerts(fullName, accessToken)
-                success(RepositorySast(rid, externalSastAlerts))
-
-            }catch (e: HttpClientErrorException) {
-                when (e.statusCode) {
+            val externalSastAlerts = try {
+                githubClient.getSastAlerts(fullName, accessToken)
+            } catch (e: HttpClientErrorException) {
+                return@run when (e.statusCode) {
                     HttpStatus.NOT_FOUND -> failure(SastError.NotFound)
                     HttpStatus.FORBIDDEN -> failure(SastError.RepoDoesNotHaveSastFeatureEnabled)
                     else -> failure(SastError.Unauthorized)
                 }
             }
+            val sastAlerts = repositoriesRepo.storeSastAlerts(rid, externalSastAlerts)
+            success(RepositorySast(rid, sastAlerts))
         }
     }
 }

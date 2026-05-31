@@ -29,15 +29,15 @@ data class GitlabSastVulnerabilityDto(
         detectedAt: Instant? = null
     ) = ExternalSastAlerts(
         externalId = id,
-        state = ExternalSastAlerts.SastAlertState.OPEN,
+        state = SastAlert.SastAlertState.OPEN,
         ruleId = cve,
         ruleDescription = name,
         severity = when (severity.lowercase()) {
-            "critical" -> ExternalSastAlerts.SastSeverity.CRITICAL
-            "high" -> ExternalSastAlerts.SastSeverity.HIGH
-            "medium" -> ExternalSastAlerts.SastSeverity.MEDIUM
-            "low" -> ExternalSastAlerts.SastSeverity.LOW
-            else -> ExternalSastAlerts.SastSeverity.UNKNOWN
+            "critical" -> SastAlert.SastSeverity.CRITICAL
+            "high" -> SastAlert.SastSeverity.HIGH
+            "medium" -> SastAlert.SastSeverity.MEDIUM
+            "low" -> SastAlert.SastSeverity.LOW
+            else -> SastAlert.SastSeverity.UNKNOWN
         },
         toolName = scanner.name,
         filePath = location.file,

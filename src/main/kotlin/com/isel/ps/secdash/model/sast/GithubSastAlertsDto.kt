@@ -19,18 +19,18 @@ data class GithubSastAlertsDto(
     fun toExternalSastAlerts() = ExternalSastAlerts(
         externalId = number.toString(),
         state = when {
-            fixedAt != null -> ExternalSastAlerts.SastAlertState.FIXED
-            dismissedAt != null -> ExternalSastAlerts.SastAlertState.DISMISSED
-            else -> ExternalSastAlerts.SastAlertState.OPEN
+            fixedAt != null -> SastAlert.SastAlertState.FIXED
+            dismissedAt != null -> SastAlert.SastAlertState.DISMISSED
+            else -> SastAlert.SastAlertState.OPEN
         },
         ruleId = rule.id,
         ruleDescription = rule.description,
         severity = when (rule.securitySeverityLevel?.lowercase()) {
-            "critical" -> ExternalSastAlerts.SastSeverity.CRITICAL
-            "high" -> ExternalSastAlerts.SastSeverity.HIGH
-            "medium" -> ExternalSastAlerts.SastSeverity.MEDIUM
-            "low" -> ExternalSastAlerts.SastSeverity.LOW
-            else -> ExternalSastAlerts.SastSeverity.UNKNOWN
+            "critical" -> SastAlert.SastSeverity.CRITICAL
+            "high" -> SastAlert.SastSeverity.HIGH
+            "medium" -> SastAlert.SastSeverity.MEDIUM
+            "low" -> SastAlert.SastSeverity.LOW
+            else -> SastAlert.SastSeverity.UNKNOWN
         },
         toolName = tool.name,
         filePath = mostRecentInstance?.location?.path,

@@ -1,16 +1,26 @@
 package com.isel.ps.secdash.model.sast
 
-import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.Platform
+import java.time.Instant
 
 class SastAlert(
     val sid: Int,
-    val repository: Repository,
-    val state: SastState,
+    val rid: Int,
+    val externalId: String,
+    val state: SastAlertState,
+    val ruleId: String,
+    val ruleDescription: String,
     val severity: SastSeverity,
-    val scaner: String,
-    val file: String,
-    val line: String,
+    val toolName: String,
+    val filePath: String?,
+    val startLine: Int?,
+    val endLine: Int?,
+    val message: String?,
+    val htmlUrl: String,
+    val platform: Platform,
+    val detectedAt: Instant?,
+    val updatedAt: Instant?,
 ) {
-    enum class SastSeverity { CRITICAL, HIGH, MEDIUM, LOW}
-    enum class SastState { OPEN, FIXED, DISMISSED }
+    enum class SastAlertState { OPEN, FIXED, DISMISSED }
+    enum class SastSeverity { CRITICAL, HIGH, MEDIUM, LOW, UNKNOWN }
 }

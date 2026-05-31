@@ -7,6 +7,8 @@ import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositorySqlDto
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
+import com.isel.ps.secdash.model.sast.ExternalSastAlerts
+import com.isel.ps.secdash.model.sast.SastAlert
 import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
 import com.isel.ps.secdash.model.vulnerability.Vulnerability
 import com.isel.ps.secdash.repository.interfaces.RepositoriesRepositoryInterface
@@ -324,6 +326,62 @@ class RepositoriesRepository(
 
         handle.createUpdate(
             "INSERT INTO repo_vulnerability_scans (rid, vulnerability_count) VALUES (:rid, :count)"
+        )
+            .bind("rid", rid)
+            .bind("count", result.size)
+            .execute()
+
+        return result
+    }
+
+    override fun storeSastAlerts(rid: Int, sastAlerts: List<ExternalSastAlerts>): List<SastAlert> {
+        val result = sastAlerts.map { alert ->
+            val sid = handle.createQuery(
+                """
+                INSERT INTO sast_alerts (
+                    rid, external_id, state, severity, rule_id, rule_description,
+                    tool_name, file_path, start_line, end_line, message, html_url,
+                    platform, detected_at, updated_at
+                ) VALUES (
+                    :rid, :external_id, :state::sast_state, :severity::sast_severity,
+                    :rule_id, :rule_description, :tool_name, :file_path, :start_line,
+                    :end_line, :message, :html_url, :platform::platform, :detected_at, :updated_at
+                )
+                ON CONFLICT (external_id, platform, rid) DO UPDATE SET
+                    state            = EXCLUDED.state,
+                    severity         = EXCLUDED.severity,
+                    rule_description = EXCLUDED.rule_description,
+                    file_path        = EXCLUDED.file_path,
+                    start_line       = EXCLUDED.start_line,
+                    end_line         = EXCLUDED.end_line,
+                    message          = EXCLUDED.message,
+                    updated_at       = EXCLUDED.updated_at
+                RETURNING sid
+                """.trimIndent()
+            )
+                .bind("rid", rid)
+                .bind("external_id", alert.externalId)
+                .bind("state", alert.state.name)
+                .bind("severity", alert.severity.name)
+                .bind("rule_id", alert.ruleId)
+                .bind("rule_description", alert.ruleDescription)
+                .bind("tool_name", alert.toolName)
+                .bind("file_path", alert.filePath)
+                .bind("start_line", alert.startLine)
+                .bind("end_line", alert.endLine)
+                .bind("message", alert.message)
+                .bind("html_url", alert.htmlUrl)
+                .bind("platform", alert.platform.name)
+                .bind("detected_at", alert.detectedAt)
+                .bind("updated_at", alert.updatedAt)
+                .mapTo<Int>()
+                .one()
+
+            alert.toSastAlert(sid, rid)
+        }
+
+        handle.createUpdate(
+            "INSERT INTO repo_sast_scans (rid, alert_count) VALUES (:rid, :count)"
         )
             .bind("rid", rid)
             .bind("count", result.size)

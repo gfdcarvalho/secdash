@@ -2,7 +2,9 @@ export type SastAlertState = 'OPEN' | 'FIXED' | 'DISMISSED'
 
 export type SastSeverity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' | 'UNKNOWN'
 
-export interface ExternalSastAlert {
+export interface SastAlert {
+  sid: number
+  rid: number
   externalId: string
   state: SastAlertState
   ruleId: string
@@ -21,5 +23,5 @@ export interface ExternalSastAlert {
 
 export interface RepositorySast {
   rid: number
-  sastAlerts: ExternalSastAlert[]
+  sastAlerts: SastAlert[]
 }

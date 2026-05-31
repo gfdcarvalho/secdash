@@ -32,7 +32,7 @@ BEGIN
     CREATE TYPE visibility AS ENUM ('PUBLIC', 'PRIVATE', 'INTERNAL');
     CREATE TYPE vulnerability_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN');
     CREATE TYPE vulnerability_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
-    CREATE TYPE sast_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW');
+    CREATE TYPE sast_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN');
     CREATE TYPE sast_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
     CREATE TYPE auth_provider AS ENUM ('GOOGLE', 'GITHUB', 'GITLAB');
     CREATE TYPE app_roles as ENUM ('ADMIN', 'USER');
@@ -148,13 +148,31 @@ BEGIN
 
     -- SAST Alerts
     CREATE TABLE sast_alerts (
-                                 sid        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                                 rid        INT           NOT NULL REFERENCES repositories(rid),
-                                 state      sast_state    NOT NULL,
-                                 severity   sast_severity NOT NULL,
-                                 scanner    VARCHAR(255)  NOT NULL,
-                                 file       VARCHAR(255)  NOT NULL,
-                                 line       VARCHAR(50)   NOT NULL
+                                 sid              INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                                 rid              INT           NOT NULL REFERENCES repositories(rid),
+                                 external_id      VARCHAR(255)  NOT NULL,
+                                 state            sast_state    NOT NULL,
+                                 severity         sast_severity NOT NULL,
+                                 rule_id          VARCHAR(255)  NOT NULL,
+                                 rule_description TEXT          NOT NULL,
+                                 tool_name        VARCHAR(255)  NOT NULL,
+                                 file_path        VARCHAR(255),
+                                 start_line       INT,
+                                 end_line         INT,
+                                 message          TEXT,
+                                 html_url         VARCHAR(255)  NOT NULL,
+                                 platform         platform      NOT NULL,
+                                 detected_at      TIMESTAMPTZ,
+                                 updated_at       TIMESTAMPTZ,
+                                 UNIQUE (external_id, platform, rid)
+    );
+
+    -- SAST Scan History
+    CREATE TABLE repo_sast_scans (
+                                     scan_id     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                                     rid         INT         NOT NULL REFERENCES repositories(rid),
+                                     scanned_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                                     alert_count INT         NOT NULL
     );
 
     CREATE TABLE teams (

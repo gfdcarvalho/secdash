@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
-import type { ExternalVulnerability, RepositoryVulnerabilities, VulnerabilitySeverity } from '../../model/vulnerabilities/vulnerabilities'
+import type { Vulnerability, RepositoryVulnerabilities, VulnerabilitySeverity } from '../../model/vulnerabilities/vulnerabilities'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './RepoVulnerabilities.module.css'
@@ -23,7 +23,7 @@ export function RepoVulnerabilities() {
     const location = useLocation()
     const { repoId, platform } = useParams<{ repoId: string; platform: string }>()
 
-    const [vulnerabilities, setVulnerabilities] = useState<ExternalVulnerability[] | null>(
+    const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[] | null>(
         location.state?.vulnerabilities?.vulnerabilities ?? null
     )
     const [error, setError] = useState(false)

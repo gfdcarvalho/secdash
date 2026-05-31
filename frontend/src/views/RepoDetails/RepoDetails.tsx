@@ -7,6 +7,7 @@ import { isSuccess } from '../../utils/Either'
 import Style from './RepoDetails.module.css'
 import type { RepositoryVulnerabilities } from '../../model/vulnerabilities/vulnerabilities'
 import { ProblemTypes } from '../../utils/ProblemTypes'
+import type { RepositorySast } from '../../model/sast/sast'
 
 
 export function RepoDetails() {
@@ -71,6 +72,21 @@ export function RepoDetails() {
 
     
     const getSast = async () => {
+        let uri 
+        if (platform ==='GITHUB') {
+            uri = `/github/repositories/${repoId}/sast`
+        } else {
+            uri = `/gitlab/repositories/${repoId}/sast`
+        }
+        const response = await api.get<RepositorySast>(uri)
+        if (isSuccess(response)) {
+            navigate(`/repos/${repo.rid}/sast/${platform.toLowerCase()}`, { state: {sastAlerts: response.value}})
+        } else {
+            switch(response.value.type) {
+                case ProblemTypes.repoDoesNotHaveSastFeatureEnabled:
+                    // setToast
+            }
+        }
 
     }
     
@@ -124,7 +140,7 @@ export function RepoDetails() {
                     <button className={Style.reportsButtons} onClick={() => {getDependabot()}}>
                         {platform === 'GITHUB' ? t.repoDetails.dependabotReport : t.repoDetails.dependencyScanningReport}
                     </button>
-                    <button className={Style.reportsButtons} onClick={() => {}}>
+                    <button className={Style.reportsButtons} onClick={() => {getSast()}}>
                         {platform === 'GITHUB' ? t.repoDetails.codeScanningReport : t.repoDetails.sastReport}
                     </button>
                 </div>

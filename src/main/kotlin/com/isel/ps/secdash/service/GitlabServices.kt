@@ -125,15 +125,16 @@ class GitlabServices(
             val externalId = repositoriesRepo.getExternalId(rid) ?: return@run failure(SastError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(SastError.Unauthorized)
             val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITLAB) ?: return@run failure(SastError.Unauthorized)
-            try {
-                val externalSastAlerts = gitlabClient.getSast(externalId, accessToken)
-                success(RepositorySast(rid, externalSastAlerts))
+            val externalSastAlerts = try {
+                gitlabClient.getSast(externalId, accessToken)
             }catch (e: HttpClientErrorException){
-                when (e.statusCode) {
+                return@run when (e.statusCode) {
                     HttpStatus.NOT_FOUND -> failure(SastError.RepoDoesNotHaveSastFeatureEnabled)
                     else -> failure(SastError.Unauthorized)
                 }
             }
+            val sastAlerts = repositoriesRepo.storeSastAlerts(rid, externalSastAlerts)
+            success(RepositorySast(rid, sastAlerts))
         }
     }
 

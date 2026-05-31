@@ -5,10 +5,10 @@ import java.time.Instant
 
 data class ExternalSastAlerts(
     val externalId: String,
-    val state: SastAlertState,
+    val state: SastAlert.SastAlertState,
     val ruleId: String,
     val ruleDescription: String,
-    val severity: SastSeverity,
+    val severity: SastAlert.SastSeverity,
     val toolName: String,
     val filePath: String?,
     val startLine: Int?,
@@ -19,6 +19,22 @@ data class ExternalSastAlerts(
     val detectedAt: Instant?,
     val updatedAt: Instant?,
 ) {
-    enum class SastAlertState { OPEN, FIXED, DISMISSED }
-    enum class SastSeverity { CRITICAL, HIGH, MEDIUM, LOW, UNKNOWN }
+    fun toSastAlert(sid: Int, rid: Int) = SastAlert(
+        sid = sid,
+        rid = rid,
+        externalId = externalId,
+        state = state,
+        ruleId = ruleId,
+        ruleDescription = ruleDescription,
+        severity = severity,
+        toolName = toolName,
+        filePath = filePath,
+        startLine = startLine,
+        endLine = endLine,
+        message = message,
+        htmlUrl = htmlUrl,
+        platform = platform,
+        detectedAt = detectedAt,
+        updatedAt = updatedAt,
+    )
 }
