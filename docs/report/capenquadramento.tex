@@ -1,67 +1,55 @@
 \chapter{Enquadramento e estado da arte} \label{intro:enquadramento}
-Perante o cenário histórico de vulnerabilidades críticas como as anteriormente mencionadas, a necessidade de ferramentas de agregação torna-se evidente, existindo atualmente várias soluções amplamente utilizadas na indústria. Contudo, estas plataformas distinguem-se do \textbf{SecDash} pelos seus objetivos e complexidade; focam-se habitualmente no segmento \textit{enterprise} e na gestão operacional de ciclo completo, incluindo a orquestração de múltiplos \textit{scanners} e fluxos de remediação (remediation workflows). \\
+Perante o cenário histórico de vulnerabilidades críticas como as anteriormente mencionadas, a necessidade de ferramentas de agregação torna-se evidente, existindo atualmente várias soluções amplamente utilizadas na indústria. Contudo, estas plataformas distinguem-se do \textbf{SecDash} pelos seus objetivos e complexidade; focam-se habitualmente no segmento \textit{enterprise} e na gestão operacional de ciclo completo, incluindo a orquestração de múltiplos \textit{scanners}. \\
 
-O SecDash, em contrapartida, não pretende ser uma ferramenta que efetua os seus próprios scans de segurança, mas sim focar-se especificamente na agregação, normalização e visualização centralizada de vulnerabilidades provenientes de múltiplos repositórios em plataformas distintas. O objetivo principal do projeto consiste em fornecer uma integração totalmente funcional com o GitHub e o GitLab, as duas plataformas mais amplamente utilizadas para hospedar código, uma vez que estas abrangem a vasta maioria dos casos de uso em ambientes reais. A integração com pipelines de Jenkins é considerada um \textit{stretch goal}, a ser explorado caso a calendarização assim o permita. \\
+O \textbf{SecDash}, em contrapartida, não pretende ser uma ferramenta que efetua os seus próprios \textit{scans} de segurança, mas sim focar-se especificamente na agregação, normalização e visualização centralizada de vulnerabilidades provenientes de múltiplos repositórios em plataformas distintas. O objetivo principal do projeto consiste em fornecer uma integração totalmente funcional com o \textbf{GitHub} e o \textbf{GitLab}, as duas plataformas mais amplamente utilizadas para hospedar código, uma vez que estas abrangem a vasta maioria dos casos de uso em ambientes reais. A integração com \textit{pipelines} de \textbf{Jenkins} é considerada um objetivo opcional, a ser explorado caso a calendarização assim o permita. \\
 
-\section{SAST e análise de dependências}
-Para o desenvolvimento de uma aplicação que pretende agregar resultados de análises de segurança de código-fonte é essencial compreender as metodologias que originam esses resultados. Estas podem ser divididas em duas categorias: a análise estática de código prório e a auditoria de código externo proveniente de bibliotecas e outras dependências. \\
+\section{Static Application Security Testing e análise de dependências}
+Para o desenvolvimento de uma aplicação que pretende agregar resultados de análises de segurança de código-fonte é essencial compreender as metodologias que originam esses resultados. Estas podem ser divididas em duas categorias: a análise estática de código próprio e a auditoria de código externo proveniente de bibliotecas e outras dependências. \\
 
-Enquanto o SAST foca a sua análise no código proprietário desenvolvido internamente, a análise de dependências foca-se no código externo proveniente de bibliotecas de terceiros integradas no projeto. \\
+Enquanto o \textbf{Static Application Security Testing (SAST)} foca a sua análise no código proprietário desenvolvido internamente, a análise de dependências foca-se no código externo proveniente de bibliotecas de terceiros integradas no projeto. \\
 
-\subsection{\textit{Static application security testing} (SAST)}
+\subsection{Static Application Security Testing (SAST)}
 
-\textit{Static Application Security Testing} (SAST), em suma, refere-se à análise de código-fonte ou código binário de um programa sem que este se encontre em execução. Deste modo é possível identificar várias vulnerabilidades de segurança no código de uma aplicação ao longo do seu processo de desenvolvimento, permitindo a detenção de problemas como vulnerabilidades a SQL injections ou credenciais como chaves de API embutidas no código desde muito cedo, quando estes ainda são fáceis e pouco dispendiosos de corrigir. \cite{sonarsource_sast_guide} \cite{gitlab_sast_docs} \\
+\textbf{Static Application Security Testing (SAST)}, em suma, refere-se à análise de código-fonte ou código binário de um programa sem que este se encontre em execução. Deste modo é possível identificar várias vulnerabilidades de segurança no código de uma aplicação ao longo do seu processo de desenvolvimento, permitindo a detenção de problemas como vulnerabilidades a SQL injections ou credenciais como chaves de API embutidas no código desde muito cedo, quando estes ainda são fáceis e pouco dispendiosos de corrigir \cite{sonarsource_sast_guide} \cite{gitlab_sast_docs}. \\
+
+Atualmente, tanto o GitHub como o GitLab integram ferramentas nativas de SAST nos seus ecossistemas, automatizando a execução destas análises através dos seus respetivos pipelines de integração contínua (CI/CD). \\
+
+No GitHub, a funcionalidade de SAST está integrada no ecossistema de \textbf{Code Scanning} e assenta principalmente no motor \textbf{CodeQL}. \\
+
+Por sua vez, no GitLab, o processo é designado nativamente por \textbf{GitLab SAST}. Ao contrário do GitHub, que centraliza a análise num único motor proprietário, o CodeQL, o GitLab adota uma estratégia de orquestração de múltiplos scanners \textit{open-source}. \\
 
 \subsection{Análise de dependências}
 
 Ao contrário do SAST, que avalia o código desenvolvido de raiz, a análise de dependências foca-se na cadeia de abastecimento de software (\textit{software supply chain}). \\
 
-O processo passa por analisar os manifestos de gestão de dependências do projeto, como os ficheiros \texttt{build.gradle.kts} ou \texttt{package.json} para extrair a lista e as versões exatas de todas as bibliotecas utilizadas, incluindo as dependências transitivas (isto é, as dependências das dependências). Atualmente o \textbf{GitHub} e o \textbf{GitLab} automatizam este processo recorrendo a mecanismos próprios. \\
+O processo passa por analisar os manifestos de gestão de dependências do projeto, como os ficheiros \texttt{build.gradle.kts} ou \texttt{package.json} para extrair a lista e as versões exatas de todas as bibliotecas utilizadas, incluindo as dependências transitivas (isto é, as dependências das dependências). Atualmente o GitHub e o GitLab automatizam este processo recorrendo a mecanismos próprios. \\
 
-No GitHub este tem o nome \textbf{Dependabot} e utiliza a \textit{GitHub Advisory Database}, uma base de dados que agrega dados de fontes públicas (como o catálogo norte-americano \textit{National Vulnerability Database}) e de alertas submetidos pela comunidade. Este possui três funcionalidades principais \cite{github_dependabot_quickstart}:
+No GitHub este tem o nome \textbf{Dependabot} e utiliza a \textbf{GitHub Advisory Database}, uma base de dados que agrega dados de fontes públicas (como o catálogo norte-americano \textit{National Vulnerability Database}) e de alertas submetidos pela comunidade. \\
 
-\begin{itemize}
-	\item \textbf{Dependabot alerts}: Informam acerca de vulnerabilidades nas dependências utilizadas num repositório;
-	
-	\item \textbf{Dependabot security updates}: Criam \textit{pull requests} automaticamente para atualizar as dependências utilizadas com vulnerabilidades de segurança conhecidas;
-	
-	\item \textbf{Dependabot version updates}: Criam \textit{pull requests} automaticamente para manter as dependências de um repositório sempre atualizadas.
-\end{itemize}
-
-Por sua vez, no \textbf{GitLab}, o processo é designado nativamente por \textbf{\textbf{Dependency Scanning}}. Atualmente conta com três métodos principais:
-
-\begin{itemize}
-	\item \textbf{Análise de dependências usando SBOM}: É a abordagem atualmente recomendada pela plataforma para todos os novos projetos. Este método assenta na geração de um artefacto SBOM (\textit{Software Bill of Materials}) no formato padrão \textit{CycloneDX} durante a execução do pipeline. Este artefacto, que contem a lista completa de componentes do projeto, é posteriormente cruzado de forma automática com a \textit{GitLab Advisory Database} para detetar vulnerabilidades conhecidas; \cite{gitlab_dependency_scanning_sbom}
-	
-	\item \textbf{Continuous Dependency Scanning (Análise Contínua)}: Consiste na monitorização contínua dos componentes SBOM gerados no último pipeline bem-sucedido da \textit{branch default}; \cite{gitlab_continuous_dependency_scanning}
-	
-	\item \textbf{Análise de dependências com Gemnasium}: Originalmente o GitLab utilizava uma análise baseada em \textit{Gemnasium}, uma ferramenta de análise que viria a ser adquirida pelo GitLab. A análise era feita diretamente na pipeline de CI/CD. Atualmente, este método encontra-se \textit{deprecated}; \cite{gitlab_legacy_dependency_scanning}
-\end{itemize}
-
-Para além disso, o GitLab disponibiliza também um método experimental chamado \textit{Libbehave}, que identifica bibliotecas de terceiros novas durante o processo de \textit{merge request}. Ao contrário da análise de dependências comum, o Libbehave analisa o comportamento do programa, podendo detetar comportamentos como a leitura e escrita de ficheiros, ou a execução de comandos do sistema operativo. \\
+Por sua vez, no GitLab, o processo é designado nativamente por \textbf{\textbf{Dependency Scanning}}. \\
 
 \section{Estado da arte}
 
-De entre programas e aplicações com intuitos semelhantes ao do \textbf{SecDash} destacamos, entre outros, o DefectDojo e ArmorCode. \\
+De entre programas e aplicações com intuitos semelhantes ao do \textbf{SecDash} destacamos, entre outros, o \textbf{DefectDojo} \cite{defectdojo} e \textbf{ArmorCode} \cite{armorcode}. \\
 
 \subsection{DefectDojo}
 O \textbf{DefectDojo} é uma plataforma DevSecOps que atua como um agregador automático para o seu conjunto de ferramentas de segurança, permitindo organizar facilmente o trabalho de segurança e reportar a postura de segurança da organização aos \textit{stakeholders}. \cite{aboutdefectdojo}\\
 
 De entre as funcionalidades do DefectDojo contam-se, entre outras:
 \begin{itemize}
-	\item O rastreio e reporte de \textit{Findings} de segurança;
+	\item O rastreio e notificação de \textit{Findings} de segurança;
 	\item A imposição de SLAs (\textit{Service Level Agreement}) em contexto;
 	\item A gestão de \textit{risk-acceptance} e outras decisões de triagem
 	\item Coordenação com gestão de testes de penetração tradicionais;
 \end{itemize}
 
-Para além de possibilitar a integração com mais de 200 ferramentas de segurança, a sua instalação local requer múltiplos contentores para vários serviços, requerindo inclusive instâncias dedicadas de \textit{Celery} e \textit{Reddis}enquanto \textit{task-queue} para a gestão de tarefas assíncronas tais como o processamento de ficheiros de reporte volumosos ou a sincronização com o \textit{Jira} e envio de notificações aos utilizadores. Estamos portanto perante uma infraestrutura comparativamente mais complexa que a requirida pelo SecDash, que será mais apropriada para equipas pequenas que não requiram todas as funcionalidades disponíveis no DefetDojo.\\
+Para além de possibilitar a integração com mais de 200 ferramentas de segurança, a sua instalação local requer múltiplos contentores para vários serviços, requerindo inclusive instâncias dedicadas de \textit{Celery} e \textit{Reddis} enquanto \textit{task-queue} para a gestão de tarefas assíncronas tais como o processamento de ficheiros de notificações volumosos ou a sincronização com o \textit{Jira} e envio de notificações aos utilizadores. Estamos portanto perante uma infraestrutura comparativamente mais complexa que a requirida pelo \textbf{SecDash}, que será mais apropriada para equipas pequenas que não requiram todas as funcionalidades disponíveis no DefetDojo.\\
 
-Por outro lado, o modelo de dados utilizado pelo \textbf{DefectDojo} utiliza cinco classes distintas (\textbf{\textit{Product Types}}, \textbf{\textit{Products}}, \textbf{\textit{Engagements}}, \textbf{\textit{Tests}} e \textbf{\textit{Findings}}) para organizar o trabalho das equipas que o utilizem.\cite{modeldefectdojo} Um Engagement, por exemplo, representa um momento no tempo em que um \textit{Test} é realizado, e contem um ou mais \textit{Tests}. A necessidade de instanciar um \textit{Engagement} para cada nova análise introduz uma barreira de agilidade significativa. Apesar de se apresentar como flexível, de forma a que este modelo se possa adaptar às diferentes equipas que o utilizem, a abordagem do DefectDojo revela uma preocupação mais voltada para questões de auditoria do que para a visão imediata de vulnerabilidades e agilidade durante o processo de desenvolvimento do software.\\
+Por outro lado, o modelo de dados utilizado pelo \textbf{DefectDojo} utiliza cinco classes distintas (\textbf{\textit{Product Types}}, \textbf{\textit{Products}}, \textbf{\textit{Engagements}}, \textbf{\textit{Tests}} e \textbf{\textit{Findings}}) para organizar o trabalho das equipas que o utilizem. \cite{modeldefectdojo} Um Engagement, por exemplo, representa um momento no tempo em que um \textit{Test} é realizado, e contem um ou mais \textit{Tests}. A necessidade de instanciar um \textit{Engagement} para cada nova análise introduz uma barreira de agilidade significativa. Apesar de se apresentar como flexível, de forma a que este modelo se possa adaptar às diferentes equipas que o utilizem, a abordagem do DefectDojo revela uma preocupação mais voltada para questões de auditoria do que para a visão imediata de vulnerabilidades e agilidade durante o processo de desenvolvimento do software.\\
 
 \subsection{ArmorCode}
-O \textbf{ArmorCode} é uma aplicação comercial \textit{enterprise} de \textit{Application Security Posture Management} (ASPM). que oferece integração com mais de 350 ferramentas de segurança de aplicações, infraestrutura, cloud e contentores, bem como com sistemas de DevOps. \\
+O \textbf{ArmorCode} é uma aplicação comercial \textit{enterprise} de \textit{Application Security Posture Management} (ASPM) que oferece integração com mais de 350 ferramentas de segurança de aplicações, infraestrutura, cloud e contentores, bem como com sistemas de DevOps. \\
 
-De entre as suas vastas funcionalidades faz também parte a agregação de vulnerabilidades encontradas por outras ferramentas de \textit{scanning}. De forma semelhante ao SecDash, o ArmorCode não faz ele próprio um scan de vulnerabilidades, apresentando-se como uma solução «\textit{scannerless, vendor-agnostic}»\cite{scanerless}. Mais uma vez, no entanto, estamos perante uma ferramenta de elevada complexidade, possuindo imensas funcionalidades para lá do escopo do problema que o SecDash pretende resolver e que para além disso podem levar a uma curva de aprendizagem acentuada que poderá ser contraproducente quando se procura uma solução ágil para a simples agregação de relatórios de vulnerabilidades externos. \\
+De entre as suas vastas funcionalidades faz também parte a agregação de vulnerabilidades encontradas por outras ferramentas de \textit{scanning}. De forma semelhante ao \textbf{SecDash}, o ArmorCode não faz ele próprio um scan de vulnerabilidades, apresentando-se como uma solução «\textit{scannerless, vendor-agnostic}» \cite{scanerless}. Mais uma vez, no entanto, estamos perante uma ferramenta de elevada complexidade, possuindo imensas funcionalidades para lá do escopo do problema que o \textbf{SecDash} pretende resolver e que para além disso podem levar a uma curva de aprendizagem acentuada que poderá ser contraproducente quando se procura uma solução ágil para a simples agregação de relatórios de vulnerabilidades externos. \\
 
 Quando comparado com o DefectDojo temos ainda a agravante de esta ser uma ferramenta SaaS proprietária com um modelo de licenciamento orientado para grandes corporações, o que a torna inacessível para projetos independentes ou de equipas de pequena dimensão. \\

@@ -132,6 +132,19 @@ R.~Lerman and C.~Zakrzewski. (2021) The {Log4j} vulnerability has the internet
   \url{https://docs.gitlab.com/user/application_security/dependency_scanning/legacy_dependency_scanning/}
 \BIBentrySTDinterwordspacing
 
+\bibitem{defectdojo}
+\BIBentryALTinterwordspacing
+{DefectDojo}, ``Defectdojo -- devsecops and vulnerability management
+  platform,'' 2026, acedido em: Maio de 2026. [Online]. Available:
+  \url{https://defectdojo.com/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{armorcode}
+\BIBentryALTinterwordspacing
+{ArmorCode}, ``Armorcode -- the market leader in next-gen aspm,'' 2026, acedido
+  em: Maio de 2026. [Online]. Available: \url{https://www.armorcode.com/}
+\BIBentrySTDinterwordspacing
+
 \bibitem{aboutdefectdojo}
 \BIBentryALTinterwordspacing
 {DefectDojo Project}. (2024) About {DefectDojo}: {DevSecOps}, {ASOC}, and

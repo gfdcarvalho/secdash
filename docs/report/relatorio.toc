@@ -2,8 +2,8 @@
 \contentsline {chapter}{\numberline {1}Introdução}{1}{}%
 \contentsline {section}{\numberline {1.1}Contextualização do problema}{1}{}%
 \contentsline {chapter}{\numberline {2}Enquadramento e estado da arte}{5}{}%
-\contentsline {section}{\numberline {2.1}SAST e análise de dependências}{5}{}%
-\contentsline {subsection}{\numberline {2.1.1}\textit {Static application security testing} (SAST)}{6}{}%
+\contentsline {section}{\numberline {2.1}Static Application Security Testing e análise de dependências}{5}{}%
+\contentsline {subsection}{\numberline {2.1.1}Static Application Security Testing (SAST)}{6}{}%
 \contentsline {subsection}{\numberline {2.1.2}Análise de dependências}{6}{}%
 \contentsline {section}{\numberline {2.2}Estado da arte}{7}{}%
 \contentsline {subsection}{\numberline {2.2.1}DefectDojo}{7}{}%
@@ -16,12 +16,12 @@
 \contentsline {subsection}{\numberline {3.1.4}Agregação de vulnerabilidades}{10}{}%
 \contentsline {subsection}{\numberline {3.1.5}Dashboard Web}{11}{}%
 \contentsline {subsection}{\numberline {3.1.6}Exportação de relatórios}{11}{}%
-\contentsline {section}{\numberline {3.2}Objetivos opcionais}{12}{}%
+\contentsline {section}{\numberline {3.2}Objetivos opcionais}{11}{}%
 \contentsline {subsection}{\numberline {3.2.1}Integração com Jenkins}{12}{}%
 \contentsline {subsection}{\numberline {3.2.2}Deployment em contentores}{12}{}%
 \contentsline {subsection}{\numberline {3.2.3}Tracking de \textit {Findings}}{12}{}%
-\contentsline {section}{\numberline {3.3}Visão geral do sistema}{13}{}%
-\contentsline {section}{\numberline {3.4}APIs externas}{14}{}%
+\contentsline {section}{\numberline {3.3}Visão geral do sistema}{12}{}%
+\contentsline {section}{\numberline {3.4}APIs externas}{13}{}%
 \contentsline {section}{\numberline {3.5}Tecnologias e linguagens}{14}{}%
 \contentsline {subsection}{\numberline {3.5.1}Backend}{14}{}%
 \contentsline {subsubsection}{Kotlin}{14}{}%
@@ -38,25 +38,15 @@
 \contentsline {section}{\numberline {4.2}Backend}{22}{}%
 \contentsline {subsection}{\numberline {4.2.1}Controllers}{22}{}%
 \contentsline {subsection}{\numberline {4.2.2}Pipeline}{23}{}%
-\contentsline {subsubsection}{AuthenticatedUserArgumentResolver}{23}{}%
-\contentsline {subsubsection}{AuthenticationInterceptor}{23}{}%
-\contentsline {subsubsection}{BearerTokenAuthFilter}{24}{}%
-\contentsline {subsubsection}{GlobalExceptionHandler}{24}{}%
-\contentsline {subsubsection}{OAuthRedirectFilter}{24}{}%
-\contentsline {subsubsection}{RequestTokenProcessor}{25}{}%
-\contentsline {subsection}{\numberline {4.2.3}Services}{25}{}%
-\contentsline {subsection}{\numberline {4.2.4}Repositories e REST Clients}{25}{}%
-\contentsline {subsection}{\numberline {4.2.5}Utils}{26}{}%
-\contentsline {subsubsection}{Sealed Class Either}{26}{}%
-\contentsline {subsubsection}{Security Config}{26}{}%
-\contentsline {section}{\numberline {4.3}Frontend}{27}{}%
-\contentsline {subsubsection}{RequireAuthentication}{27}{}%
-\contentsline {subsubsection}{ThemeProvider}{28}{}%
-\contentsline {subsection}{\numberline {4.3.1}i18n}{28}{}%
-\contentsline {chapter}{\numberline {5}Deployment}{29}{}%
-\contentsline {chapter}{\numberline {6}Conclusão}{31}{}%
-\contentsline {section}{\numberline {6.1}Dificuldades Técnicas e teóricas}{31}{}%
-\contentsline {section}{\numberline {6.2}Considerações finais}{31}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{34}{}%
+\contentsline {subsection}{\numberline {4.2.3}Services}{23}{}%
+\contentsline {subsection}{\numberline {4.2.4}Repositories e REST Clients}{24}{}%
+\contentsline {subsection}{\numberline {4.2.5}Security Config}{24}{}%
+\contentsline {section}{\numberline {4.3}Frontend}{24}{}%
+\contentsline {subsubsection}{RequireAuthentication}{25}{}%
+\contentsline {subsubsection}{ThemeProvider}{25}{}%
+\contentsline {subsection}{\numberline {4.3.1}i18n}{25}{}%
+\contentsline {chapter}{\numberline {5}Deployment}{27}{}%
+\contentsline {chapter}{\numberline {6}Conclusão}{29}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{33}{}%
 \contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{35}{}%
 \contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{39}{}%

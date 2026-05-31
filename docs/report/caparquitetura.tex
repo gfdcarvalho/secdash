@@ -3,15 +3,15 @@
 %
 \chapter{Arquitetura e tecnologias} \label{cap:arquitetura}
 
-O presente capítulo pretende expor uma visão geral dos requisitos da aplicação e da organização técnica do projeto, os diferentes módulos que o compõem e suas intedependências, bem como as linguagem de programação e \textit{frameworks} usadas no seu desenvolvimento.\\
+O presente capítulo pretende expor uma visão geral dos requisitos da aplicação e da organização técnica do projeto, os diferentes módulos que o compõem e suas interdependências, bem como as linguagem de programação e \textit{frameworks} usadas no seu desenvolvimento.\\
 
 \section{Requisitos funcionais} \label{intro:requisitos}
 
-De forma a responder satisfatoriamente ao problema que o SecDash pretende resolver, foi definida uma lista de requisitos funcionais considerados essenciais para o sistema. Estes requisitos representam as funcionalidades mínimas necessárias para permitir a agregação, normalização e visualização centralizada de vulnerabilidades provenientes de múltiplos repositórios e plataformas. \\
+De forma a responder satisfatoriamente ao problema que o \textbf{SecDash} pretende resolver, foi definida uma lista de requisitos funcionais considerados essenciais para o sistema. Estes requisitos representam as funcionalidades mínimas necessárias para permitir a agregação, normalização e visualização centralizada de vulnerabilidades provenientes de múltiplos repositórios e plataformas. \\
 
 \subsection{Integração de repositórios}
 
-A aplicação deve ser capaz de obter repositórios alojados nas plataformas \textit{GitHub} e \textit{GitLab} através das respetivas APIs. \\
+A aplicação deve ser capaz de obter repositórios alojados nas plataformas GitHub e GitLab através das respetivas APIs. \\
 
 Após a autenticação do utilizador e obtenção das permissões necessárias, o sistema deverá conseguir:
 \begin{itemize}
@@ -25,7 +25,7 @@ Após a autenticação do utilizador e obtenção das permissões necessárias, 
 
 A plataforma deve disponibilizar mecanismos de autenticação que permitam aos utilizadores vigiar de forma persistente os seus repositórios escolhidos garantindo ao mesmo tempo a sua confidencialidade.\\
 
-Para isso deverá existir suporte à autenticação através do protocolo OAuth2, recorrendo aos serviços disponibilizados pelo \textit{GitHub} e \textit{GitLab}. Este mecanismo permitirá:
+Para isso deverá existir suporte à autenticação através do protocolo OAuth2, recorrendo aos serviços disponibilizados pelo GitHub e GitLab. Este mecanismo permitirá:
 \begin{itemize}
 	\item Autenticar utilizadores sem necessidade de credenciais locais;
 	\item Garantir o acesso autenticado às APIs externa, obtendo assim permissão para acesso aos repositórios privados de um utilizador;
@@ -36,16 +36,14 @@ Após autenticação bem sucedida, o utilizador deverá poder consultar os seus 
 
 \subsection{Controlo de acesso com base em papéis}
 
-O sistema deverá implementar um mecanismo de controlo de acesso baseados em papéis (\textit{Role-Based Access Control} ou \textit{RBAC}), permitindo restringir funcionalidades de acordo com o tipo de utilizador.\\
+O sistema deverá implementar um mecanismo de controlo de acesso baseados em papéis (\textbf{Role-Based Access Control} ou \textbf{RBAC}), permitindo restringir funcionalidades de acordo com o tipo de utilizador.\\
 
 Deverão ser suportados os seguintes papéis:
 \begin{itemize}
-	\item \textbf{ADMIN}: Utilizador com funções de administração. Pode adicionar e remover utilizadores e repositórios de equipas às quais não pertence, pode eliminar utilizadores, etc...
+	\item \textbf{ADMIN}: Utilizador com funções de administração. Pode adicionar e remover utilizadores e repositórios de equipas às quais não pertence, eliminar equipas que não lidera.
 	
 	\item \textbf{USER}: Utilizador comum da aplicação.
 \end{itemize}
-
-Este mecanismo permitirá uma organização em equipas dentro da plataforma, bem como uma gestão do acesso aos dados conforme determido por role idk temos de ver. \\
 
 \subsection{Agregação de vulnerabilidades}
 
@@ -53,7 +51,7 @@ Uma das funcionalidades mais importantes do SecDash deverá ser a capacidade de 
 
 A informação obtida deverá ser convertida para um modelo de dados interno normalizado, independentemente do formato original utilizado pela plataforma de origem. O sistema deverá então:
 \begin{itemize}
-	\item Importar relatórios de vulnerabilidades de ambas as plataformas \textit{GitHub} e \textit{GitLab};
+	\item Importar relatórios de vulnerabilidades de ambas as plataformas GitHub e GitLab;
 	\item Identificar e exibir as vulnerabilidades associadas a cada repositório;
 	\item Normalizar os dados heterogéneos provenientes de cada plataforma externa;
 	\item Permitir a consulta agregada e centralizada dos relatórios e findings provenientes de cada plataforma externa.
@@ -68,7 +66,8 @@ A plataforma deverá disponibilizar uma interface web que permita aos utilizador
 O dashboard deverá incluir:
 \begin{itemize}
 	\item Listagem de vulnerabilidades;
-	\item Temos de ver o resto idk
+	\item Listagem de SAST Alerts;
+	\item Gráficos de visualização da evolução de alertas de segurança ao longo do tempo.
 \end{itemize}
 
 Pretende-se que a interface seja visualmente clara e de fácil acessibilidade, permitindo-lhes identificar rapidamente problemas de segurança relevantes identificados pelas ferramentas de segurança da plataforma originária de cada repositório. \\
@@ -85,16 +84,17 @@ Os relatórios exportados deverão incluir:
 	\item Resumo das vulnerabilidades identificadas;
 	\item Data de geração do relatório.
 \end{itemize}
+
 \section{Objetivos opcionais}
-No caso de a calendarização o permitir, pretendem-se implementar os seguintes objetivos opcionais, considerados \textit{stretch goals}. Consideramos que estes objetivos poderiam acrescentar mais alguma usabilidade à aplicação, embora não sejam estritamente necessários para responder ao problema que esta pretende desenvolver. \\
+No caso de a calendarização o permitir, pretendem-se implementar os seguintes objetivos opcionais. Consideramos que estes objetivos poderiam acrescentar mais alguma usabilidade à aplicação, embora não sejam estritamente necessários para responder ao problema que esta pretende desenvolver. \\
 
 \subsection{Integração com Jenkins}
-Pretende-se acrescentar uma nova possível fonte de dados para além das plataformas GitHub e GitLab, integrando o \textbf{SecDash} com o Jenkins, um dos servidores de automação mais utilizados na indústria para CI/CD. \\
+Pretende-se acrescentar fonte de dados adicional para além das plataformas GitHub e GitLab, integrando o \textbf{SecDash} com o Jenkins, um dos servidores de automação mais utilizados na indústria para CI/CD. \\
 
 \subsection{Deployment em contentores}
 De forma a validar a viabilidade operacional da plataforma, pretende-se realizar o \textit{deployment} do \textbf{SecDash} alojando-o num servidor pessoal. \\
 
-Este processo envolveria a configuração e gestão de redes para exposição controlada do serviço e a orquestração via \textit{Docker}. O objetivo é que a aplicação possa ser demonstrada num ambiente que mais se assemelharia a um ambiente real e não apenas no ambiente de desenvolvimento local, passando a aplicação a estar acessível de forma remota. \\
+Este processo envolveria a configuração e gestão de redes para exposição controlada do serviço e a orquestração via Docker. O objetivo é que a aplicação possa ser demonstrada num ambiente que mais se assemelharia a um ambiente real e não apenas no ambiente de desenvolvimento local, passando a aplicação a estar acessível de forma remota. \\
 
 Pretende-se deste modo alargar o âmbito do projeto para lá de apenas desenvolvimento de software, passando pela gestão de regras de \textit{firewall} e exposição segura de serviços para acesso remoto. \\
 
@@ -108,28 +108,26 @@ O projeto encontra-se dividido em dois blocos principais, \textit{frontend} e \t
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.75\linewidth]{./figures/diagrama.png}
+	\includegraphics[width=1\linewidth]{./figures/diagrama.png}
 	\caption{diagrama da arquitetura}
 \end{figure}
 
-O \textit{backend} é o principal responsável pela lógica de negócio da aplicação, recaindo nele as funções de comunicar com as APIs externas às quais a aplicação necessita de recorrer e de normalizar a informação recebida destas. É também sua responsabilidade toda a lógica de registo e autorização dos utilizadores e a persistências dos dados numa base de dados. O \textit{backend} atua também como uma \textbf{API REST}, expondo os dados necessários de forma estruturada via pedidos \textbf{HTTP}. \\
+O \textit{backend} é o principal responsável pela lógica de negócio da aplicação, tendo a responsabilidade de comunicar com as APIs externas às quais a aplicação necessita de recorrer e de normalizar a informação recebida destas. É também sua responsabilidade toda a lógica de registo e autorização dos utilizadores e a persistências dos dados numa base de dados. O \textit{backend} atua também como uma \textbf{API REST}, expondo os dados necessários de forma estruturada via pedidos \textbf{HTTP}. \\
 
 Enquanto isso, o \textit{frontend} constitui a interface visual com que o utilizador interage via web browser. O seu papel é consumir os dados enviados pelo \textit{backend} e exibí-los ao utilizador de forma interativa através de uma página web, tratando de toda a lógica de navegação e visualização. \\
 
-Esta separação modular, tendo por base o princípio de \textit{separation of concerns}, para além de permitir escolhas técnicas mais especializadas para cada módulo, reduz a complexidade ao limitar a interação entre estes, permitindo que cada camada evolua de forma independente, facilitando a manutenção e atualização futura do sistema. \\
-
-Para além disso, separar a lógica de apresentação da lógica de dados permite que uma única API, implementada no \textit{backend} venha a servir potenciais múltiplas plataformas (web, desktop, mobile, etc). \\
+Esta separação modular, tendo por base o princípio de \textit{separation of concerns}, para além de permitir escolhas técnicas mais especializadas para cada módulo, reduz a complexidade ao limitar a interação entre estes, permitindo que cada camada evolua de forma independente, facilitando a manutenção e atualização futura do sistema. Para além disso, separar a lógica de apresentação da lógica de dados permite que uma única API, implementada no \textit{backend} venha a servir potenciais múltiplas plataformas (web, desktop, mobile, etc). \\
 
 
 \section{APIs externas} \label{arquitetura:apis}
-O funcionamento da aplicação está intrinsecamente ligado ao usp de APIs externas.  Os utilizadores podem-se autenticar através da utilização do protocolo \textit{OAuth 2.0} usando como \textit{identity providers} Google, GitHub ou GitLab. \\
+O funcionamento da aplicação está intrinsecamente ligado ao uso de APIs externas.  Os utilizadores podem-se autenticar através da utilização do protocolo OAuth 2.0 usando como \textit{identity providers} Google, GitHub ou GitLab. \\
 
-Estes dois últimos provedores de identidade cumprem um papel duplo, pois para além da possibilidade de providenciarem \textit{autenticação} ao SecDash são também eles que providenciam \textit{autorização}, de forma a que a aplicação possa requisitar os repositórios dos utilizadores bem como consumir os endpoints de segurança que contêm os relatórios de vulnerabilidades sobre os quais a funcionalidade base do projeto assenta. \\
+Estes dois últimos provedores de identidade cumprem um papel duplo, pois para além da possibilidade de providenciarem \textit{autenticação} ao \textbf{SecDash} são também eles que providenciam \textit{autorização}, de forma a que a aplicação possa requisitar os repositórios dos utilizadores bem como consumir os endpoints de segurança que contêm os relatórios de vulnerabilidades sobre os quais a funcionalidade base do projeto assenta. \\
 
 \section{Tecnologias e linguagens} \label{arquitetura:tecnologias}
 \subsection{Backend} \label{arquitetura:tecnologias:backend}
 \subsubsection{Kotlin}
-A decisão de escolher Kotlin como linguagem utilizada para o desenvolvimento do \textbf{backend} foi tomada, em parte, devido à proficiência nela adquirida ao longo do percurso da licenciatura. Uma vez que foi a linguagem com maior exposição e utilização prática em mais unidades curriculares ao longo do percurso académico deste ciclo de estudos, esta escolha permitiu reduzir a curva de aprendizagem necessária à elaboração do projeto, acelarando assim o seu desenvolvimento. \\
+A decisão de escolher Kotlin como linguagem utilizada para o desenvolvimento do \textit{backend} foi tomada, em parte, devido à proficiência nela adquirida ao longo do percurso da licenciatura. Uma vez que foi a linguagem com maior exposição e utilização prática em mais unidades curriculares ao longo do percurso académico deste ciclo de estudos, esta escolha permitiu reduzir a curva de aprendizagem necessária à elaboração do projeto, acelarando assim o seu desenvolvimento. \\
 
 Para além disso, a linguagem Kotlin possui uma série de características que auxiliam o desenvolvimento e fortalecem a robustez da aplicação, de entre as quais se destacam duas:
 
@@ -141,14 +139,14 @@ Para além disso, a linguagem Kotlin possui uma série de características que a
 
 \subsubsection{Spring Boot}
 
-A framework Spring Boot constitui a base fundamental do \textit{backend}. A sua filosofia \textit{"convention-over-configuration"}\cite{coc}, permite minimizar a preocupação com questões de configuração para que o foco do desenvolvimento possa incidir apenas na lógica aplicacional, tornando o processo de programação mais célere. \\
+A framework Spring Boot constitui a base fundamental do \textit{backend}. A sua filosofia \textit{"convention-over-configuration"} \cite{coc}, permite minimizar a preocupação com questões de configuração para que o foco do desenvolvimento possa incidir apenas na lógica aplicacional, tornando o processo de programação mais célere. \\
 
 O Spring Boot é particularmente útil pelos seguintes pontos:
 
 \begin{itemize}
 	\item \textbf{\textit{Inversion of Control} (IoC) e Injeção de Dependências:} O Spring gere automaticamente o ciclo de vida dos componentes da aplicação. No contexto do \textbf{SecDash}, isto permite, por exemplo, que os clientes REST de integração com o GitHub e GitLab sejam injetados nos serviços correspondentes de forma transparente;
 	
-	\item \textbf{Segurança com Spring Security:} A dependência Spring Security facilita a implementação de fluxos de autenticação \textit{OAuth2} e a proteção de determinados \textit{endpoints} através de configurações de autorização granulares, garantindo que dados sensíveis e algumas funcionalidades da aplicação são acedidos apenas por utilizadores com as permissões adequadas;
+	\item \textbf{Segurança com Spring Security:} A dependência Spring Security facilita a implementação de fluxos de autenticação OAuth2 e a proteção de determinados \textit{endpoints} através de configurações de autorização granulares, garantindo que dados sensíveis e algumas funcionalidades da aplicação são acedidos apenas por utilizadores com as permissões adequadas;
 	
 	\item \textbf{Servidor embutido:} O Spring Boot permite que a aplicação seja compilada para um único ficheiro executável que inclui um servidor Apache Tomcat embutido. Para além de eliminar a necessidade de configurar um servidor externo, isto poderá facilitar a contentorização da aplicação através da plataforma Docker.
 
@@ -159,7 +157,7 @@ Para a camada de interação com a base de dados, optou-se pela utilização da 
 Esta apresenta duas grandes vantagens sobre o nosso ponto de vista:
 
 \begin{itemize}
-	\item \textbf{Controlo total sobre o SQL:} A JDBI permite escrever maualmente as consultas SQL a serem executadas. Este controlo garante a performance e a correção de consultas complexas;
+	\item \textbf{Controlo total sobre o SQL:} A JDBI permite escrever maualmente as consultas SQL a serem executadas. Este controlo garante o desempenho e a correção de consultas complexas;
 	
 	\item \textbf{Mapeamento Nativo para \textit{Data Classes}:} A integração com o Kotlin permite que os resultados das consultas SQL sejam mapeados automaticamente para \textit{Data Classes}. 
 	
@@ -169,26 +167,26 @@ Esta apresenta duas grandes vantagens sobre o nosso ponto de vista:
 \end{itemize}
 
 \subsubsection{PostgreSQL}
-Para persistência de dados decidiu-se utilizar uma base de dados relacional, uma vez que os dados com os quais a aplicação trabalha são altamente estruturados e com dependências e relações claras entre si (por exemplo, um utilizador possui múltiplos repositórios associados e cada repositório agrupa um conjunto delimitado de vulnerabilidades). O PostgreSQL permite mapear este modelo de dados de forma direta, utilizando chaves primárias e estrangeiras para refletir fielmente a lógica de negócio. Este fator, aliado à simplicidade no mapeamento com a Jdbi e integração com o ecossistema Kotlin/JVM, levaram à escolha de PostgreSQL. \\
+Para persistência de dados decidiu-se utilizar uma base de dados relacional, uma vez que os dados com os quais a aplicação trabalha são altamente estruturados e com dependências e relações claras entre si (por exemplo, um utilizador possui múltiplos repositórios associados e cada repositório agrupa um conjunto delimitado de vulnerabilidades). O \textbf{PostgreSQL} permite mapear este modelo de dados de forma direta, utilizando chaves primárias e estrangeiras para refletir fielmente a lógica de negócio. Este fator, aliado à simplicidade no mapeamento com a Jdbi e integração com o ecossistema Kotlin/JVM, levaram à escolha de PostgreSQL. \\
 
 \subsubsection{OAuth 2.0}
 A utilização do protocolo \textbf{OAuth 2.0} no \textbf{SecDash} cumpre um propósito duplo. \\
 
 Um destes propósitos é a delegação da gestão de identidades a entidades externas confiáveis, não sendo assim necessário que um utilizador se registe diretamente no \textbf{SecDash}. Os utilizadores podem assim criar conta e aceder à plataforma com apenas um clique, utilizando contas já existentes em outras plataformas, o que pode melhorar significativamente a experiência de utilização. As plataformas suportadas como provedores de identidade sãp Google, GitHub e GitLab. \\
 
-Para além disso, a funcionalidade principal da aplicação está dependente deste protocolo: sendo o \textit{SecDash} um agregador de vulnerabilidades, a aplicação necessita de consultar dados privados guardados no GitHub e GitLab, sendo o Oauth2.0 a forma como o acesso a estes é concedido. \\
+Para além disso, a funcionalidade principal da aplicação está dependente deste protocolo: sendo o \textbf{SecDash} um agregador de vulnerabilidades, a aplicação necessita de consultar dados privados guardados no GitHub e GitLab, sendo o Oauth2.0 a forma como o acesso a estes é concedido. \\
 
 \subsection{Frontend} \label{arquitetura:tecnologias:frontend}
 
 \subsubsection{Typescript}
-A linguagem escolhida para o \textit{frontend} foi \textit{\textbf{Typescript}}. \\
+A linguagem escolhida para o \textit{frontend} foi \textbf{Typescript}. \\
 
-A escolha desta em detrimento de Javascript puro deveu-se ao facto de Typescript possuir tipagem estática. Não só isto facilita a transposição dos modelos de dados utilizados no backend para a lógica do frontend como também garante que qualquer erro de correspondência de dados possa ser detetado imediatamente em tempo de compilação, e não em tempo de execução no navegador do utilizador. \\
+A escolha desta em detrimento de Javascript puro deveu-se ao facto de Typescript possuir tipagem estática. Não só isto facilita a transposição dos modelos de dados utilizados no \textit{backend} para a lógica do frontend como também garante que qualquer erro de correspondência de dados possa ser detetado imediatamente em tempo de compilação, e não em tempo de execução no navegador do utilizador. \\
 
 \subsubsection{React}
 Como biblioteca principal para a construção da interface do utilizador, adotou-se \textbf{React}. \\
 
-Os fatore que motivaram esta escolha foram os seguintes:
+Os fatores que motivaram esta escolha foram os seguintes:
 
 \begin{itemize}
 	\item \textbf{Arquitetura Baseada em Componentes:} O React permite decompor a interface visal em peças de código modulares, isoladas e reutilizáveis. Esta modularidade facilita a manutenção do código e permite que múltiplos elementos partilhem a mesma lógica visual e a sua reutilização;

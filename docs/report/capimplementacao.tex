@@ -1,11 +1,11 @@
 \chapter{Implementação} \label{cap:implementacao}
 
-Para facilitar a manutenção e implementação do sistema, bem como a sua compreesão,o \textbf{SecDash} encontra-se decomposto em camadas, seguindo um padrão de desenho \textit{multitier} ou \textit{layered}. \\
+Para facilitar a manutenção e implementação do sistema, bem como a sua compreesão,o \textbf{SecDash} encontra-se decomposto em camadas, seguindo um padrão de desenho \textit{multi-tier} ou \textit{layered}. \\
 
-A aplicação encontra-se dividida em três níveis, numa estrutura hierárquica, sendo estes a \textit{\textbf{camada de apresentação}}, a \textit{\textbf{camada lógica}} e a \textit{\textbf{camada de dados}}. \\
+A aplicação encontra-se dividida em três níveis, numa estrutura hierárquica, sendo estes a \textbf{camada de apresentação}, a \textbf{camada lógica} e a \textbf{camada de dados}. \\
 
 \begin{itemize}
-	\item A \textbf{camada de apresentação} tem como função principal ser a interface com a qual o utilizador interage com o SecDash, isto é, o nosso \textit{frontend} web;
+	\item A \textbf{camada de apresentação} tem como função principal ser a interface com a qual o utilizador interage com o \textbf{SecDash}, isto é, o nosso \textit{frontend} web;
 
 	\item A \textbf{camada lógica} é o cerne do programa, tratando-se do nosso backend em kotlin onde é implementada toda a lógica de negócio;
 
@@ -21,16 +21,16 @@ O modelo de dados serve também de ponte entre os requisitos de negócio da plat
 
 Como referido no capítulo anterior, os dados obtidos das APIs externas do GitHub e GitLab são altamente estruturados e com dependências e relações claras entre si. Assim sendo, a elaboração de um modelo Entidade-Associação, indispensável para a estruturação lógica do projeto, torna-se relativamente trivial. \\
 
-O diagrama do modelo obtido encontra-se apresentado na figura abaixo. É importante salientar que, de forma a facilitar a apresentação e visualização do modelo no presente documento, os atributos das entidades foram omitidos do diagrama. O script SQL utilizado para criar todo o esquema da base de dados, onde se pode consultar todos os atributos, encontra-se no Apêndice \ref{ap:schema}. \\
+O diagrama do modelo obtido encontra-se apresentado na figura abaixo. É importante salientar que, de forma a facilitar a apresentação e visualização do modelo no presente documento, os atributos das entidades, bem como a cardinalidade das suas relações, foram omitidos do diagrama. O script SQL utilizado para criar todo o esquema da base de dados, onde se pode consultar todos os atributos, encontra-se no Apêndice \ref{ap:schema}. \\
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.95\linewidth]{./figures/secdash-ea.drawio.png}
-	\caption{diagrama do modelo entidade-associação}
+	\caption{diagrama do modelo de dados}
 \end{figure}
 
 \begin{itemize}
-	\item Cada \textbf{USER} possui um \textbf{id} e \textbf{name} que os identificarão na aplicação, bem como um \textbf{email}. Poderão também ter um campo \textit{\textbf{password\_validation}}, opcional, caso optem por se registar na aplicação diretamente com o seu email em vez de utilizarem uma das opções OAuth 2.0. \\
+	\item Cada \textbf{USER} possui um \textbf{id} que os identificará na aplicação, bem como um \textbf{name} e \textbf{email}. Poderão também ter um campo \textit{\textbf{password\_validation}}, opcional, caso optem por se registar na aplicação diretamente com o seu email em vez de utilizarem uma das opções OAuth 2.0. \\
 	
 	Cada user terá também uma \textit{\textbf{role}}, que o identificará como um utilizador normal ou administrador, tendo este último acesso a funcionalidades vedadas a utilizadores normais, tais como eliminar utilizadores ou equipas que não lhe pertencem. \\
 	
@@ -48,7 +48,7 @@ O diagrama do modelo obtido encontra-se apresentado na figura abaixo. É importa
 É importante indicar que ao obter os dados das APIs externas, sejam estes referentes a repositórios ou vulnerabilidades, a informação devolvida contém inúmeros campos que não consideramos relevantes de armazenar ou exibir aos utilizadores para os propósitos do \textbf{SecDash}. A título de exemplo, o objeto JSON referente a um repoisitório GitHub devolvido pela sua API contém mais de 80 campos, sendo vários deles objetos que por sua vez contém também múltiplos campos. Um exemplo deste formato pode ser consultado no Apêndice \ref{ap:repogithub}. Como tal, optou-se por filtrar muitos destes campos, sendo apenas armazenados aqueles que considerámos relevantes para o propósito da aplicação.
 
 \section{Backend} \label{implementacao:backend}
-O backend do \textbf{SecDash} encontra-se estruturado com o padrão de desenho Controller-Service-Repository (CSR). Pretende-se deste modo isolar o tratamento de pedidos HTTP, a lógica de negócio e operações de base de dados em componentes independentes. Organizar a aplicação desta forma tem o intuito de facilitar o seu desenvolvimento e manutenção. \\
+O \textit{backend} do \textbf{SecDash} encontra-se estruturado com o padrão de desenho \textbf{Controller-Service-Repository (CSR)}. Pretende-se deste modo isolar o tratamento de pedidos HTTP, a lógica de negócio e operações de base de dados em componentes independentes. Organizar a aplicação desta forma tem o intuito de facilitar o seu desenvolvimento e manutenção. \\
 
 \subsection{Controllers}
 A camada dos \textit{controllers} tem como principal objetivo receber pedidos HTTP para consequentemente devolver respostas HTTP. A camada conta com cinco controllers distintos, cada um com endpoints próprios para cada operação suportada pela aplicação: 
@@ -59,86 +59,57 @@ A camada dos \textit{controllers} tem como principal objetivo receber pedidos HT
 	
 	\item \textbf{GitLab Controller:} Análogo ao controller anterior mas para GitLab;
 	
-	\item \textbf{Team Controller:} Responsável por receber pedidos HTTP e emitir as respetivas respostas para operações relacionadas com equipas no SecDash. Os utilizadores podem criar ou eliminar equipas, adicionar ou remover repositórios e outros utilizadores a equipas ou promover membros de uma equipa a Team Leader.
+	\item \textbf{Repo Controller:} Responsável por receber e responder a pedidos HTTP relacionados com os repositórios inseridos no domínio do \textbf{SecDash};
 	
-	\item \textbf{User Controller:} Responsável por receber e responder a pedidos HTTP para registo na aplicação através do formulário de registo ou de obter informação do utilizador com sessão ativa.
+	\item \textbf{Team Controller:} Responsável por receber pedidos HTTP e emitir as respetivas respostas para operações relacionadas com equipas no \textbf{SecDash}. Os utilizadores podem criar ou eliminar equipas, adicionar ou remover repositórios e outros utilizadores a equipas ou promover membros de uma equipa a Team Leader;
+	
+	\item \textbf{User Controller:} Responsável por receber e responder a pedidos HTTP para registo na aplicação através do formulário de registo ou de obter informação do utilizador com sessão ativa;
+	
 \end{itemize}
 
-Para manter o isolamento das camadas, nenhuma lógica de negócio ou processamento de dados é executado nesta camada. Esse tipo de tarefas é delegado para a camada dos serviços, que será detalhada na subseção seguinte. \\
-
-Não obstante, para efeitos de organização do código, optou-se por colocar alguns componentes necessários para uma utilização mais eficiente da \textit{framerwork} Spring e evitar repetição de código numa subpackage entitulada \textit{pipeline} na \textit{package} dos controllers. Estes componentes encontram-se explicitados na subsecção Pipeline. \\
+Para manter o isolamento das camadas, nenhuma lógica de negócio ou processamento de dados é executado nesta camada. Esse tipo de tarefas é delegado para a camada dos serviços, que será detalhada na subseção seguinte. Não obstante, para efeitos de organização do código, optou-se por colocar alguns componentes necessários para uma utilização mais eficiente da \textit{framerwork} Spring e evitar repetição de código numa subpackage entitulada \textit{pipeline} na \textit{package} dos controllers. Estes componentes encontram-se explicitados na subsecção Pipeline. \\
 
 \subsection{Pipeline}
-\subsubsection{AuthenticatedUserArgumentResolver}
-No Spring, a interface HandlerMethodArgumentResolver é utilizada para resolver parâmetros de métodos em valores no contexto de um determinado pedido. Com o objetivo de disponibilizar automaticamente a informação do utilizador autenticado na aplicação nos métodos dos controllers que fazem uso dessa informação foi implementada essa interface através da classe \textbf{AuthenticatedUserArgumentResolver}. Esta é responsável por identificar parâmetros do tipo AuthenticatedUser e resolver o respetivo valor a partir do contexto de um pedido HTTP. \\
 
-O método \textbf{supportsParameter} determina se o resolver deve ser aplicado a um determinado parâmetro do controlador. Neste caso age apenas sobre parâmetros do tipo AuthenticatedUser. Quando um controller contém um parâmetro deste tipo, o Spring chama o método resolveArgument que irá obter o utilizador autenticado associado ao pedido HTTP a ser recebido. \\
-
-O método \textbf{addUserTo} guarda o utilizador autenticado como atributo do pedido HTTP, permitindo que o \textbf{resolveArgument} o recupere posteriormente através de \textbf{getUserFrom}. Este método é utilizado pelo \textbf{AuthenticationInterceptor} e pelo \textbf{BearerTokenAuthFilter} para disponibilizar o utilizador autenticado ao resolver. \\
-
-\subsubsection{AuthenticationInterceptor}
-O \textbf{AuthenticatedInterceptor} implementa a interface HandlerInterceptor do Spring, permitindo a execução de código antes da invocação dos controllers. Este \textit{interceptor} pode ser visto como o mecanismo central de autenticação da aplicação, sendo responsável por chamar os métodos do RequestTokenProcessor para validar os tokens de acesso e poder assim disponibilizar o utilizador autenticado ao resto do sistema. \\
-
-A lógica principal encontra-se no método \textbf{preHandle}, que é executado antes da invocação de cada controller associado ao pedido HTTP. Quando um endpoint protegido é identificado, o interceptor tenta obter o token de autenticação enviado pelo cliente.
-
-Este intercepter começa por procurar o header \textbf{NAME\_AUTHORIZATION\_HEADER}. Se não existir o sistema tenta autenticar o utilizador através dos cookies associados ao pedido. \\
-
-\subsubsection{BearerTokenAuthFilter}
-A classe \textbf{BearerTokenAuthFilter} é um filtro que é responsável por autenticar o utilizador em cada pedido HTTP e por estabelecer o contexto de segurança da aplicação. Ele extende a classe do Spring \textbf{OncePerRequestFilter}, garantindo assim que a sua execução ocorre apenas uma única vez por pedido. \\
-
-A função deste filtro é extrair credenciais de autenticação, sejam elas um bearer token presente num cabeçalho HTTP ou uma cookie, validar essas mesmas credenciais para finalmente adicionar o utilizador autenticado ao contexto de segurança do Spring. \\
-
-O utilizador autenticado é associado ao contexto global de segurança da aplicação através da alteração do valor de 
-\textbf{SecurityContextHolder.getContext().authentication}, permitindo que qualquer componente do Spring Security aceda ao utilizador autenticado durante o processamento do pedido. Para além da integração com o Spring Security, o filtro também preenche o mecanismo de resolução de argumentos utilizado por nós implementado e descrito anteriormente, o AuthenticatedUserArgumentResolver. \\
-
-\subsubsection{GlobalExceptionHandler}
-O objetivo desta classe é o tratamento de exceções lançadas por erros não tratados. Ao utilizar a anotação \textbf{@RestControllerAdvice} do Spring Boot centralizamos o tratamento de erros não tratados em qualquer ponto da aplicação, garantindo uma resposta consistente para o cliente em caso de erro. \\
-
-O seu único método, \textbf{handleUnexpected} captura todas as exceções do tipo Exception, funcionando como um \textit{fallback} global para qualquer erro inesperado no decorrer da execução do \textit{backend}. \\
-
-\subsubsection{OAuthRedirectFilter}
-O filtro \textbf{OAuthRedirectFilter} é responsável por preservar o destino final do utilizador durante o fluxo de autenticação OAuth2. Tal como a classe \textbf{BearerTokenAuthFilter}, esta classe também estende a classe do Spring \textbf{OncePerRequestFilter}, garantindo a sua execução apenas uma vez por pedido HTTP. \\
-
-Esta classe serve para que o fluxo de autorização via OAuth2 não afete negativamente a navegação dos utilizadores, para que após a conclusão do fluxo estes possam ser redirecionados para a página específica que pretendiam aceder, atuando apenas em endpoints relacionados com o início do fluxo OAuth2. \\
-
-\subsubsection{RequestTokenProcessor}
-A classe \textbf{RequestTokenProcessor} é a principal responsável pela validação e gestão de tokens no \textbf{SecDash}, e atua como uma camada de abstração entre os mecanismos de transporte dos tokens (headers HTTP ou cookies) e o serviço de autenticação. \\
+\begin{table}[htbp]
+	\centering
+	\caption{Responsabilidades dos componentes do pipeline de execução no Backend.}
+	\label{tab:pipeline_components}
+	\begin{tabular}{|l|p{10cm}|}
+		\hline
+		\textbf{Componente} & \textbf{Breve Descrição da Responsabilidade} \\ \hline
+		\texttt{AuthenticatedUserArgumentResolver} & Injeta automaticamente o objeto \texttt{AuthenticatedUser} nos parâmetros dos \textit{controllers} que requerem a identidade do utilizador. \\ \hline
+		\texttt{AuthenticationInterceptor} & Interceta os pedidos ao nível do Spring MVC para validar o \textit{token} (\textit{header} ou \textit{cookie}) antes que estes atinjam os endpoints protegidos. \\ \hline
+		\texttt{BearerTokenAuthFilter} & Filtro de baixo nível que valida as credenciais do utilizador e integra a sessão ativa no contexto global de segurança do Spring Security. \\ \hline
+		\texttt{GlobalExceptionHandler} & Centraliza a captura de erros não tratados na API, transformando exceções inesperadas em respostas formatadas e seguras para o cliente. \\ \hline
+		\texttt{OAuthRedirectFilter} & Preserva e armazena na sessão o URI de redirecionamento original do utilizador durante o início do fluxo de autenticação por OAuth2.0. \\ \hline
+		\texttt{RequestTokenProcessor} & Abstrai a lógica de extração, parsing e validação de \textit{tokens}, gerindo também a criação e destruição de \textit{cookies} seguros. \\ \hline
+	\end{tabular}
+\end{table}
 
 \subsection{Services}
 A camada dos serviços é onde se processa a lógica de negócio da aplicação. Esta camada está organizada de forma semelhante à camada de \textit{controllers} já descrita, com a separação em cinco serviços distintos. \\
 
 Um dos detalhes que vale a pena realçar é o uso que cada um dos serviços faz de uma classe que lhe é injetada com o nome de \textbf{transactionManager}. Trata-se de uma classe implementada com o nome \textbf{JdbiTransactionManager} e tem o propósito de gerir a execução de operações à base de dados dentro de transações na camada de serviços, utilizando a biblioteca JDBI, para que não seja esta camada a ter de liderar diretamente com a abertura, commit ou rollback de transações. \\
 
-Tal é feito através do método \textit{inTransaction} da JDBI, que recebe um bloco de código e executa-a dentro de uma transação controlada por essa biblioteca. Se a execução do bloco for bem-sucedida a transação é confirmada automaticamente. Caso contrário, é feito o rollback também automaticamente. \\
+Tal é feito através do método \textit{inTransaction} da JDBI, que recebe um bloco de código e executa-a dentro de uma transação controlada por essa biblioteca. Se a execução do bloco for bem-sucedida a transação é confirmada automaticamente. Caso contrário, é feito o \textit{rollback} também automaticamente. \\
 
 \subsection{Repositories e REST Clients}
 Nesta camada é onde se processa o acesso à base de dados e a APIs externas. \\
 
-A package \textbf{restclient} contém as classes \textbf{GitHubRestClient} e \textbf{GitLabRestClient} onde, através do RestClient nativo do Spring, fazemos as chamadas a estas APIs. A package \textbf{repository} contém as classes onde é acedida a base de dados através de transações JDBI. \\
+A package \textbf{restclient} contém as classes \textbf{GitHubRestClient} e \textbf{GitLabRestClient} onde, através do RestClient nativo do Spring, fazemos as chamadas a estas APIs. A \textit{package} \textbf{repository} contém as classes onde é acedida a base de dados através de transações JDBI. \\
 
-Devido à hetereogeneidade e às limitações da JDBI, que apenas consegue mapear automaticamente tipos básicos como tipos básicos como String ou Int, em muitas transações foi necessário mapear o \textit{Result Set} obtido através do uso de \textit{Data Transfer Objects} (DTOs) por nós implementados. Estes encontram-se na pacakage \textbf{model}, junto às respetivas classes de destino. \\
+Devido à hetereogeneidade dos dados, em muitas transações é necessário mapear o \textit{Result Set} obtido através do uso de \textit{Data Transfer Objects} (DTOs) por nós implementados. Estes encontram-se na \textit{pacakage} \textbf{model}, junto às respetivas classes de destino. \\
 
-\subsection{Utils}
-Na package \textit{utils} encontram-se algumas classes de âmbito utilitário para a nossa aplicação. Destas, duas são particularmente relevantes para o funcionamento do SecDash: a \textit{selaed class} \textbf{Either} e a classe \textbf{SecurityConfig}, pelo que serão discutidas nas subsecções seguintes. \\
-
-\subsubsection{Sealed Class Either}
-O SecDash recorre à \textit{sealed class} \textbf{Either} (ou \textit{type aliases} dela derivados) para representar o resultado de qualquer operação que possa terminar em sucesso ou em erro para evitar o uso de exceções e de blocos \textit{try-catch} para controlo da execução. \\
-
-Esta sealed class contém duas \textit{data classes} com dois casos possíveis: \textbf{Left} e \textbf{Right}. \textbf{Left} serve para representar erros e conter a sua informação; \textbf{Right} serve para representar o resultado de uma operação bem-sucedida e conter o valor do resultado. \\
-
-Para facilitar a utilização desta \textit{sealed class}, existem duas funções auxiliares: \textbf{success} e \textbf{failure}. Estas  permitem criar de forma clara e concisa instâncias de resultados bem-sucedidos ou de erro. São também definidos dois type aliases, \textbf{Success} e \textbf{Failure} para melhorar a legibilidade do código ao tornar explícito o significado de cada um dos caso. \\
-
-Este padrão teve por base o código fornecido pelo Professor Pedro Félix, disponibilizado como base de um projeto da unidade curricular de Desenvolvimento de Aplicações Web (DAW) num semestre anterior, tendo sido reaproveitado para o desenvolvimento do SecDash por ser um padrão comum em programação funcional e útil para casos onde é importante representar de forma explícita todos os resultados possíveis de uma operação, como é o caso da nossa camada de serviço. \\
-
-\subsubsection{Security Config}
+\subsection{Security Config}
 A classe \textbf{SecurityConfig} é responsável pela configuração global da segurança da aplicação através do \textbf{Spring Security}. É através desta classe que são definidos como os pedidos HTTP são autenticados, que endpoints são de acesso público ou protegidos e a integração de mecanismos de autenticação. \\
 
 A anotação \textbf{@EnableWebSecurity} ativa o suporte ao \textbf{Spring Security}, permitindo a definição de regras de autenticação e autorização, bem como a integração com mecanismos como filtros personalizados e com o protocolo \textbf{OAuth2.0}. \\
 
-Os métodos anotados com @Bean são registados no contexto do Spring como beans por ele geridos, permitindo assim que componentes como o \textbf{SecurityFilterChain} e o \textbf{AuthenticationSuccessHandler} sejam instanciados e geridos automaticamente pela framework e injetados onde necessário. Sem esse registo no \textit{startup} da aplicação não seria possível integrar a lógica de autenticação por nós desenvolvida com recurso ao \textbf{BearerTokenAuthFilter} e ao \textbf{OAuthRedirectFilter} anteriormente discutidos no presente capítulo. \\
+Os métodos anotados com \textbf{@Bean} são registados no contexto do Spring como beans por ele geridos, permitindo assim que componentes como o \textbf{SecurityFilterChain} e o \textbf{AuthenticationSuccessHandler} sejam instanciados e geridos automaticamente pela framework e injetados onde necessário. Sem esse registo no \textit{startup} da aplicação não seria possível integrar a lógica de autenticação por nós desenvolvida com recurso ao \textbf{BearerTokenAuthFilter} e ao \textbf{OAuthRedirectFilter} anteriormente discutidos no presente capítulo. \\
 
 \section{Frontend} \label{implementacao:frontend}
-A arquitetura do cliente web foi desenvolvida recorrendo à biblioteca \textit{React}, com um foco na modularidade e reatividade da interface de utilizador. \\
+A arquitetura do cliente web foi desenvolvida recorrendo à biblioteca \textbf{React}, com um foco na modularidade e reatividade da interface de utilizador. \\
 
 O cliente segue uma estrutura \textit{Single Page Application}(SPA) onde inicialmente é carregada uma única página base cujo conteúdo é atualizado dinamicamente em resposta às ações do utilizador. É assim garantida uma experiência de utilização fluida e desacoplada, com o browser do navegador a comunicar de forma assíncrona com a API do \textit{backend} através de pedidos HTTP. \\
 
@@ -146,16 +117,13 @@ As subsecções seguintes abordam alguns elementos do cliente Web que julgamos m
 
 \subsubsection{RequireAuthentication}
 
-O componente RequireAuthentication tem como responsabilidade intercetaro os acessos a qualquer URI da aplicação que exija que o utilizador tenha sessão iniciada para que a presença de uma sessão ativa possa ser validada antes de os componentes serem exibidos. Ao tentar aceder a uma rota protegida, caso o utilizador não possua um token válido, este será automaticamente redirecionado para a página de login. \\
-
-É de realçar alguns cuidados que foram tomados de forma a que a experiência do utilizador seja o mais fluída e intuitiva possível, nomeadamente o uso do hook \textbf{useLocation}, para que a localização do utilizador seja guardada para que assim possa ser redirecionado para a rota protegida que pretendia aceder após o login bem sucedido e o troço de código "replace=\{true\}", que impede que um utilizador possa usar a função de retroceder do seu browser para voltar para a página anterior após ter sido redirecionado para a página de login. \\
-
+O componente \textbf{RequireAuthentication} tem como responsabilidade intercetar os acessos a qualquer URI da aplicação que exija que o utilizador tenha sessão iniciada para que a presença de uma sessão ativa possa ser validada antes de os componentes serem exibidos. Ao tentar aceder a uma rota protegida, caso o utilizador não possua um token válido, este será automaticamente redirecionado para a página de login. \\
 
 \subsubsection{ThemeProvider}
 
-O \textbf{ThemeProvider} é o componente responsável por gerir e persistir o esquema de cores da aplicação, contanto com dois temas: escuro e cladro. \\
+O \textbf{ThemeProvider} é o componente responsável por gerir e persistir o esquema de cores da aplicação, contanto com dois temas: escuro e claro. \\
 
-É garantida uma experiência visual consistente ao longo de toda a Single Page Application. Para evitar o efeito visual desagradável de possivelmente carregar inicialmente o tema claro e só depois ser carregado o escuro que um utilizador tenha ativado ao mudar de página, o estado inicial do tema é determinado através de uma função de iniciação lazy no \textbf{useState}, que verifica qual o tema selecionado pelo utilizador, armazenado no localStorage. \\
+É garantida uma experiência visual consistente ao longo de toda a \textit{Single Page Application}. Para evitar o efeito visual desagradável de possivelmente carregar inicialmente o tema claro e só depois ser carregado o escuro que um utilizador tenha ativado ao mudar de página, o estado inicial do tema é determinado através de uma função de iniciação \textit{lazy} no \textbf{useState}, que verifica qual o tema selecionado pelo utilizador, armazenado no \textit{localStorage}. \\
 
 O tema atual é disponibilizado a todo o frontend através do \textbf{ThemeContext}. \\
 
@@ -163,4 +131,4 @@ O tema atual é disponibilizado a todo o frontend através do \textbf{ThemeConte
 
 O frontend do \textbf{SecDash} foi implementado tendo em vista a possibilidade de exibir uma interface com várias línguas distintas. \\
 
-A lógica de implementação desta funcionalidade está centrada no componente \textbf{I18nProvider}, que recorre à \textit{Context API} do React para armazenar o idioma ativo (Locale) e expor o seu dicionário de traduções. \\
+A lógica de implementação desta funcionalidade está centrada no componente \textbf{I18nProvider}, que recorre à \textit{Context API} do React para armazenar o idioma ativo (\textit{Locale}) e expor o seu dicionário de traduções. \\
