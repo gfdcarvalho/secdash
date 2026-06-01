@@ -6,6 +6,7 @@ import type { Repository } from '../../model/repository/repository'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './TeamDetails.module.css'
+import { AddRepoModal } from './AddRepoModal'
 
 
 export function TeamDetails() {
@@ -14,6 +15,7 @@ export function TeamDetails() {
     const navigate = useNavigate()
     const [team, setTeam] = useState<Team>()
     const [notFound, setNotFound] = useState(false)
+    const [showAddModal, setShowAddModal] = useState(false)
 
     const getTeam = async () => {
         const response = await api.get<Team>(`/teams/${teamId}`)
@@ -68,19 +70,41 @@ export function TeamDetails() {
                 </div>
 
                 <div className={Style.section}>
-                    <h3 className={Style.sectionTitle}>{t.teamDetails.repositories} ({team.repos.length})</h3>
+                    <div className={Style.sectionHeader}>
+                        <h3 className={Style.sectionTitle}>{t.teamDetails.repositories} ({team.repos.length})</h3>
+                        <button className={Style.addReposButton} onClick={() => setShowAddModal(true)}>
+                            {t.teamDetails.addRepos}
+                        </button>
+                    </div>
                     <div className={Style.reposList}>
                         {team.repos.length === 0 && <p className={Style.emptyMessage}>{t.teamDetails.noRepositories}</p>}
-                        {team.repos.map(repo => repoCard(repo, () => navigate(`/repos/${repo.rid}`)))}
+                        {team.repos.map(repo => repoCard(
+                            repo,
+                            t.teamDetails.removeFromTeam,
+                            () => navigate(`/repos/${repo.rid}`),
+                            async () => {
+                                await api.delete(`/teams/${team.tid}/repository/${repo.rid}`)
+                                getTeam()
+                            }
+                        ))}
                     </div>
                 </div>
             </div>
+
+            {showAddModal && (
+                <AddRepoModal
+                    teamId={team.tid}
+                    alreadyAddedIds={new Set(team.repos.map(r => r.rid))}
+                    onClose={() => setShowAddModal(false)}
+                    onRepoAdded={getTeam}
+                />
+            )}
         </div>
     )
 }
 
 
-function repoCard(repo: Repository, onClick: () => void) {
+function repoCard(repo: Repository, removeLabel: string, onClick: () => void, onRemove: () => void) {
     const owner = repo.owner
     return (
         <div key={repo.rid} className={Style.repoCard} onClick={onClick}>
@@ -93,12 +117,18 @@ function repoCard(repo: Repository, onClick: () => void) {
                     <span className={Style.repoName}>{repo.name}</span>
                     <span className={Style.repoVisibility}>{repo.visibility}</span>
                 </div>
-                {repo.description && <p className={Style.repoDescription}>{repo.description}</p>}
+                <p className={Style.repoDescription}>{repo.description}</p>
                 <div className={Style.repoCardMeta}>
                     <span>{owner.name}</span>
                     <span>{repo.platform}</span>
                 </div>
             </div>
+            <button
+                className={Style.removeButton}
+                onClick={e => { e.stopPropagation(); onRemove() }}
+            >
+                {removeLabel}
+            </button>
         </div>
     )
 }
