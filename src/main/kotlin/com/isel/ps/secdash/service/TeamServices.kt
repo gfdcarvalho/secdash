@@ -282,7 +282,7 @@ class TeamServices(
         return transactionManager.run {
             val teamsRepo = it.teamRepository
 
-            if (teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamStatsError.NotTeamMember)
+            if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamStatsError.NotTeamMember)
 
             success(TeamStats(
                 vulnerabilityStats = teamsRepo.getTeamVulnerabilityStats(tid),

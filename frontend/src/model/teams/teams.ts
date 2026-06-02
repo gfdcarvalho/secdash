@@ -26,3 +26,30 @@ export type SimpleTeam = {
 export type SimpleTeamsListOutput = {
     teams: SimpleTeam[]
 }
+
+export type CountsBySeverity = {
+    critical: number
+    high: number
+    medium: number
+    low: number
+    unknown: number
+}
+
+export type VulnerabilityStats = {
+    open: number
+    fixed: number
+    dismissed: number
+    countsBySeverity: CountsBySeverity
+}
+
+export type SastStats = {
+    open: number
+    fixed: number
+    dismissed: number
+    countsBySeverity: CountsBySeverity
+}
+
+export type TeamStats = {
+    vulnerabilityStats: VulnerabilityStats
+    sastStats: SastStats
+}

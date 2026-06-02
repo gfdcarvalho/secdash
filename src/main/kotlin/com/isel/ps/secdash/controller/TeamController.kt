@@ -208,4 +208,12 @@ class TeamController(
                 }
         }
     }
+
+    @GetMapping("/{tid}/stats/history")
+    fun getTeamStatHistory(
+        @PathVariable tid: Int,
+        user: AuthenticatedUser,
+    ): ResponseEntity<*> {
+        TODO()
+    }
 }

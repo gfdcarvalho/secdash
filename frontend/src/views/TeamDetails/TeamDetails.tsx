@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
-import type { Team } from '../../model/teams/teams'
+import type { Team, TeamStats } from '../../model/teams/teams'
 import type { Repository } from '../../model/repository/repository'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './TeamDetails.module.css'
 import { AddRepoModal } from './AddRepoModal'
+import { TeamStatsSection } from './TeamStatsSection'
 
 
 export function TeamDetails() {
@@ -14,6 +15,7 @@ export function TeamDetails() {
     const { teamId } = useParams()
     const navigate = useNavigate()
     const [team, setTeam] = useState<Team>()
+    const [stats, setStats] = useState<TeamStats>()
     const [notFound, setNotFound] = useState(false)
     const [showAddModal, setShowAddModal] = useState(false)
 
@@ -26,8 +28,18 @@ export function TeamDetails() {
         }
     }
 
-    useEffect(() => {
+    const getStats = async () => {
+        const response = await api.get<TeamStats>(`/teams/${teamId}/stats`)
+        if (isSuccess(response)) setStats(response.value.data)
+    }
+
+    const refresh = () => { // não tenho a certeza se deviamos ter aqui o getStats porque se a equipa ficar muito complexa poder ser um pedido que custa bastante 
         getTeam()
+        getStats()
+    }
+
+    useEffect(() => {
+        refresh()
     }, [teamId])
 
     if (notFound) {
@@ -53,6 +65,8 @@ export function TeamDetails() {
                 {team.description && <p className={Style.description}>{team.description}</p>}
             </div>
             <div className={Style.bottomSection}>
+                {stats && <TeamStatsSection stats={stats} />}
+
                 <div className={Style.section}>
                     <h3 className={Style.sectionTitle}>{t.teamDetails.members} ({team.members.length})</h3>
                     <div className={Style.membersList}>
@@ -84,7 +98,7 @@ export function TeamDetails() {
                             () => navigate(`/repos/${repo.rid}`),
                             async () => {
                                 await api.delete(`/teams/${team.tid}/repository/${repo.rid}`)
-                                getTeam()
+                                refresh()
                             }
                         ))}
                     </div>
@@ -96,7 +110,7 @@ export function TeamDetails() {
                     teamId={team.tid}
                     alreadyAddedIds={new Set(team.repos.map(r => r.rid))}
                     onClose={() => setShowAddModal(false)}
-                    onRepoAdded={getTeam}
+                    onRepoAdded={refresh}
                 />
             )}
         </div>
