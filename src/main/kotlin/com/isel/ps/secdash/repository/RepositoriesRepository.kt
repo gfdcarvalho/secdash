@@ -324,11 +324,22 @@ class RepositoriesRepository(
             vuln.toVulnerability(vid, rid)
         }
 
+        val severityCounts = result.groupingBy { it.severity }.eachCount()
         handle.createUpdate(
-            "INSERT INTO repo_vulnerability_scans (rid, vulnerability_count) VALUES (:rid, :count)"
+            """
+            INSERT INTO repo_vulnerability_scans
+                (rid, vulnerability_count, critical_count, high_count, medium_count, low_count, unknown_count)
+            VALUES
+                (:rid, :count, :critical, :high, :medium, :low, :unknown)
+            """.trimIndent()
         )
             .bind("rid", rid)
             .bind("count", result.size)
+            .bind("critical", severityCounts[Vulnerability.VulnerabilitySeverity.CRITICAL] ?: 0)
+            .bind("high", severityCounts[Vulnerability.VulnerabilitySeverity.HIGH] ?: 0)
+            .bind("medium", severityCounts[Vulnerability.VulnerabilitySeverity.MEDIUM] ?: 0)
+            .bind("low", severityCounts[Vulnerability.VulnerabilitySeverity.LOW] ?: 0)
+            .bind("unknown", severityCounts[Vulnerability.VulnerabilitySeverity.UNKNOWN] ?: 0)
             .execute()
 
         return result
@@ -380,11 +391,22 @@ class RepositoriesRepository(
             alert.toSastAlert(sid, rid)
         }
 
+        val severityCounts = result.groupingBy { it.severity }.eachCount()
         handle.createUpdate(
-            "INSERT INTO repo_sast_scans (rid, alert_count) VALUES (:rid, :count)"
+            """
+            INSERT INTO repo_sast_scans
+                (rid, alert_count, critical_count, high_count, medium_count, low_count, unknown_count)
+            VALUES
+                (:rid, :count, :critical, :high, :medium, :low, :unknown)
+            """.trimIndent()
         )
             .bind("rid", rid)
             .bind("count", result.size)
+            .bind("critical", severityCounts[SastAlert.SastSeverity.CRITICAL] ?: 0)
+            .bind("high", severityCounts[SastAlert.SastSeverity.HIGH] ?: 0)
+            .bind("medium", severityCounts[SastAlert.SastSeverity.MEDIUM] ?: 0)
+            .bind("low", severityCounts[SastAlert.SastSeverity.LOW] ?: 0)
+            .bind("unknown", severityCounts[SastAlert.SastSeverity.UNKNOWN] ?: 0)
             .execute()
 
         return result

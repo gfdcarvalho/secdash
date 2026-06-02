@@ -12,6 +12,7 @@ import com.isel.ps.secdash.service.CreateTeamError
 import com.isel.ps.secdash.service.DeleteTeamError
 import com.isel.ps.secdash.service.GetTeamError
 import com.isel.ps.secdash.service.PromoteUserToLeaderError
+import com.isel.ps.secdash.service.GetTeamStatsError
 import com.isel.ps.secdash.service.RemoveRepoFromTeamError
 import com.isel.ps.secdash.service.RemoveUserFromTeamError
 import com.isel.ps.secdash.service.TeamServices
@@ -188,6 +189,22 @@ class TeamController(
                     RemoveRepoFromTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                     RemoveRepoFromTeamError.OnlyTeamLeader -> Problem.response(403, Problem.onlyTeamLeader)
                     RemoveRepoFromTeamError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                }
+        }
+    }
+
+    @GetMapping("/{tid}/stats")
+    fun getTeamStats(
+        @PathVariable tid: Int,
+        user: AuthenticatedUser,
+    ): ResponseEntity<*> {
+        val result = teamServices.getTeamStats(user.user.uid, tid)
+        return when (result) {
+            is Success -> ResponseEntity.ok(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetTeamStatsError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                    GetTeamStatsError.TeamNotFound  -> Problem.response(404, Problem.teamNotFound)
                 }
         }
     }

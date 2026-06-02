@@ -1,10 +1,13 @@
 package com.isel.ps.secdash.repository
 
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
+import com.isel.ps.secdash.model.teams.SastStats
 import com.isel.ps.secdash.model.teams.SimpleTeam
+import com.isel.ps.secdash.model.teams.StatRowSqlDto
 import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamMember
 import com.isel.ps.secdash.model.teams.TeamRoles
+import com.isel.ps.secdash.model.teams.VulnerabilityStats
 import com.isel.ps.secdash.repository.interfaces.TeamRepositoryInterface
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -223,5 +226,37 @@ class TeamRepository(
             .bind("tid", tid)
             .bind("rid", repositoryToRemove)
             .execute()
+    }
+
+    override fun getTeamVulnerabilityStats(tid: Int): VulnerabilityStats {
+        val rows = handle.createQuery(
+            """
+            SELECT state, severity, COUNT(*) AS count
+            FROM vulnerabilities v
+            JOIN team_repos tr ON v.rid = tr.rid
+            WHERE tr.tid = :tid
+            GROUP BY state, severity
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<StatRowSqlDto>()
+            .list()
+        return VulnerabilityStats.from(rows)
+    }
+
+    override fun getTeamSastStats(tid: Int): SastStats {
+        val rows = handle.createQuery(
+            """
+            SELECT state, severity, COUNT(*) AS count
+            FROM sast_alerts s
+            JOIN team_repos tr ON s.rid = tr.rid
+            WHERE tr.tid = :tid
+            GROUP BY state, severity
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<StatRowSqlDto>()
+            .list()
+        return SastStats.from(rows)
     }
 }

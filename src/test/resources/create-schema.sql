@@ -129,7 +129,12 @@ BEGIN
                                               scan_id             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                                               rid                 INT         NOT NULL REFERENCES repositories(rid),
                                               scanned_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                                              vulnerability_count INT         NOT NULL
+                                              vulnerability_count INT         NOT NULL,
+                                              critical_count      INT         NOT NULL DEFAULT 0,
+                                              high_count          INT         NOT NULL DEFAULT 0,
+                                              medium_count        INT         NOT NULL DEFAULT 0,
+                                              low_count           INT         NOT NULL DEFAULT 0,
+                                              unknown_count       INT         NOT NULL DEFAULT 0
     );
 
     -- Vulnerability References
@@ -169,10 +174,15 @@ BEGIN
 
     -- SAST Scan History
     CREATE TABLE repo_sast_scans (
-                                     scan_id     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                                     rid         INT         NOT NULL REFERENCES repositories(rid),
-                                     scanned_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                                     alert_count INT         NOT NULL
+                                     scan_id        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                                     rid            INT         NOT NULL REFERENCES repositories(rid),
+                                     scanned_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                                     alert_count    INT         NOT NULL,
+                                     critical_count INT         NOT NULL DEFAULT 0,
+                                     high_count     INT         NOT NULL DEFAULT 0,
+                                     medium_count   INT         NOT NULL DEFAULT 0,
+                                     low_count      INT         NOT NULL DEFAULT 0,
+                                     unknown_count  INT         NOT NULL DEFAULT 0
     );
 
     CREATE TABLE teams (

@@ -2,6 +2,7 @@ package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
+import com.isel.ps.secdash.model.teams.TeamStats
 import com.isel.ps.secdash.model.users.AppRole
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
@@ -78,6 +79,13 @@ sealed class RemoveRepoFromTeamError {
 }
 
 typealias RemoveRepoFromTeamResult = Either<RemoveRepoFromTeamError, Unit>
+
+sealed class GetTeamStatsError {
+    data object NotTeamMember: GetTeamStatsError()
+    data object TeamNotFound: GetTeamStatsError()
+}
+
+typealias GetTeamStatsResult = Either<GetTeamStatsError, TeamStats>
 
 @Service
 class TeamServices(
@@ -264,6 +272,22 @@ class TeamServices(
             teamsRepo.removeRepositoryFromTeam(tid, repositoryToRemove)
 
             success(Unit)
+        }
+    }
+
+    fun getTeamStats(
+        uid: Int,
+        tid: Int,
+    ): GetTeamStatsResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+
+            if (teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamStatsError.NotTeamMember)
+
+            success(TeamStats(
+                vulnerabilityStats = teamsRepo.getTeamVulnerabilityStats(tid),
+                sastStats = teamsRepo.getTeamSastStats(tid),
+            ))
         }
     }
 }

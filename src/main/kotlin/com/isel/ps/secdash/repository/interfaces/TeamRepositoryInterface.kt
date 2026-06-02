@@ -1,7 +1,9 @@
 package com.isel.ps.secdash.repository.interfaces
 
+import com.isel.ps.secdash.model.teams.SastStats
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
+import com.isel.ps.secdash.model.teams.VulnerabilityStats
 
 interface TeamRepositoryInterface {
     fun getTeamsByUser(uid: Int): List<SimpleTeam>
@@ -31,4 +33,8 @@ interface TeamRepositoryInterface {
     fun addRepositoryToTeam(tid: Int, repositoryToAdd: Int)
 
     fun removeRepositoryFromTeam(tid: Int, repositoryToRemove: Int)
+
+    fun getTeamVulnerabilityStats(tid: Int): VulnerabilityStats
+
+    fun getTeamSastStats(tid: Int): SastStats
 }
