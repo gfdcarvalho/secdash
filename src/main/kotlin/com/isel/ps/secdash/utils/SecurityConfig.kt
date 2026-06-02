@@ -3,6 +3,7 @@ package com.isel.ps.secdash.utils
 import com.isel.ps.secdash.controller.pipeline.BearerTokenAuthFilter
 import com.isel.ps.secdash.controller.pipeline.OAuthRedirectFilter
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig(
     private val bearerTokenAuthFilter: BearerTokenAuthFilter,
     private val oAuthRedirectFilter: OAuthRedirectFilter,
+    @Value("\${frontend.url}") private val frontendUrl: String,
 ) {
 
     @Bean
@@ -44,6 +46,9 @@ class SecurityConfig(
             }
             .oauth2Login { oauth2 ->
                 oauth2.successHandler(oauthSuccessHandler())
+                oauth2.failureHandler { _, response, _ ->
+                    response.sendRedirect(frontendUrl)
+                }
             }
 
         return http.build()

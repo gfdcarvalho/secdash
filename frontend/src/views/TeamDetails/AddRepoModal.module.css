@@ -70,6 +70,25 @@
     border: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
     border-radius: 0.5em;
     flex: 1;
+    scrollbar-color: color-mix(in srgb, var(--color-text) 30%, transparent) transparent;
+    scrollbar-width: thin;
+}
+
+.list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+    border-radius: 3px;
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in srgb, var(--color-text) 50%, transparent);
 }
 
 .repoRow {
