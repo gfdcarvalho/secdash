@@ -370,4 +370,14 @@ class TeamServices(
             success(dailyCounts)
         }
     }
+
+    fun getTeamVulnerabilities(uid: Int, tid: Int) {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+
+            if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamVulnerabilitiesError.NotTeamMember)
+
+            val vunerabilities =
+        }
+    }
 }

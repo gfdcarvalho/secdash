@@ -18,6 +18,7 @@ import com.isel.ps.secdash.service.GetTeamVulnerabilityHistoryError
 import com.isel.ps.secdash.service.RemoveRepoFromTeamError
 import com.isel.ps.secdash.service.RemoveUserFromTeamError
 import com.isel.ps.secdash.service.TeamServices
+import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity
@@ -241,6 +242,19 @@ class TeamController(
                 when (result.value) {
                     GetTeamSastHistoryError.NotTeamMember -> Problem.response(403, Problem.forbidden)
                 }
+        }
+    }
+
+    @GetMapping("/{tid}/vulnerabilities")
+    fun getTeamVulnerabilities(
+        @PathVariable tid: Int,
+        user: AuthenticatedUser,
+    ): ResponseEntity<*> {
+        val result = teamServices.getTeamVulnerabilities(user.user.uid, tid)
+        return when (result) {
+            is Success -> ResponseEntity.ok(result.value)
+            is Failure ->
+                TODO()
         }
     }
 }
