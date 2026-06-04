@@ -290,4 +290,16 @@ class TeamServices(
             ))
         }
     }
+
+    fun getTeamVulnerabilityHistory(uid: Int, tid: Int): GetTeamVulnerabilityHistoryResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+
+            if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamVulnerabilityHistoryError.NotTeamMember)
+
+            success(TeamVulnerabilityHistory(
+
+            ))
+
+        }
 }

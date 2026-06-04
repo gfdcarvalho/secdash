@@ -209,11 +209,14 @@ class TeamController(
         }
     }
 
-    @GetMapping("/{tid}/stats/history")
-    fun getTeamStatHistory(
+    @GetMapping("/{tid}/vulnerability/history")
+    fun getTeamVulnerabilityHistory(
         @PathVariable tid: Int,
         user: AuthenticatedUser,
     ): ResponseEntity<*> {
-        TODO()
+        val result = teamServices.getTeamVulnerabilityHistory(user.user.uid, tid)
+        return when (result) {
+            is Success -> ResponseEntity.ok().build<Any>()
+        }
     }
 }

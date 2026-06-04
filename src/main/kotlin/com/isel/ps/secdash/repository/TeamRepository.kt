@@ -7,6 +7,7 @@ import com.isel.ps.secdash.model.teams.StatRowSqlDto
 import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamMember
 import com.isel.ps.secdash.model.teams.TeamRoles
+import com.isel.ps.secdash.model.teams.TeamVulnerabilityHistory
 import com.isel.ps.secdash.model.teams.VulnerabilityStats
 import com.isel.ps.secdash.repository.interfaces.TeamRepositoryInterface
 import org.jdbi.v3.core.Handle
@@ -258,5 +259,9 @@ class TeamRepository(
             .mapTo<StatRowSqlDto>()
             .list()
         return SastStats.from(rows)
+    }
+
+    override fun getTeamVulnerabilityHistory(tid: Int): TeamVulnerabilityHistory {
+        TODO("Not yet implemented")
     }
 }
