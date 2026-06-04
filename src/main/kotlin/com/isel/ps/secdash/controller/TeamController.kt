@@ -14,6 +14,8 @@ import com.isel.ps.secdash.service.GetTeamError
 import com.isel.ps.secdash.service.PromoteUserToLeaderError
 import com.isel.ps.secdash.service.GetTeamStatsError
 import com.isel.ps.secdash.service.GetTeamSastHistoryError
+import com.isel.ps.secdash.service.GetTeamSastAlertsError
+import com.isel.ps.secdash.service.GetTeamVulnerabilitiesError
 import com.isel.ps.secdash.service.GetTeamVulnerabilityHistoryError
 import com.isel.ps.secdash.service.RemoveRepoFromTeamError
 import com.isel.ps.secdash.service.RemoveUserFromTeamError
@@ -254,7 +256,24 @@ class TeamController(
         return when (result) {
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
-                TODO()
+                when (result.value) {
+                    GetTeamVulnerabilitiesError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                }
+        }
+    }
+
+    @GetMapping("/{tid}/sast")
+    fun getTeamSastAlerts(
+        @PathVariable tid: Int,
+        user: AuthenticatedUser,
+    ): ResponseEntity<*> {
+        val result = teamServices.getTeamSastAlerts(user.user.uid, tid)
+        return when (result) {
+            is Success -> ResponseEntity.ok(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetTeamSastAlertsError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                }
         }
     }
 }

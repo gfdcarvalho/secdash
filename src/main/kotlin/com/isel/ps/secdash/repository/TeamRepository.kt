@@ -1,6 +1,8 @@
 package com.isel.ps.secdash.repository
 
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
+import com.isel.ps.secdash.model.sast.SastAlertWithRepoSqlDto
+import com.isel.ps.secdash.model.sast.TeamSastAlerts
 import com.isel.ps.secdash.model.teams.SastStats
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.StatRowSqlDto
@@ -10,7 +12,10 @@ import com.isel.ps.secdash.model.teams.TeamRoles
 import com.isel.ps.secdash.model.teams.TeamSastHistory
 import com.isel.ps.secdash.model.teams.TeamScanTarget
 import com.isel.ps.secdash.model.teams.TeamVulnerabilityHistory
+import com.isel.ps.secdash.model.vulnerability.TeamVulnerabilities
+import com.isel.ps.secdash.model.vulnerability.VulnerabilityWithRepoSqlDto
 import com.isel.ps.secdash.model.teams.VulnerabilityStats
+import com.isel.ps.secdash.model.vulnerability.VulnerabilityReferenceRow
 import com.isel.ps.secdash.repository.interfaces.TeamRepositoryInterface
 import org.jdbi.v3.core.Handle
 import org.jdbi.v3.core.kotlin.mapTo
@@ -323,4 +328,75 @@ class TeamRepository(
             .bind("tid", tid)
             .execute()
     }
+
+    override fun getTeamVulnerabilities(tid: Int): List<TeamVulnerabilities> {
+        val rows = handle.createQuery(
+            """
+            SELECT v.vid, v.rid, r.name AS repo_name, v.external_id, v.title, v.description,
+                   v.severity, v.state, v.cve_id, v.ghsa_id, v.package_name, v.package_version,
+                   v.vulnerable_version_range, v.fixed_version, v.manifest_path,
+                   v.cvss_score, v.cvss_vector, v.platform, v.detected_at, v.updated_at
+            FROM vulnerabilities v
+            JOIN repositories r ON v.rid = r.rid
+            JOIN team_repos tr ON v.rid = tr.rid
+            WHERE tr.tid = :tid
+            ORDER BY v.rid
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<VulnerabilityWithRepoSqlDto>()
+            .list()
+
+        val references = handle.createQuery(
+            """
+            SELECT vr.vuln_id, vr.url
+            FROM vulnerability_references vr
+            JOIN vulnerabilities v ON vr.vuln_id = v.vid
+            JOIN team_repos tr ON v.rid = tr.rid
+            WHERE tr.tid = :tid
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<VulnerabilityReferenceRow>()
+            .list()
+            .groupBy { it.vulnId }
+            .mapValues { (_, refs) -> refs.map { it.url } }
+
+        return rows
+            .groupBy { it.repoName }
+            .map { (repoName, vulnRows) ->
+                TeamVulnerabilities(
+                    name            = repoName,
+                    vulnerabilities = vulnRows.map { it.toVulnerability(references[it.vid] ?: emptyList()) },
+                )
+            }
+    }
+
+    override fun getTeamSastAlerts(tid: Int): List<TeamSastAlerts> {
+        val rows = handle.createQuery(
+            """
+            SELECT s.sid, s.rid, r.name AS repo_name, s.external_id, s.state, s.rule_id,
+                   s.rule_description, s.severity, s.tool_name, s.file_path, s.start_line,
+                   s.end_line, s.message, s.html_url, s.platform, s.detected_at, s.updated_at
+            FROM sast_alerts s
+            JOIN repositories r ON s.rid = r.rid
+            JOIN team_repos tr ON s.rid = tr.rid
+            WHERE tr.tid = :tid
+            ORDER BY s.rid
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<SastAlertWithRepoSqlDto>()
+            .list()
+
+        return rows
+            .groupBy { it.repoName }
+            .map { (repoName, alertRows) ->
+                TeamSastAlerts(
+                    name   = repoName,
+                    alerts = alertRows.map { it.toSastAlert() },
+                )
+            }
+    }
 }
+

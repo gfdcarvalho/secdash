@@ -7,6 +7,8 @@ import com.isel.ps.secdash.model.teams.TeamSastHistory
 import com.isel.ps.secdash.model.teams.TeamScanTarget
 import com.isel.ps.secdash.model.teams.TeamVulnerabilityHistory
 import com.isel.ps.secdash.model.teams.VulnerabilityStats
+import com.isel.ps.secdash.model.sast.TeamSastAlerts
+import com.isel.ps.secdash.model.vulnerability.TeamVulnerabilities
 
 interface TeamRepositoryInterface {
     fun getTeamsByUser(uid: Int): List<SimpleTeam>
@@ -48,4 +50,8 @@ interface TeamRepositoryInterface {
     fun getTeamsForScan(limit: Int): List<TeamScanTarget>
 
     fun updateLastScanAt(tid: Int)
+
+    fun getTeamVulnerabilities(tid: Int): List<TeamVulnerabilities>
+
+    fun getTeamSastAlerts(tid: Int): List<TeamSastAlerts>
 }

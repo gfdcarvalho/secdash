@@ -9,6 +9,33 @@
     gap: 0.4em;
 }
 
+.topRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.topActions {
+    display: flex;
+    gap: 0.4em;
+}
+
+.actionButton {
+    font-size: 0.8em;
+    padding: 0.35em 0.75em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.actionButton:hover {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
 .teamName {
     font-size: 1.2em;
     font-weight: 600;

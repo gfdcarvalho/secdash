@@ -112,6 +112,8 @@ export const en = {
         addReposAdded: "Added",
         addReposError: "Error",
         removeFromTeam: "Remove from team",
+        vulnerabilities: "Vulnerabilities",
+        sastAlerts: "SAST Alerts",
     },
     repoVulnerabilities: {
         loading: "Loading...",

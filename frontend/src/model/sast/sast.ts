@@ -25,3 +25,8 @@ export interface RepositorySast {
   rid: number
   sastAlerts: SastAlert[]
 }
+
+export interface TeamSastAlerts {
+  name: string
+  alerts: SastAlert[]
+}

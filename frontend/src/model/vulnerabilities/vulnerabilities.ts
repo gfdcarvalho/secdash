@@ -29,3 +29,8 @@ export interface RepositoryVulnerabilities {
   rid: number
   vulnerabilities: Vulnerability[]
 }
+
+export interface TeamVulnerabilities {
+  name: string
+  vulnerabilities: Vulnerability[]
+}

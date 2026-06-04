@@ -74,7 +74,17 @@ export function TeamDetails() {
     return (
         <div className={Style.content}>
             <div className={Style.topSection}>
-                <span className={Style.teamName}>{team.name}</span>
+                <div className={Style.topRow}>
+                    <span className={Style.teamName}>{team.name}</span>
+                    <div className={Style.topActions}>
+                        <button className={Style.actionButton} onClick={() => navigate(`/teams/${team.tid}/vulnerabilities`)}>
+                            {t.teamDetails.vulnerabilities}
+                        </button>
+                        <button className={Style.actionButton} onClick={() => navigate(`/teams/${team.tid}/sast`)}>
+                            {t.teamDetails.sastAlerts}
+                        </button>
+                    </div>
+                </div>
                 {team.description && <p className={Style.description}>{team.description}</p>}
             </div>
             <div className={Style.bottomSection}>

@@ -1,6 +1,8 @@
 package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.teams.CountsBySeverity
+import com.isel.ps.secdash.model.sast.TeamSastAlerts
+import com.isel.ps.secdash.model.vulnerability.TeamVulnerabilities
 import com.isel.ps.secdash.model.teams.DailySastCount
 import com.isel.ps.secdash.model.teams.DailyVulnerabilityCount
 import com.isel.ps.secdash.model.teams.SimpleTeam
@@ -102,6 +104,18 @@ sealed class GetTeamSastHistoryError {
 }
 
 typealias GetTeamSastHistoryResult = Either<GetTeamSastHistoryError, List<DailySastCount>>
+
+sealed class GetTeamVulnerabilitiesError {
+    data object NotTeamMember: GetTeamVulnerabilitiesError()
+}
+
+typealias GetTeamVulnerabilitiesResult = Either<GetTeamVulnerabilitiesError, List<TeamVulnerabilities>>
+
+sealed class GetTeamSastAlertsError {
+    data object NotTeamMember: GetTeamSastAlertsError()
+}
+
+typealias GetTeamSastAlertsResult = Either<GetTeamSastAlertsError, List<TeamSastAlerts>>
 
 @Service
 class TeamServices(
@@ -371,13 +385,23 @@ class TeamServices(
         }
     }
 
-    fun getTeamVulnerabilities(uid: Int, tid: Int) {
+    fun getTeamVulnerabilities(uid: Int, tid: Int): GetTeamVulnerabilitiesResult {
         return transactionManager.run {
             val teamsRepo = it.teamRepository
 
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamVulnerabilitiesError.NotTeamMember)
 
-            val vunerabilities =
+            success(teamsRepo.getTeamVulnerabilities(tid))
+        }
+    }
+
+    fun getTeamSastAlerts(uid: Int, tid: Int): GetTeamSastAlertsResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+
+            if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamSastAlertsError.NotTeamMember)
+
+            success(teamsRepo.getTeamSastAlerts(tid))
         }
     }
 }

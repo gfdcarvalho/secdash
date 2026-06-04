@@ -112,6 +112,8 @@ export const pt = {
         addReposAdded: "Adicionado",
         addReposError: "Erro",
         removeFromTeam: "Remover da equipa",
+        vulnerabilities: "Vulnerabilidades",
+        sastAlerts: "Alertas SAST",
     },
     repoVulnerabilities: {
         loading: "A carregar...",
