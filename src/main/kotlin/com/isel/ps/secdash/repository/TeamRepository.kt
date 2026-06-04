@@ -7,6 +7,7 @@ import com.isel.ps.secdash.model.teams.StatRowSqlDto
 import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamMember
 import com.isel.ps.secdash.model.teams.TeamRoles
+import com.isel.ps.secdash.model.teams.TeamSastHistory
 import com.isel.ps.secdash.model.teams.TeamVulnerabilityHistory
 import com.isel.ps.secdash.model.teams.VulnerabilityStats
 import com.isel.ps.secdash.repository.interfaces.TeamRepositoryInterface
@@ -261,7 +262,35 @@ class TeamRepository(
         return SastStats.from(rows)
     }
 
-    override fun getTeamVulnerabilityHistory(tid: Int): TeamVulnerabilityHistory {
-        TODO("Not yet implemented")
+    override fun getTeamVulnerabilityHistory(tid: Int): List<TeamVulnerabilityHistory> {
+        return handle.createQuery(
+            """
+            SELECT s.scan_id, s.rid, s.scanned_at, s.vulnerability_count,
+                   s.critical_count, s.high_count, s.medium_count, s.low_count, s.unknown_count
+            FROM repo_vulnerability_scans s
+            JOIN team_repos tr ON s.rid = tr.rid
+            WHERE tr.tid = :tid
+            ORDER BY s.scanned_at
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<TeamVulnerabilityHistory>()
+            .list()
+    }
+
+    override fun getTeamSastHistory(tid: Int): List<TeamSastHistory> {
+        return handle.createQuery(
+            """
+            SELECT s.scan_id, s.rid, s.scanned_at, s.alert_count,
+                   s.critical_count, s.high_count, s.medium_count, s.low_count, s.unknown_count
+            FROM repo_sast_scans s
+            JOIN team_repos tr ON s.rid = tr.rid
+            WHERE tr.tid = :tid
+            ORDER BY s.scanned_at
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<TeamSastHistory>()
+            .list()
     }
 }

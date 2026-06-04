@@ -53,3 +53,25 @@ export type TeamStats = {
     vulnerabilityStats: VulnerabilityStats
     sastStats: SastStats
 }
+
+export type DailySastCount = {
+    date: string
+    count: number
+    countsBySeverity: CountsBySeverity
+}
+
+export type DailyVulnerabilityCount = {
+    date: string
+    count: number
+    countsBySeverity: CountsBySeverity
+}
+
+
+export type DailySastCountList = DailySastCount[]
+
+export type DailyVulnerabilityCountList = DailyVulnerabilityCount[]
+
+export type HistoryStats = {
+    sastList: DailySastCountList
+    vulnList: DailyVulnerabilityCountList
+}

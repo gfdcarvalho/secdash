@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
-import type { Team, TeamStats } from '../../model/teams/teams'
+import { type DailySastCountList, type Team, type TeamStats, type HistoryStats, type DailyVulnerabilityCountList} from '../../model/teams/teams'
 import type { Repository } from '../../model/repository/repository'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
@@ -16,6 +16,7 @@ export function TeamDetails() {
     const navigate = useNavigate()
     const [team, setTeam] = useState<Team>()
     const [stats, setStats] = useState<TeamStats>()
+    const [historyStats, setHistoryStats] = useState<HistoryStats>()
     const [notFound, setNotFound] = useState(false)
     const [showAddModal, setShowAddModal] = useState(false)
 
@@ -33,9 +34,21 @@ export function TeamDetails() {
         if (isSuccess(response)) setStats(response.value.data)
     }
 
+    const getVulnerabilityAndSastHistory = async () => {
+        const sastReponse = await api.get<DailySastCountList>(`/teams/${teamId}/sast/history`)
+        if (isSuccess(sastReponse)) {
+            const vulnResponse = await api.get<DailyVulnerabilityCountList>(`/teams/${teamId}/vulnerability/history`)
+            if (isSuccess(vulnResponse)) {
+                console.log(`vulnlist + ${vulnResponse.value.data} \n sastList = ${sastReponse.value.data}`)
+                setHistoryStats({ sastList: sastReponse.value.data, vulnList: vulnResponse.value.data})
+            }
+        }
+    }
+
     const refresh = () => { // não tenho a certeza se deviamos ter aqui o getStats porque se a equipa ficar muito complexa poder ser um pedido que custa bastante 
         getTeam()
         getStats()
+        getVulnerabilityAndSastHistory()
     }
 
     useEffect(() => {
@@ -65,7 +78,7 @@ export function TeamDetails() {
                 {team.description && <p className={Style.description}>{team.description}</p>}
             </div>
             <div className={Style.bottomSection}>
-                {stats && <TeamStatsSection stats={stats} />}
+                {stats && <TeamStatsSection stats={stats} historyStats={historyStats}/>}
 
                 <div className={Style.section}>
                     <h3 className={Style.sectionTitle}>{t.teamDetails.members} ({team.members.length})</h3>

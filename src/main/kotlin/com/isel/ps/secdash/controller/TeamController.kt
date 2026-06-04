@@ -13,6 +13,8 @@ import com.isel.ps.secdash.service.DeleteTeamError
 import com.isel.ps.secdash.service.GetTeamError
 import com.isel.ps.secdash.service.PromoteUserToLeaderError
 import com.isel.ps.secdash.service.GetTeamStatsError
+import com.isel.ps.secdash.service.GetTeamSastHistoryError
+import com.isel.ps.secdash.service.GetTeamVulnerabilityHistoryError
 import com.isel.ps.secdash.service.RemoveRepoFromTeamError
 import com.isel.ps.secdash.service.RemoveUserFromTeamError
 import com.isel.ps.secdash.service.TeamServices
@@ -209,6 +211,9 @@ class TeamController(
         }
     }
 
+
+
+    // -------------------------- temos que garantir um scan por dia por repo para isto funcionar bem ...
     @GetMapping("/{tid}/vulnerability/history")
     fun getTeamVulnerabilityHistory(
         @PathVariable tid: Int,
@@ -216,7 +221,26 @@ class TeamController(
     ): ResponseEntity<*> {
         val result = teamServices.getTeamVulnerabilityHistory(user.user.uid, tid)
         return when (result) {
-            is Success -> ResponseEntity.ok().build<Any>()
+            is Success -> ResponseEntity.ok(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetTeamVulnerabilityHistoryError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                }
+        }
+    }
+
+    @GetMapping("/{tid}/sast/history")
+    fun getTeamSastHistory(
+        @PathVariable tid: Int,
+        user: AuthenticatedUser,
+    ): ResponseEntity<*> {
+        val result = teamServices.getTeamSastHistory(user.user.uid, tid)
+        return when (result) {
+            is Success -> ResponseEntity.ok(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetTeamSastHistoryError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                }
         }
     }
 }

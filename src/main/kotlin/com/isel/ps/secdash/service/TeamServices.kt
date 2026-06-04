@@ -1,9 +1,13 @@
 package com.isel.ps.secdash.service
 
+import com.isel.ps.secdash.model.teams.CountsBySeverity
+import com.isel.ps.secdash.model.teams.DailySastCount
+import com.isel.ps.secdash.model.teams.DailyVulnerabilityCount
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamStats
 import com.isel.ps.secdash.model.users.AppRole
+import java.time.ZoneOffset
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.failure
@@ -86,6 +90,18 @@ sealed class GetTeamStatsError {
 }
 
 typealias GetTeamStatsResult = Either<GetTeamStatsError, TeamStats>
+
+sealed class GetTeamVulnerabilityHistoryError {
+    data object NotTeamMember: GetTeamVulnerabilityHistoryError()
+}
+
+typealias GetTeamVulnerabilityHistoryResult = Either<GetTeamVulnerabilityHistoryError, List<DailyVulnerabilityCount>>
+
+sealed class GetTeamSastHistoryError {
+    data object NotTeamMember: GetTeamSastHistoryError()
+}
+
+typealias GetTeamSastHistoryResult = Either<GetTeamSastHistoryError, List<DailySastCount>>
 
 @Service
 class TeamServices(
@@ -297,9 +313,61 @@ class TeamServices(
 
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamVulnerabilityHistoryError.NotTeamMember)
 
-            success(TeamVulnerabilityHistory(
+            val scans = teamsRepo.getTeamVulnerabilityHistory(tid)
+            val dailyCounts = scans
+                .groupBy { scan -> scan.scannedAt.atZone(ZoneOffset.UTC).toLocalDate() }
+                .map { (date, scansOnDay) ->
+                    val lastPerRepo = scansOnDay
+                        .groupBy { scan -> scan.rid }
+                        .values
+                        .map { repoScans -> repoScans.maxBy { scan -> scan.scannedAt } }
+                    DailyVulnerabilityCount(
+                        date = date,
+                        count = lastPerRepo.sumOf { it.vulnerabilityCount },
+                        countsBySeverity = CountsBySeverity(
+                            critical = lastPerRepo.sumOf { it.criticalCount },
+                            high     = lastPerRepo.sumOf { it.highCount },
+                            medium   = lastPerRepo.sumOf { it.mediumCount },
+                            low      = lastPerRepo.sumOf { it.lowCount },
+                            unknown  = lastPerRepo.sumOf { it.unknownCount },
+                        ),
+                    )
+                }
+                .sortedBy { it.date }
 
-            ))
-
+            success(dailyCounts)
         }
+    }
+
+    fun getTeamSastHistory(uid: Int, tid: Int): GetTeamSastHistoryResult {
+        return transactionManager.run {
+            val teamsRepo = it.teamRepository
+
+            if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamSastHistoryError.NotTeamMember)
+
+            val scans = teamsRepo.getTeamSastHistory(tid)
+            val dailyCounts = scans
+                .groupBy { scan -> scan.scannedAt.atZone(ZoneOffset.UTC).toLocalDate() }
+                .map { (date, scansOnDay) ->
+                    val lastPerRepo = scansOnDay
+                        .groupBy { scan -> scan.rid }
+                        .values
+                        .map { repoScans -> repoScans.maxBy { scan -> scan.scannedAt } }
+                    DailySastCount(
+                        date = date,
+                        count = lastPerRepo.sumOf { it.alertCount },
+                        countsBySeverity = CountsBySeverity(
+                            critical = lastPerRepo.sumOf { it.criticalCount },
+                            high     = lastPerRepo.sumOf { it.highCount },
+                            medium   = lastPerRepo.sumOf { it.mediumCount },
+                            low      = lastPerRepo.sumOf { it.lowCount },
+                            unknown  = lastPerRepo.sumOf { it.unknownCount },
+                        ),
+                    )
+                }
+                .sortedBy { it.date }
+
+            success(dailyCounts)
+        }
+    }
 }
