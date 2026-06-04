@@ -23,6 +23,7 @@ import kotlin.time.Duration.Companion.hours
 
 
 @SpringBootApplication
+@org.springframework.scheduling.annotation.EnableScheduling
 class SecdashApplication{
 	@Bean
 	fun jdbi(): Jdbi =

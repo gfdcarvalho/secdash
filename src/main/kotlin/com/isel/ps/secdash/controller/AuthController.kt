@@ -155,7 +155,13 @@ class AuthController(
             ?: return Problem.response(401, Problem.unauthorized)
         val accessToken = authorizedClient.accessToken?.tokenValue
             ?: return Problem.response(401, Problem.unauthorized)
-        val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITHUB, accessToken)
+        val result = authServices.storeUserAuthorization(
+            userId = user.user.uid,
+            authProvider = AuthProvider.GITHUB,
+            accessToken = accessToken,
+            refreshToken = null,     // GitHub OAuth App tokens não expiram
+            expiresAt = null,
+        )
         return handleAuthorizationResponse(user, result, Platform.GITHUB, request)
     }
 
@@ -169,7 +175,13 @@ class AuthController(
             ?: return Problem.response(401, Problem.unauthorized)
         val accessToken = authorizedClient?.accessToken?.tokenValue
             ?: return Problem.response(401, Problem.unauthorized)
-        val result = authServices.storeUserAuthorization(user.user.uid, AuthProvider.GITLAB, accessToken)
+        val result = authServices.storeUserAuthorization(
+            userId = user.user.uid,
+            authProvider = AuthProvider.GITLAB,
+            accessToken = accessToken,
+            refreshToken = authorizedClient.refreshToken?.tokenValue,
+            expiresAt = authorizedClient.accessToken?.expiresAt,
+        )
         return handleAuthorizationResponse(user, result, Platform.GITLAB, request)
     }
 

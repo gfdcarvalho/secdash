@@ -8,6 +8,7 @@ import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamMember
 import com.isel.ps.secdash.model.teams.TeamRoles
 import com.isel.ps.secdash.model.teams.TeamSastHistory
+import com.isel.ps.secdash.model.teams.TeamScanTarget
 import com.isel.ps.secdash.model.teams.TeamVulnerabilityHistory
 import com.isel.ps.secdash.model.teams.VulnerabilityStats
 import com.isel.ps.secdash.repository.interfaces.TeamRepositoryInterface
@@ -292,5 +293,34 @@ class TeamRepository(
             .bind("tid", tid)
             .mapTo<TeamSastHistory>()
             .list()
+    }
+
+    override fun getTeamsForScan(limit: Int): List<TeamScanTarget> {
+        return handle.createQuery(
+            """
+            SELECT DISTINCT ON (t.tid) t.tid, tu.uid AS leader_uid
+            FROM teams t
+            JOIN team_users tu ON t.tid = tu.tid AND tu.role = :role::team_roles
+            JOIN team_repos tr ON t.tid = tr.tid
+            WHERE (t.last_scan_at IS NULL OR t.last_scan_at < NOW() - INTERVAL '24 hours')
+              AND EXISTS (
+                SELECT 1 FROM tokens tok
+                WHERE tok.user_id = tu.uid
+                  AND tok.last_used_at > EXTRACT(EPOCH FROM (NOW() - INTERVAL '48 hours'))
+              )
+            ORDER BY t.tid
+            LIMIT :limit
+            """.trimIndent()
+        )
+            .bind("limit", limit)
+            .bind("role", TeamRoles.LEADER.name)
+            .mapTo<TeamScanTarget>()
+            .list()
+    }
+
+    override fun updateLastScanAt(tid: Int) {
+        handle.createUpdate("UPDATE teams SET last_scan_at = NOW() WHERE tid = :tid")
+            .bind("tid", tid)
+            .execute()
     }
 }

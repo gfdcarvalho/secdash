@@ -5,6 +5,7 @@ import com.isel.ps.secdash.model.users.PasswordValidationInfo
 import com.isel.ps.secdash.model.users.Token
 import com.isel.ps.secdash.model.users.TokenValidationInfo
 import com.isel.ps.secdash.model.users.User
+import com.isel.ps.secdash.model.users.UserTokenInfo
 import kotlinx.datetime.Instant
 
 interface UserRepositoryInterface {
@@ -48,12 +49,19 @@ interface UserRepositoryInterface {
     fun getAccessToken(
         userId: Int,
         authProvider: AuthProvider
-    ): String? // maybe we should have a data class for this return
+    ): String?
+
+    fun getTokenInfo(
+        userId: Int,
+        authProvider: AuthProvider,
+    ): UserTokenInfo?
 
     fun storeUserAuthorization(
         userId: Int,
         authProvider: AuthProvider,
-        accessToken: String
+        accessToken: String,
+        refreshToken: String?,
+        expiresAt: java.time.Instant?,
     )
 
     fun getUserByUsername(username: String): User?
