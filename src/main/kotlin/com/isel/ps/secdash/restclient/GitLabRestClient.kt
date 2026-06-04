@@ -8,14 +8,22 @@ import com.isel.ps.secdash.model.repositories.GithubRepositoryDto
 import com.isel.ps.secdash.model.repositories.GitlabRepositoryDto
 import com.isel.ps.secdash.model.sast.ExternalSastAlerts
 import com.isel.ps.secdash.model.sast.GitlabSastAlertsDto
+import com.isel.ps.secdash.model.users.GitLabTokenResponse
 import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
 import com.isel.ps.secdash.model.vulnerability.GitlabDependencyScanDto
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
 
 @Service
 class GitLabRestClient {
+    @Value("\${spring.security.oauth2.client.registration.gitlab-api.client-id}")
+    private lateinit var clientId: String
+
+    @Value("\${spring.security.oauth2.client.registration.gitlab-api.client-secret}")
+    private lateinit var clientSecret: String
+
     private val restClient = RestClient.create()
     private val objectMapper = jacksonObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -71,6 +79,15 @@ class GitLabRestClient {
 
         val response = objectMapper.readValue<GitlabDependencyScanDto>(raw)
         return response.toExternalVulnerabilities()
+    }
+
+    fun refreshToken(refreshToken: String): GitLabTokenResponse {
+        return restClient.post()
+            .uri("https://gitlab.com/oauth/token")
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .body("grant_type=refresh_token&refresh_token=$refreshToken&client_id=$clientId&client_secret=$clientSecret")
+            .retrieve()
+            .body<GitLabTokenResponse>()!!
     }
 
     fun getSast(

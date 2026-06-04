@@ -19,9 +19,11 @@ import com.isel.ps.secdash.service.ResponseTypes.SastResult
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
+import java.time.Instant
 
 sealed class DependencyScanError {
     data object Unauthorized : DependencyScanError()
@@ -36,6 +38,35 @@ class GitlabServices(
     private val transactionManager: TransactionManager,
     private val gitlabClient: GitLabRestClient,
 ) {
+
+    fun getValidToken(userId: Int): String? {
+        val tokenInfo = transactionManager.run {
+            it.usersRepository.getTokenInfo(userId, AuthProvider.GITLAB)
+        } ?: return null
+
+        if (tokenInfo.expiresAt == null || Instant.now().isBefore(tokenInfo.expiresAt)) {
+            return tokenInfo.accessToken
+        }
+
+        val refreshToken = tokenInfo.refreshToken ?: return null
+        val newTokens = try {
+            gitlabClient.refreshToken(refreshToken)
+        } catch (e: Exception) {
+            return null
+        }
+
+        transactionManager.run {
+            it.usersRepository.storeUserAuthorization(
+                userId       = userId,
+                authProvider = AuthProvider.GITLAB,
+                accessToken  = newTokens.accessToken,
+                refreshToken = newTokens.refreshToken,
+                expiresAt    = newTokens.expiresAt,
+            )
+        }
+
+        return newTokens.accessToken
+    }
 
     fun getRepositoriesFromAuthorizedUser(userId: Int): GetRepositoriesResult {
         return transactionManager.run {
@@ -95,12 +126,10 @@ class GitlabServices(
 
     fun getDependencyScan(uid: Int, rid: Int): DependencyScanResult {
         return transactionManager.run {
-            val userRepo = it.usersRepository
             val repositoriesRepo = it.repositoriesRepository
             val externalId = repositoriesRepo.getExternalId(rid) ?: return@run failure(DependencyScanError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(uid, rid)) return@run failure(DependencyScanError.Unauthorized)
-            val accessToken = userRepo.getAccessToken(uid, AuthProvider.GITLAB) ?: return@run failure(DependencyScanError.Unauthorized)
-
+            val accessToken = getValidToken(uid) ?: return@run failure(DependencyScanError.Unauthorized)
             val externalVulnerabilities = try {
                 gitlabClient.getDependencyScan(externalId, accessToken)
             } catch(e: HttpClientErrorException){
@@ -120,11 +149,10 @@ class GitlabServices(
         rid: Int,
     ): SastResult {
         return transactionManager.run {
-            val userRepo = it.usersRepository
             val repositoriesRepo = it.repositoriesRepository
             val externalId = repositoriesRepo.getExternalId(rid) ?: return@run failure(SastError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(SastError.Unauthorized)
-            val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITLAB) ?: return@run failure(SastError.Unauthorized)
+            val accessToken = getValidToken(userId) ?: return@run failure(SastError.Unauthorized)
             val externalSastAlerts = try {
                 gitlabClient.getSast(externalId, accessToken)
             }catch (e: HttpClientErrorException){

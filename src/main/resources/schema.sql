@@ -28,10 +28,12 @@ CREATE TABLE user_authentication (
 
 -- user_oauth_tokens (authorization)
 CREATE TABLE user_authorization (
-    user_id      INT           NOT NULL REFERENCES users(uid),
-    provider     auth_provider NOT NULL,
-    access_token TEXT          NOT NULL,
-    PRIMARY KEY  (user_id, provider)
+    user_id       INT           NOT NULL REFERENCES users(uid),
+    provider      auth_provider NOT NULL,
+    access_token  TEXT          NOT NULL,
+    refresh_token TEXT,
+    expires_at    TIMESTAMPTZ,
+    PRIMARY KEY   (user_id, provider)
 );
 
 -- tokens
@@ -156,9 +158,10 @@ CREATE TABLE repo_sast_scans (
 );
 
 CREATE TABLE teams (
-    tid         INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name        VARCHAR(255) NOT NULL,
-    description TEXT
+    tid          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name         VARCHAR(255) NOT NULL,
+    description  TEXT,
+    last_scan_at TIMESTAMPTZ
 );
 
 CREATE TABLE team_users (

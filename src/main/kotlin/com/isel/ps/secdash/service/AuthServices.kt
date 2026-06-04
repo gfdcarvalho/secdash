@@ -106,13 +106,15 @@ class AuthServices(
         userId: Int,
         authProvider: AuthProvider,
         accessToken: String,
+        refreshToken: String?,
+        expiresAt: java.time.Instant?,
     ): AuthorizationResult {
         if (accessToken.isBlank()) {
             return failure(AuthorizationError.InvalidToken)
         }
         return transactionManager.run {
             val usersRepo = it.usersRepository
-            usersRepo.storeUserAuthorization(userId, authProvider, accessToken)
+            usersRepo.storeUserAuthorization(userId, authProvider, accessToken, refreshToken, expiresAt)
             success(Unit)
         }
     }

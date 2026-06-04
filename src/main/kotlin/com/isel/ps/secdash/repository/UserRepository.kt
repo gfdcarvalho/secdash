@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.users.PasswordValidationInfo
 import com.isel.ps.secdash.model.users.Token
 import com.isel.ps.secdash.model.users.TokenValidationInfo
 import com.isel.ps.secdash.model.users.User
+import com.isel.ps.secdash.model.users.UserTokenInfo
 import com.isel.ps.secdash.repository.interfaces.UserRepositoryInterface
 import kotlinx.datetime.Instant
 import org.jdbi.v3.core.Handle
@@ -122,17 +123,28 @@ class UserRepository(
             .execute()
     }
 
-    override fun storeUserAuthorization(userId: Int, authProvider: AuthProvider, accessToken: String) {
+    override fun storeUserAuthorization(
+        userId: Int,
+        authProvider: AuthProvider,
+        accessToken: String,
+        refreshToken: String?,
+        expiresAt: java.time.Instant?,
+    ) {
         handle.createUpdate(
             """
-                insert into user_authorization(user_id, provider, access_token)
-                values (:user_id, :provider::auth_provider, :access_token)
-                on conflict (user_id, provider) do update set access_token = :access_token
+                INSERT INTO user_authorization(user_id, provider, access_token, refresh_token, expires_at)
+                VALUES (:user_id, :provider::auth_provider, :access_token, :refresh_token, :expires_at)
+                ON CONFLICT (user_id, provider) DO UPDATE SET
+                    access_token  = EXCLUDED.access_token,
+                    refresh_token = EXCLUDED.refresh_token,
+                    expires_at    = EXCLUDED.expires_at
             """.trimIndent()
         )
             .bind("user_id", userId)
             .bind("provider", authProvider.name)
             .bind("access_token", accessToken)
+            .bind("refresh_token", refreshToken)
+            .bind("expires_at", expiresAt)
             .execute()
     }
 
@@ -147,6 +159,21 @@ class UserRepository(
             .mapTo<String>()
             .singleOrNull()
         return providerId
+    }
+
+    override fun getTokenInfo(userId: Int, authProvider: AuthProvider): UserTokenInfo? {
+        return handle.createQuery(
+            """
+                SELECT access_token, refresh_token, expires_at
+                FROM user_authorization
+                WHERE user_id = :user_id AND provider = :provider::auth_provider
+            """.trimIndent()
+        )
+            .bind("user_id", userId)
+            .bind("provider", authProvider.name)
+            .mapTo<UserTokenInfo>()
+            .findOne()
+            .orElse(null)
     }
 
     override fun getAccessToken(userId: Int, authProvider: AuthProvider): String? {
