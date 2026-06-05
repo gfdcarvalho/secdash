@@ -16,7 +16,8 @@
 .selects { composes: selects from '../RepoSast/RepoSast.module.css'; }
 .dateSelect { composes: dateSelect from '../RepoSast/RepoSast.module.css'; }
 .listSection { composes: listSection from '../RepoSast/RepoSast.module.css'; }
-.alertCard { composes: alertCard from '../RepoSast/RepoSast.module.css'; }
+.alertCard { composes: alertCard from '../RepoSast/RepoSast.module.css'; cursor: pointer; }
+.alertCard:hover { opacity: 0.85; }
 .alertHeader { composes: alertHeader from '../RepoSast/RepoSast.module.css'; }
 .alertTitle { composes: alertTitle from '../RepoSast/RepoSast.module.css'; }
 .badges { composes: badges from '../RepoSast/RepoSast.module.css'; }

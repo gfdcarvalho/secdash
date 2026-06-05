@@ -1,0 +1,177 @@
+.content {
+    composes: content from '../../styles/shared.module.css';
+}
+
+.topSection {
+    composes: topBar from '../../styles/shared.module.css';
+}
+
+.backButton {
+    font-size: 0.82em;
+    padding: 0.3em 0.7em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.backButton:hover {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.badges {
+    display: flex;
+    gap: 0.4em;
+    align-items: center;
+}
+
+.severityBadge, .stateBadge {
+    font-size: 0.72em;
+    font-weight: 600;
+    padding: 0.2em 0.55em;
+    border-radius: 0.4em;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.severity_critical { background: color-mix(in srgb, #e53e3e 18%, transparent); color: #e53e3e; }
+.severity_high     { background: color-mix(in srgb, #dd6b20 18%, transparent); color: #dd6b20; }
+.severity_medium   { background: color-mix(in srgb, #d69e2e 18%, transparent); color: #d69e2e; }
+.severity_low      { background: color-mix(in srgb, #38a169 18%, transparent); color: #38a169; }
+.severity_unknown  { background: color-mix(in srgb, var(--color-text) 12%, transparent); color: color-mix(in srgb, var(--color-text) 70%, transparent); }
+
+.state_open      { background: color-mix(in srgb, #e53e3e 15%, transparent); color: #e53e3e; }
+.state_fixed     { background: color-mix(in srgb, #38a169 15%, transparent); color: #38a169; }
+.state_dismissed { background: color-mix(in srgb, var(--color-text) 12%, transparent); color: color-mix(in srgb, var(--color-text) 60%, transparent); }
+
+.bottomSection {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1.75em;
+    overflow-y: auto;
+}
+
+.title {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65em;
+}
+
+.sectionTitle {
+    font-size: 0.72em;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin: 0;
+}
+
+.repoRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+}
+
+.ownerAvatar {
+    composes: ownerAvatar from '../../styles/shared.module.css';
+}
+
+.ownerAvatarFallback {
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
+}
+
+.repoInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1em;
+    flex: 1;
+}
+
+.repoLink {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    width: fit-content;
+}
+
+.repoLink:hover {
+    border-bottom-color: var(--color-text);
+}
+
+.ownerName {
+    font-size: 0.8em;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.platformBadge {
+    font-size: 0.7em;
+    padding: 0.15em 0.5em;
+    border-radius: 0.75em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    text-transform: lowercase;
+    flex-shrink: 0;
+}
+
+.description {
+    font-size: 0.9em;
+    color: color-mix(in srgb, var(--color-text) 80%, transparent);
+    margin: 0;
+    line-height: 1.55;
+}
+
+.detailsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em 2.5em;
+}
+
+.metaItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+
+.metaLabel {
+    font-size: 0.7em;
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metaValue {
+    font-size: 0.88em;
+    font-weight: 500;
+    font-family: monospace;
+}
+
+.externalLink {
+    font-size: 0.82em;
+    padding: 0.3em 0.7em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    color: var(--color-text);
+    text-decoration: none;
+    width: fit-content;
+    transition: background-color 0.15s ease;
+}
+
+.externalLink:hover {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.message {
+    composes: repoMessage from '../../styles/shared.module.css';
+}

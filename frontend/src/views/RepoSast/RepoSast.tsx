@@ -184,7 +184,7 @@ export function RepoSast() {
                     <p className={Style.message}>{t.repoSast.noAlerts}</p>
                 ) : (
                     filtered.map(alert => (
-                        <div key={alert.externalId} className={Style.alertCard}>
+                        <div key={alert.externalId} className={Style.alertCard} onClick={() => navigate(`/sast/${alert.sid}`)}>
                             <div className={Style.alertHeader}>
                                 <span className={Style.alertTitle}>{alert.ruleDescription}</span>
                                 <div className={Style.badges}>

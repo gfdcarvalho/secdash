@@ -164,7 +164,7 @@ export function TeamVulnerabilitiesView() {
                     <p className={Style.message}>{t.repoVulnerabilities.noVulnerabilities}</p>
                 ) : (
                     filtered.map(vuln => (
-                        <div key={`${vuln.repoName}-${vuln.externalId}`} className={Style.vulnCard}>
+                        <div key={`${vuln.repoName}-${vuln.externalId}`} className={Style.vulnCard} onClick={() => navigate(`/vulnerability/${vuln.vid}`)}>
                             <div className={Style.vulnHeader}>
                                 <span className={Style.vulnTitle}>{vuln.title}</span>
                                 <div className={Style.badges}>

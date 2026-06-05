@@ -16,7 +16,8 @@
 .selects { composes: selects from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .dateSelect { composes: dateSelect from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .listSection { composes: listSection from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
-.vulnCard { composes: vulnCard from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
+.vulnCard { composes: vulnCard from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; cursor: pointer; }
+.vulnCard:hover { opacity: 0.85; }
 .vulnHeader { composes: vulnHeader from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .vulnTitle { composes: vulnTitle from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .badges { composes: badges from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
