@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
-import { NavLink } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import type { Repository } from '../../model/repository/repository'
 import Style from './Repos.module.css'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
+import { AddFromGithubModal } from './AddFromGithubModal'
+import { AddFromGitlabModal } from './AddFromGitlabModal'
+
+type OpenModal = 'github' | 'gitlab' | null
 
 export function Repos() {
     const { t } = useTranslation()
     const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
     const [repositories, setRepositories] = useState<Array<Repository>>()
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
+    const [openModal, setOpenModal] = useState<OpenModal>(() => {
+        const provider = searchParams.get('provider')
+        if (provider === 'github' || provider === 'gitlab') return provider
+        return null
+    })
 
     const getRepositories = async () => {
         const response = await api.get<Array<Repository>>('/repos')
@@ -27,17 +36,34 @@ export function Repos() {
         getRepositories()
     }, [])
 
+    useEffect(() => {
+        if (openModal === null && searchParams.has('provider')) {
+            setSearchParams({}, { replace: true })
+        }
+    }, [openModal])
+
+    const handleClose = () => setOpenModal(null)
+    const handleRepoAdded = () => getRepositories()
+
+    const alreadyAddedIds = new Set(repositories?.map(r => r.externalId) ?? [])
+
     return (
         <div className={Style.repositoriesContent}>
+            {openModal === 'github' && (
+                <AddFromGithubModal onClose={handleClose} onRepoAdded={handleRepoAdded} alreadyAddedIds={alreadyAddedIds} />
+            )}
+            {openModal === 'gitlab' && (
+                <AddFromGitlabModal onClose={handleClose} onRepoAdded={handleRepoAdded} alreadyAddedIds={alreadyAddedIds} />
+            )}
             <div className={Style.topSection}>
                 <h2>{t.repos.title}</h2>
                 <div className={Style.topSectionButtons}>
-                    <NavLink to='/repos/github' className={Style.addRepositoriesButtons}>
+                    <button className={Style.addRepositoriesButtons} onClick={() => setOpenModal('github')}>
                         {t.repos.addFromGithub}
-                    </NavLink>
-                    <NavLink to='/repos/gitlab' className={Style.addRepositoriesButtons}>
+                    </button>
+                    <button className={Style.addRepositoriesButtons} onClick={() => setOpenModal('gitlab')}>
                         {t.repos.addFromGitlab}
-                    </NavLink>
+                    </button>
                 </div>
             </div>
             <div className={Style.bottomSection}>

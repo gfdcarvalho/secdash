@@ -134,9 +134,6 @@ export function RepoDetails() {
                 </div>
 
                 <div className={Style.actions}>
-                    <button className={Style.addToTeamButton} onClick={() => { /* TODO: lógica de adicionar à equipa */ }}>
-                        {t.repoDetails.addToTeam}
-                    </button>
                     <button className={Style.reportsButtons} onClick={() => {getDependabot()}}>
                         {platform === 'GITHUB' ? t.repoDetails.dependabotReport : t.repoDetails.dependencyScanningReport}
                     </button>

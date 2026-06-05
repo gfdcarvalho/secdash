@@ -9,8 +9,6 @@ import { Repos } from './views/ReposView/Repos'
 import { Teams } from './views/TeamsView/Teams'
 import './App.css'
 import { CreateTeam } from './views/CreateTeam/CreateTeam';
-import { Github } from './views/GithubView/Github';
-import { Gitlab } from './views/GitlabView/Gitlab';
 import { RepoDetails } from './views/RepoDetails/RepoDetails';
 import { TeamDetails } from './views/TeamDetails/TeamDetails';
 import { RequireAuthentication } from './utils/RequireAuthentication';
@@ -27,8 +25,6 @@ const router = createBrowserRouter ([
       { index: true, element: <Home/>, },  // "path" = '/' (home page)
       { path: '/profile', element: <Profile/>},
       { path: '/repos', element: <Repos/>},
-      { path: '/repos/github', element: <Github/>},
-      { path: '/repos/gitlab', element: <Gitlab/>},
       { path: '/repos/:repoId', element: <RepoDetails/>},
       { path: '/repos/:repoId/vulnerabilities/:platform', element: <RepoVulnerabilities/>},
       { path: '/repos/:repoId/sast/:platform', element: <RepoSast/>},

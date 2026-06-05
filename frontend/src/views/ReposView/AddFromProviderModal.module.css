@@ -1,0 +1,202 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal {
+    background: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+    border-radius: 0.75em;
+    width: min(92%, 560px);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1.5em;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modalTitle {
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+    font-size: 1em;
+    padding: 0.25em;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+}
+
+.closeButton:hover {
+    opacity: 1;
+}
+
+.search {
+    width: 100%;
+    padding: 0.75em 1em;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    outline: none;
+    border-radius: 0.5em;
+    font-size: 0.9em;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+
+.search:focus {
+    border-color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+    border-radius: 0.5em;
+    flex: 1;
+    scrollbar-color: color-mix(in srgb, var(--color-text) 30%, transparent) transparent;
+    scrollbar-width: thin;
+}
+
+.list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: color-mix(in srgb, var(--color-text) 30%, transparent);
+    border-radius: 3px;
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+.repoRow {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 0.75em 1em;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.repoRow:last-child {
+    border-bottom: none;
+}
+
+.ownerAvatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.ownerAvatarFallback {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--color-text) 15%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75em;
+    font-weight: 600;
+}
+
+.repoInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+    flex: 1;
+    min-width: 0;
+}
+
+.repoName {
+    font-size: 0.9em;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.repoMeta {
+    display: flex;
+    gap: 0.6em;
+    font-size: 0.75em;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.addButton {
+    font-size: 0.8em;
+    padding: 0.35em 0.75em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.addButton:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+}
+
+.addButton:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.addButton[data-state="added"] {
+    border-color: color-mix(in srgb, var(--color-text) 20%, transparent);
+}
+
+.addButton[data-state="error"] {
+    border-color: #e05555;
+    color: #e05555;
+    opacity: 1;
+}
+
+.message {
+    padding: 1.5em;
+    text-align: center;
+    font-size: 0.85em;
+    color: color-mix(in srgb, var(--color-text) 55%, transparent);
+    margin: 0;
+}
+
+.toast {
+    position: absolute;
+    bottom: 1.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    background: color-mix(in srgb, var(--color-text) 10%, var(--color-bg));
+    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+    border-radius: 0.5em;
+    padding: 0.6em 1.2em;
+    font-size: 0.85em;
+    white-space: nowrap;
+    pointer-events: none;
+}
