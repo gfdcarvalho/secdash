@@ -5,8 +5,10 @@ import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.sast.ExternalSastAlerts
 import com.isel.ps.secdash.model.sast.SastAlert
+import com.isel.ps.secdash.model.sast.SastAlertDetail
 import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
 import com.isel.ps.secdash.model.vulnerability.Vulnerability
+import com.isel.ps.secdash.model.vulnerability.VulnerabilityDetail
 
 interface RepositoriesRepositoryInterface {
 
@@ -41,4 +43,12 @@ interface RepositoriesRepositoryInterface {
     fun storeVulnerabilities(rid: Int, vulnerabilities: List<ExternalVulnerability>): List<Vulnerability>
 
     fun storeSastAlerts(rid: Int, sastAlerts: List<ExternalSastAlerts>): List<SastAlert>
+
+    fun getVulnerabilityDetail(vid: Int): VulnerabilityDetail?
+
+    fun userHasAccessToVulnerability(uid: Int, vid: Int): Boolean
+
+    fun getSastAlertDetail(sid: Int): SastAlertDetail?
+
+    fun userHasAccessToSastAlert(uid: Int, sid: Int): Boolean
 }

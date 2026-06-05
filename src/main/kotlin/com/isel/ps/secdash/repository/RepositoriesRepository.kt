@@ -9,8 +9,13 @@ import com.isel.ps.secdash.model.repositories.RepositorySqlDto
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
 import com.isel.ps.secdash.model.sast.ExternalSastAlerts
 import com.isel.ps.secdash.model.sast.SastAlert
+import com.isel.ps.secdash.model.sast.SastAlertDetail
+import com.isel.ps.secdash.model.sast.SastAlertDetailSqlDto
 import com.isel.ps.secdash.model.vulnerability.ExternalVulnerability
 import com.isel.ps.secdash.model.vulnerability.Vulnerability
+import com.isel.ps.secdash.model.vulnerability.VulnerabilityDetail
+import com.isel.ps.secdash.model.vulnerability.VulnerabilityDetailSqlDto
+import com.isel.ps.secdash.model.vulnerability.VulnerabilityReferenceRow
 import com.isel.ps.secdash.repository.interfaces.RepositoriesRepositoryInterface
 import java.time.Instant
 import org.jdbi.v3.core.Handle
@@ -410,5 +415,100 @@ class RepositoriesRepository(
             .execute()
 
         return result
+    }
+
+    override fun getVulnerabilityDetail(vid: Int): VulnerabilityDetail? {
+        val dto = handle.createQuery(
+            """
+            SELECT v.vid, v.rid, v.external_id, v.title, v.description,
+                   v.severity, v.state, v.cve_id, v.ghsa_id, v.package_name, v.package_version,
+                   v.vulnerable_version_range, v.fixed_version, v.manifest_path,
+                   v.cvss_score, v.cvss_vector, v.platform, v.detected_at, v.updated_at,
+                   r.name AS repo_name, r.html_url AS repo_html_url,
+                   o.name AS owner_name, o.avatar_url AS owner_avatar_url
+            FROM vulnerabilities v
+            JOIN repositories r ON v.rid = r.rid
+            JOIN owners o ON r.owner_id = o.oid
+            WHERE v.vid = :vid
+            """.trimIndent()
+        )
+            .bind("vid", vid)
+            .mapTo<VulnerabilityDetailSqlDto>()
+            .findOne()
+            .orElse(null) ?: return null
+
+        val references = handle.createQuery(
+            "SELECT vuln_id, url FROM vulnerability_references WHERE vuln_id = :vid"
+        )
+            .bind("vid", vid)
+            .mapTo<VulnerabilityReferenceRow>()
+            .list()
+            .map { it.url }
+
+        return dto.toVulnerabilityDetail(references)
+    }
+
+    override fun userHasAccessToVulnerability(uid: Int, vid: Int): Boolean {
+        return handle.createQuery(
+            """
+            SELECT EXISTS (
+                SELECT 1 FROM vulnerabilities v
+                JOIN user_repositories ur ON v.rid = ur.rid
+                WHERE v.vid = :vid AND ur.uid = :uid
+                UNION
+                SELECT 1 FROM vulnerabilities v
+                JOIN team_repos tr ON v.rid = tr.rid
+                JOIN team_users tu ON tr.tid = tu.tid
+                WHERE v.vid = :vid AND tu.uid = :uid
+            )
+            """.trimIndent()
+        )
+            .bind("vid", vid)
+            .bind("uid", uid)
+            .mapTo<Boolean>()
+            .one()
+    }
+
+    override fun getSastAlertDetail(sid: Int): SastAlertDetail? {
+        val dto = handle.createQuery(
+            """
+            SELECT s.sid, s.rid, s.external_id, s.state, s.rule_id, s.rule_description,
+                   s.severity, s.tool_name, s.file_path, s.start_line, s.end_line,
+                   s.message, s.html_url, s.platform, s.detected_at, s.updated_at,
+                   r.name AS repo_name, r.html_url AS repo_html_url,
+                   o.name AS owner_name, o.avatar_url AS owner_avatar_url
+            FROM sast_alerts s
+            JOIN repositories r ON s.rid = r.rid
+            JOIN owners o ON r.owner_id = o.oid
+            WHERE s.sid = :sid
+            """.trimIndent()
+        )
+            .bind("sid", sid)
+            .mapTo<SastAlertDetailSqlDto>()
+            .findOne()
+            .orElse(null) ?: return null
+
+        return dto.toSastAlertDetail()
+    }
+
+    override fun userHasAccessToSastAlert(uid: Int, sid: Int): Boolean {
+        return handle.createQuery(
+            """
+            SELECT EXISTS (
+                SELECT 1 FROM sast_alerts s
+                JOIN user_repositories ur ON s.rid = ur.rid
+                WHERE s.sid = :sid AND ur.uid = :uid
+                UNION
+                SELECT 1 FROM sast_alerts s
+                JOIN team_repos tr ON s.rid = tr.rid
+                JOIN team_users tu ON tr.tid = tu.tid
+                WHERE s.sid = :sid AND tu.uid = :uid
+            )
+            """.trimIndent()
+        )
+            .bind("sid", sid)
+            .bind("uid", uid)
+            .mapTo<Boolean>()
+            .one()
     }
 }
