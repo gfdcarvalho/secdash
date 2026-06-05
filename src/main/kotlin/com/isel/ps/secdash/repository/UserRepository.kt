@@ -255,4 +255,9 @@ class UserRepository(
             .execute()
     }
 
+    override fun getAllUsers(): List<User> {
+        return handle.createQuery("SELECT uid, name, email, password_validation, role FROM users")
+            .mapTo<User>()
+            .list()
+    }
 }

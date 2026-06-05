@@ -73,4 +73,6 @@ interface UserRepositoryInterface {
     fun checkIfUserExists(uid: Int): Boolean
 
     fun deleteUser(uid: Int)
+
+    fun getAllUsers(): List<User>
 }

@@ -88,4 +88,11 @@ class UserController(
         }
     }
 
+    @GetMapping()
+    fun getAllUsers(
+        user: AuthenticatedUser,
+    ): ResponseEntity<*> {
+        return ResponseEntity.ok(userServices.getAllUsers())
+    }
+
 }

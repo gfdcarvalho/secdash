@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.users.UserDomain
+import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.model.users.UserTeamsAndRepos
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
@@ -72,4 +73,9 @@ class UserServices(
         }
     }
 
+    fun getAllUsers(): List<UserOutputDto> {
+        return transactionManager.run {
+            it.usersRepository.getAllUsers().map { user -> user.toOutputDto() }
+        }
+    }
 }

@@ -7,6 +7,7 @@ import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './TeamDetails.module.css'
 import { AddRepoModal } from './AddRepoModal'
+import { AddMemberModal } from './AddMemberModal'
 import { TeamStatsSection } from './TeamStatsSection'
 
 
@@ -19,6 +20,7 @@ export function TeamDetails() {
     const [historyStats, setHistoryStats] = useState<HistoryStats>()
     const [notFound, setNotFound] = useState(false)
     const [showAddModal, setShowAddModal] = useState(false)
+    const [showAddMemberModal, setShowAddMemberModal] = useState(false)
 
     const getTeam = async () => {
         const response = await api.get<Team>(`/teams/${teamId}`)
@@ -91,7 +93,12 @@ export function TeamDetails() {
                 {stats && <TeamStatsSection stats={stats} historyStats={historyStats}/>}
 
                 <div className={Style.section}>
-                    <h3 className={Style.sectionTitle}>{t.teamDetails.members} ({team.members.length})</h3>
+                    <div className={Style.sectionHeader}>
+                        <h3 className={Style.sectionTitle}>{t.teamDetails.members} ({team.members.length})</h3>
+                        <button className={Style.addReposButton} onClick={() => setShowAddMemberModal(true)}>
+                            {t.teamDetails.addMembers}
+                        </button>
+                    </div>
                     <div className={Style.membersList}>
                         {team.members.map(member => (
                             <div key={member.uid} className={Style.memberCard}>
@@ -134,6 +141,14 @@ export function TeamDetails() {
                     alreadyAddedIds={new Set(team.repos.map(r => r.rid))}
                     onClose={() => setShowAddModal(false)}
                     onRepoAdded={refresh}
+                />
+            )}
+            {showAddMemberModal && (
+                <AddMemberModal
+                    teamId={team.tid}
+                    alreadyAddedIds={new Set(team.members.map(m => m.uid))}
+                    onClose={() => setShowAddMemberModal(false)}
+                    onMemberAdded={refresh}
                 />
             )}
         </div>
