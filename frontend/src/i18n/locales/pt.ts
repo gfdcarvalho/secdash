@@ -93,6 +93,8 @@ export const pt = {
         sastReport: "Relatório SAST",
         dependabotNotEnabled: "Este repositório não tem o Dependabot ativo.",
         sastNotEnabled: "Este repositório não tem o SAST ativo.",
+        deleteError: "Erro ao eliminar repositório.",
+        deleteButton: "Eliminar repositório",
     },
     profile: {
         title: "Perfil",

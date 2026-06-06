@@ -93,6 +93,8 @@ export const en = {
         sastReport: "SAST Report",
         dependabotNotEnabled: "This repository does not have Dependabot enabled.",
         sastNotEnabled: "This repository does not have SAST enabled.",
+        deleteError: "Error deleting repository.",
+        deleteButton: "Delete repository",
     },
     profile: {
         title: "Profile",

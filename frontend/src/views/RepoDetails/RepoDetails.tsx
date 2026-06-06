@@ -49,6 +49,15 @@ export function RepoDetails() {
         )
     }
 
+    const deleteRepo = async () => {
+        const response = await api.delete(`/repos/${repoId}`)
+        if (isSuccess(response)) {
+            navigate(`/repos`)
+        } else {
+            setToastMessage(t.repoDetails.deleteError)
+        }
+    }
+
     const owner = repo.owner
     const platform = repo.platform
     const createdAt = new Date(repo.createdAt).toLocaleDateString()
@@ -75,7 +84,6 @@ export function RepoDetails() {
         }
 
     }
-
     
     const getSast = async () => {
         let uri 
@@ -96,9 +104,7 @@ export function RepoDetails() {
                     setToastMessage(t.repoDetails.sastNotEnabled)
             }
         }
-
     }
-    
 
     return (
         <div className={Style.content}>
@@ -109,9 +115,14 @@ export function RepoDetails() {
                     <span className={Style.visibilityBadge}>{repo.visibility}</span>
                     <span className={Style.platformBadge}>{repo.platform}</span>
                 </div>
-                <a className={Style.externalLink} href={repo.htmlUrl} target="_blank" rel="noreferrer">
-                    {t.repoDetails.externalLink} {repo.platform}
-                </a>
+                <div className={Style.buttons}>
+                    <a className={Style.externalLink} href={repo.htmlUrl} target="_blank" rel="noreferrer">
+                        {t.repoDetails.externalLink} {repo.platform}
+                    </a>
+                    <button onClick={deleteRepo} className={Style.deleteButton}>
+                        {t.repoDetails.deleteButton}
+                    </button>
+                </div>
             </div>
             <div className={Style.bottomSection}>
                 <div className={Style.ownerRow}>

@@ -130,3 +130,28 @@
 .message {
     composes: repoMessage from '../../styles/shared.module.css';
 }
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.deleteButton {
+    font-size: 0.78em;
+    padding: 0.35em 0.7em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 25%, transparent);
+    background: transparent;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.deleteButton:hover {
+    background: color-mix(in srgb, #e05555 12%, transparent);
+    border-color: #e05555;
+    color: #e05555;
+}
