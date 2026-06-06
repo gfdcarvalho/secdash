@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import Style from './Teams.module.css'
-import type { SimpleTeam, SimpleTeamsListOutput } from '../../model/teams/teams'
+import type {SimpleTeamWithCount, SimpleTeamWithCountListOutput} from '../../model/teams/teams'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 
@@ -10,12 +10,13 @@ import { isSuccess } from '../../utils/Either'
 export function Teams() {
     const { t } = useTranslation()
     const navigate = useNavigate()
-    const [teams, setTeams] = useState<Array<SimpleTeam>>()
+    const [teams, setTeams] = useState<Array<SimpleTeamWithCount>>()
     const [error, setError] = useState(false)
 
     const getTeams = async () => {
-        const response = await api.get<SimpleTeamsListOutput>("/teams")
+        const response = await api.get<SimpleTeamWithCountListOutput>("/teams")
         if(isSuccess(response)) {
+            console.log()
             setTeams(response.value.data.teams)
             setError(false)
         }else {

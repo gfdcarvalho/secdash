@@ -5,10 +5,10 @@ import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.DependabotError
 import com.isel.ps.secdash.service.GithubServices
-import com.isel.ps.secdash.service.ResponseTypes.AddRepositoryError
-import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesByOwnerError
-import com.isel.ps.secdash.service.ResponseTypes.GetRepositoriesError
-import com.isel.ps.secdash.service.ResponseTypes.SastError
+import com.isel.ps.secdash.service.responseTypes.AddRepositoryError
+import com.isel.ps.secdash.service.responseTypes.GetRepositoriesByOwnerError
+import com.isel.ps.secdash.service.responseTypes.GetRepositoriesError
+import com.isel.ps.secdash.service.responseTypes.SastError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity

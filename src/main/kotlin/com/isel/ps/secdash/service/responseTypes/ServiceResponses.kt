@@ -1,4 +1,4 @@
-package com.isel.ps.secdash.service.ResponseTypes
+package com.isel.ps.secdash.service.responseTypes
 
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository

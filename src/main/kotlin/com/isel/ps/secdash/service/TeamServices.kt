@@ -1,131 +1,51 @@
 package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.teams.CountsBySeverity
-import com.isel.ps.secdash.model.sast.TeamSastAlerts
-import com.isel.ps.secdash.model.vulnerability.TeamVulnerabilities
 import com.isel.ps.secdash.model.teams.DailySastCount
 import com.isel.ps.secdash.model.teams.DailyVulnerabilityCount
-import com.isel.ps.secdash.model.teams.SimpleTeam
-import com.isel.ps.secdash.model.teams.Team
+import com.isel.ps.secdash.model.teams.SimpleTeamWithCountsListOutput
 import com.isel.ps.secdash.model.teams.TeamStats
 import com.isel.ps.secdash.model.users.AppRole
 import java.time.ZoneOffset
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
-import com.isel.ps.secdash.utils.Either
+import com.isel.ps.secdash.service.responseTypes.AddRepositoryToTeamError
+import com.isel.ps.secdash.service.responseTypes.AddRepositoryToTeamResult
+import com.isel.ps.secdash.service.responseTypes.AddUserToTeamError
+import com.isel.ps.secdash.service.responseTypes.AddUserToTeamResult
+import com.isel.ps.secdash.service.responseTypes.CreateTeamError
+import com.isel.ps.secdash.service.responseTypes.CreateTeamResult
+import com.isel.ps.secdash.service.responseTypes.DeleteTeamError
+import com.isel.ps.secdash.service.responseTypes.DeleteTeamResult
+import com.isel.ps.secdash.service.responseTypes.GetTeamError
+import com.isel.ps.secdash.service.responseTypes.GetTeamResult
+import com.isel.ps.secdash.service.responseTypes.GetTeamSastAlertsError
+import com.isel.ps.secdash.service.responseTypes.GetTeamSastAlertsResult
+import com.isel.ps.secdash.service.responseTypes.GetTeamSastHistoryError
+import com.isel.ps.secdash.service.responseTypes.GetTeamSastHistoryResult
+import com.isel.ps.secdash.service.responseTypes.GetTeamStatsError
+import com.isel.ps.secdash.service.responseTypes.GetTeamStatsResult
+import com.isel.ps.secdash.service.responseTypes.GetTeamVulnerabilitiesError
+import com.isel.ps.secdash.service.responseTypes.GetTeamVulnerabilitiesResult
+import com.isel.ps.secdash.service.responseTypes.GetTeamVulnerabilityHistoryError
+import com.isel.ps.secdash.service.responseTypes.GetTeamVulnerabilityHistoryResult
+import com.isel.ps.secdash.service.responseTypes.PromoteUserToLeaderError
+import com.isel.ps.secdash.service.responseTypes.PromoteUserToLeaderResult
+import com.isel.ps.secdash.service.responseTypes.RemoveRepoFromTeamError
+import com.isel.ps.secdash.service.responseTypes.RemoveRepoFromTeamResult
+import com.isel.ps.secdash.service.responseTypes.RemoveUserFromTeamError
+import com.isel.ps.secdash.service.responseTypes.RemoveUserFromTeamResult
 import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
 import org.springframework.stereotype.Service
-
-sealed class GetTeamsError {
-
-}
-
-typealias GetTeamsResult = Either<GetTeamsError, List<SimpleTeam>>
-
-sealed class GetTeamError {
-    data object Unauthorized : GetTeamError()
-}
-
-typealias GetTeamResult = Either<GetTeamError, Team>
-
-sealed class CreateTeamError {
-    data object InvalidName: CreateTeamError()
-    data object InternalError: CreateTeamError()
-}
-
-typealias CreateTeamResult = Either<CreateTeamError, Team>
-
-sealed class DeleteTeamError {
-    data object OnlyTeamLeaderOrAdmin: DeleteTeamError()
-    data object TeamNotFound: DeleteTeamError()
-}
-
-typealias DeleteTeamResult = Either<DeleteTeamError, Unit>
-
-sealed class AddUserToTeamError {
-    data object OnlyTeamLeader: AddUserToTeamError()
-    data object TeamNotFound: AddUserToTeamError()
-    data object UserNotFound: AddUserToTeamError()
-    data object UserAlreadyOnTeam: AddUserToTeamError()
-}
-
-typealias AddUserToTeamResult = Either<AddUserToTeamError, Unit>
-
-sealed class RemoveUserFromTeamError {
-    data object OnlyTeamLeader: RemoveUserFromTeamError()
-    data object TeamNotFound: RemoveUserFromTeamError()
-    data object UserNotFound: RemoveUserFromTeamError()
-    data object UserNotOnTeam: RemoveUserFromTeamError()
-}
-
-typealias RemoveUserFromTeamResult = Either<RemoveUserFromTeamError, Unit>
-
-sealed class PromoteUserToLeaderError {
-    data object OnlyTeamLeader: PromoteUserToLeaderError()
-    data object TeamNotFound: PromoteUserToLeaderError()
-    data object UserNotOnTeam: PromoteUserToLeaderError()
-    data object UserAlreadyLeader: PromoteUserToLeaderError()
-}
-
-typealias PromoteUserToLeaderResult = Either<PromoteUserToLeaderError, Unit>
-
-sealed class AddRepositoryToTeamError {
-    data object OnlyTeamLeader: AddRepositoryToTeamError()
-    data object TeamNotFound: AddRepositoryToTeamError()
-    data object RepositoryNotFound: AddRepositoryToTeamError()
-    data object RepositoryAlreadyAdded: AddRepositoryToTeamError()
-}
-
-typealias AddRepositoryToTeamResult = Either<AddRepositoryToTeamError, Unit>
-
-sealed class RemoveRepoFromTeamError {
-    data object OnlyTeamLeader: RemoveRepoFromTeamError()
-    data object TeamNotFound: RemoveRepoFromTeamError()
-    data object RepositoryNotFound: RemoveRepoFromTeamError()
-}
-
-typealias RemoveRepoFromTeamResult = Either<RemoveRepoFromTeamError, Unit>
-
-sealed class GetTeamStatsError {
-    data object NotTeamMember: GetTeamStatsError()
-    data object TeamNotFound: GetTeamStatsError()
-}
-
-typealias GetTeamStatsResult = Either<GetTeamStatsError, TeamStats>
-
-sealed class GetTeamVulnerabilityHistoryError {
-    data object NotTeamMember: GetTeamVulnerabilityHistoryError()
-}
-
-typealias GetTeamVulnerabilityHistoryResult = Either<GetTeamVulnerabilityHistoryError, List<DailyVulnerabilityCount>>
-
-sealed class GetTeamSastHistoryError {
-    data object NotTeamMember: GetTeamSastHistoryError()
-}
-
-typealias GetTeamSastHistoryResult = Either<GetTeamSastHistoryError, List<DailySastCount>>
-
-sealed class GetTeamVulnerabilitiesError {
-    data object NotTeamMember: GetTeamVulnerabilitiesError()
-}
-
-typealias GetTeamVulnerabilitiesResult = Either<GetTeamVulnerabilitiesError, List<TeamVulnerabilities>>
-
-sealed class GetTeamSastAlertsError {
-    data object NotTeamMember: GetTeamSastAlertsError()
-}
-
-typealias GetTeamSastAlertsResult = Either<GetTeamSastAlertsError, List<TeamSastAlerts>>
 
 @Service
 class TeamServices(
     private val transactionManager: TransactionManager,
 ) {
-    fun getTeamsByUser(uid: Int): GetTeamsResult {
+    fun getTeamsByUser(uid: Int): SimpleTeamWithCountsListOutput {
         return transactionManager.run {
             val teamsRepo = it.teamRepository
-
-            success(teamsRepo.getTeamsByUser(uid))
+            SimpleTeamWithCountsListOutput(teamsRepo.getTeamsByUser(uid))
         }
     }
 
@@ -135,8 +55,8 @@ class TeamServices(
     ): GetTeamResult {
         return transactionManager.run {
             val teamsRepo = it.teamRepository
+            val team = teamsRepo.getTeam(tid) ?: return@run failure(GetTeamError.TeamNotFound)
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamError.Unauthorized)
-            val team = teamsRepo.getTeam(tid) ?: TODO()
             success(team)
         }
     }
@@ -145,7 +65,7 @@ class TeamServices(
         uid: Int,
         teamName: String,
         teamDescription: String?,
-    ): CreateTeamResult{
+    ): CreateTeamResult {
         if (teamName.isBlank()) return failure(CreateTeamError.InvalidName)
 
         return transactionManager.run {
@@ -167,7 +87,8 @@ class TeamServices(
             val reposRepository = it.repositoriesRepository
             val team = teamsRepo.getTeam(tid) ?: return@run failure(DeleteTeamError.TeamNotFound)
 
-            if (!teamsRepo.checkUserTeamLeader(uid, tid) && userRole != AppRole.ADMIN) return@run failure(DeleteTeamError.OnlyTeamLeaderOrAdmin)
+            if (!teamsRepo.checkUserTeamLeader(uid, tid) && userRole != AppRole.ADMIN) return@run failure(
+                DeleteTeamError.OnlyTeamLeaderOrAdmin)
 
             teamsRepo.deleteTeam(tid)
 

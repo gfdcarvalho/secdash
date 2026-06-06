@@ -5,6 +5,7 @@ import com.isel.ps.secdash.model.sast.SastAlertWithRepoSqlDto
 import com.isel.ps.secdash.model.sast.TeamSastAlerts
 import com.isel.ps.secdash.model.teams.SastStats
 import com.isel.ps.secdash.model.teams.SimpleTeam
+import com.isel.ps.secdash.model.teams.SimpleTeamWithCounts
 import com.isel.ps.secdash.model.teams.StatRowSqlDto
 import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamMember
@@ -24,19 +25,26 @@ class TeamRepository(
     private val handle: Handle,
 ) : TeamRepositoryInterface {
 
-    override fun getTeamsByUser(uid: Int): List<SimpleTeam> {
+    override fun getTeamsByUser(uid: Int): List<SimpleTeamWithCounts> {
         return handle.createQuery(
             """
-          SELECT t.tid, t.name, t.description
-          FROM team_users tu
-          JOIN teams t ON tu.tid = t.tid
-          WHERE tu.uid = :uid
-          """
+        SELECT
+            t.tid,
+            t.name,
+            t.description,
+            COUNT(DISTINCT tr.rid) AS repoCount,
+            COUNT(DISTINCT tu_all.uid) AS memberCount
+        FROM team_users tu
+        JOIN teams t ON t.tid = tu.tid
+        LEFT JOIN team_repos tr ON tr.tid = t.tid
+        LEFT JOIN team_users tu_all ON tu_all.tid = t.tid
+        WHERE tu.uid = :uid
+        GROUP BY t.tid, t.name, t.description
+        """
         )
             .bind("uid", uid)
-            .mapTo<SimpleTeam>()
+            .mapTo<SimpleTeamWithCounts>()
             .list()
-
     }
 
     override fun getTeam(teamId: Int): Team? {

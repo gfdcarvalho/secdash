@@ -27,6 +27,18 @@ export type SimpleTeamsListOutput = {
     teams: SimpleTeam[]
 }
 
+export type SimpleTeamWithCount = {
+    tid: number,
+    name: string,
+    description: string | null,
+    repoCount: number,
+    memberCount: number,
+}
+
+export type SimpleTeamWithCountListOutput = {
+    teams: SimpleTeamWithCount[]
+}
+
 export type CountsBySeverity = {
     critical: number
     high: number

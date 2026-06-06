@@ -1,26 +1,24 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.controller.model.Problem
-import com.isel.ps.secdash.model.teams.SimpleTeamsListOutput
 import com.isel.ps.secdash.model.teams.TeamCreationInput
 import com.isel.ps.secdash.model.teams.TeamRepositoryInput
 import com.isel.ps.secdash.model.teams.TeamUserInput
 import com.isel.ps.secdash.model.users.AuthenticatedUser
-import com.isel.ps.secdash.service.AddRepositoryToTeamError
-import com.isel.ps.secdash.service.AddUserToTeamError
-import com.isel.ps.secdash.service.CreateTeamError
-import com.isel.ps.secdash.service.DeleteTeamError
-import com.isel.ps.secdash.service.GetTeamError
-import com.isel.ps.secdash.service.PromoteUserToLeaderError
-import com.isel.ps.secdash.service.GetTeamStatsError
-import com.isel.ps.secdash.service.GetTeamSastHistoryError
-import com.isel.ps.secdash.service.GetTeamSastAlertsError
-import com.isel.ps.secdash.service.GetTeamVulnerabilitiesError
-import com.isel.ps.secdash.service.GetTeamVulnerabilityHistoryError
-import com.isel.ps.secdash.service.RemoveRepoFromTeamError
-import com.isel.ps.secdash.service.RemoveUserFromTeamError
+import com.isel.ps.secdash.service.responseTypes.AddRepositoryToTeamError
+import com.isel.ps.secdash.service.responseTypes.AddUserToTeamError
+import com.isel.ps.secdash.service.responseTypes.CreateTeamError
+import com.isel.ps.secdash.service.responseTypes.DeleteTeamError
+import com.isel.ps.secdash.service.responseTypes.GetTeamError
+import com.isel.ps.secdash.service.responseTypes.PromoteUserToLeaderError
+import com.isel.ps.secdash.service.responseTypes.GetTeamStatsError
+import com.isel.ps.secdash.service.responseTypes.GetTeamSastHistoryError
+import com.isel.ps.secdash.service.responseTypes.GetTeamSastAlertsError
+import com.isel.ps.secdash.service.responseTypes.GetTeamVulnerabilitiesError
+import com.isel.ps.secdash.service.responseTypes.GetTeamVulnerabilityHistoryError
+import com.isel.ps.secdash.service.responseTypes.RemoveRepoFromTeamError
+import com.isel.ps.secdash.service.responseTypes.RemoveUserFromTeamError
 import com.isel.ps.secdash.service.TeamServices
-import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import org.springframework.http.ResponseEntity
@@ -40,16 +38,12 @@ class TeamController(
     private val teamServices: TeamServices
 ) {
 
-
     @GetMapping
     fun getUserTeams(
         user: AuthenticatedUser
     ): ResponseEntity<*> {
         val result = teamServices.getTeamsByUser(user.user.uid)
-        return when (result) {
-            is Success -> ResponseEntity.ok(SimpleTeamsListOutput(result.value))
-            is Failure -> TODO() // for now this endpoint has no errors
-        }
+        return ResponseEntity.ok(result)
     }
 
     @GetMapping("/{teamId}")
@@ -63,6 +57,7 @@ class TeamController(
             is Failure ->
                 when (result.value){
                     GetTeamError.Unauthorized -> Problem.response(401, Problem.unauthorized)
+                    GetTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                 }
         }
     }

@@ -1,6 +1,5 @@
 package com.isel.ps.secdash.controller
 
-
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserCreationModel
@@ -71,7 +70,7 @@ class UserController(
                 teamsAndRepos.repositories,
                 teamsAndRepos.teams,
             )
-        ) // Needs error treatment
+        )
     }
 
     @DeleteMapping("/delete/{uid}")
