@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts'
 import type { CountsBySeverity, HistoryStats, TeamStats } from '../../model/teams/teams'
 import Style from './TeamStatsSection.module.css'
+import {useNavigate, useParams} from "react-router";
 
 const SEVERITY_COLORS = {
     critical: '#e05555',
@@ -38,7 +39,15 @@ function severityData(counts: CountsBySeverity) {
     ]).filter(d => d.value > 0) // este filtro tira os valores com 0 para o grafico não desenhar fatias que não devia
 }
 
-function SeverityDonut({ counts, total }: { counts: CountsBySeverity; total: number }) {
+function SeverityDonut({
+    counts,
+    total,
+    onClickSeverity,
+}: {
+    counts: CountsBySeverity;
+    total: number;
+    onClickSeverity?: (severity: string) => void;
+}) {
     const data = severityData(counts)
     const isEmpty = data.length === 0
 
@@ -68,7 +77,15 @@ function SeverityDonut({ counts, total }: { counts: CountsBySeverity; total: num
                         stroke="none"
                     >
                         {data.map((entry, i) => (
-                            <Cell key={i} fill={entry.color} />
+                            <Cell
+                                key={i}
+                                fill={entry.color}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    onClickSeverity?.(entry.name.toUpperCase())
+                                }}
+                                style={{ cursor: 'pointer' }}
+                            />
                         ))}
                     </Pie>
                 )}
@@ -79,12 +96,13 @@ function SeverityDonut({ counts, total }: { counts: CountsBySeverity; total: num
     )
 }
 
-function StatCard({ title, open, fixed, dismissed, counts }: {
+function StatCard({ title, open, fixed, dismissed, counts, onClickSeverity }: {
     title: string
     open: number
     fixed: number
     dismissed: number
-    counts: CountsBySeverity
+    counts: CountsBySeverity,
+    onClickSeverity?: (severity: string) => void
 }) {
     const severityEntries = [
         { label: 'Critical', value: counts.critical, color: SEVERITY_COLORS.critical },
@@ -112,7 +130,11 @@ function StatCard({ title, open, fixed, dismissed, counts }: {
                     ))}
                 </div>
             </div>
-            <SeverityDonut counts={counts} total={open} />
+            <SeverityDonut
+                counts={counts}
+                total={open}
+                onClickSeverity={onClickSeverity}
+            />
         </div>
     )
 }
@@ -198,6 +220,8 @@ function HistoryLineChart({ title, data }: {
 
 export function TeamStatsSection({ stats, historyStats }: Props) {
     const [view, setView] = useState<'pie' | 'line'>('pie')
+    const { teamId } = useParams<{ teamId: string }>()
+    const navigate = useNavigate()
 
     return (
         <div className={Style.statsSection}>
@@ -218,6 +242,12 @@ export function TeamStatsSection({ stats, historyStats }: Props) {
                         fixed={stats.vulnerabilityStats.fixed}
                         dismissed={stats.vulnerabilityStats.dismissed}
                         counts={stats.vulnerabilityStats.countsBySeverity}
+                        onClickSeverity={(severity) =>
+                            navigate(`/teams/${teamId}/vulnerabilities`, {
+                                state: { severity }
+                            })
+                        }
+
                     />
                     <StatCard
                         title="SAST Alerts"
@@ -225,6 +255,12 @@ export function TeamStatsSection({ stats, historyStats }: Props) {
                         fixed={stats.sastStats.fixed}
                         dismissed={stats.sastStats.dismissed}
                         counts={stats.sastStats.countsBySeverity}
+                        onClickSeverity={(severity) =>
+                            navigate(`/teams/${teamId}/sast`, {
+                                state: { severity }
+                            })
+                        }
+
                     />
                 </div>
             )}

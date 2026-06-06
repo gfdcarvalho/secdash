@@ -5,6 +5,7 @@ import type { Vulnerability, TeamVulnerabilities, VulnerabilitySeverity } from '
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './TeamVulnerabilities.module.css'
+import { useLocation } from 'react-router'
 
 const ALL_SEVERITIES: VulnerabilitySeverity[] = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN']
 const DATE_OPTIONS = [0, 7, 30, 90] as const
@@ -22,14 +23,28 @@ type VulnerabilityWithRepo = Vulnerability & { repoName: string }
 export function TeamVulnerabilitiesView() {
     const { t } = useTranslation()
     const navigate = useNavigate()
+    const location = useLocation()
     const { teamId } = useParams<{ teamId: string }>()
 
     const [vulnerabilities, setVulnerabilities] = useState<VulnerabilityWithRepo[] | null>(null)
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
-    const [selectedSeverities, setSelectedSeverities] = useState<Set<VulnerabilitySeverity>>(new Set())
+
+    const [selectedSeverities, setSelectedSeverities] =
+        useState<Set<VulnerabilitySeverity>>(() => {
+            const sev = location.state?.severity as VulnerabilitySeverity | undefined
+            return sev ? new Set([sev]) : new Set()
+        })
+
     const [dateFilter, setDateFilter] = useState<DateOption>(0)
     const [sortOption, setSortOption] = useState<SortOption>('none')
+
+    useEffect(() => {
+        const sev = location.state?.severity as VulnerabilitySeverity | undefined
+        if (sev) {
+            setSelectedSeverities(new Set([sev]))
+        }
+    }, [location.state])
 
     useEffect(() => {
         const fetch = async () => {
