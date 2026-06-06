@@ -122,12 +122,12 @@ class Problem(
         val repoDoesNotHaveSastFeatureEnabled =
             Problem(
                 typeUri = URI("$BASE_URI/repo-does-not-have-sast-feature-enabled"),
-                detail = "Invalid Team name",
+                detail = "Repository Does not have Sast feature enabled",
             )
         val repoDoesNotHaveDependabotFeatureEnabled =
             Problem(
                 typeUri = URI("$BASE_URI/repo-does-not-have-dependabot-feature-enabled"),
-                detail = "Invalid Team name",
+                detail = "Repository Does not have Dependabot feature enabled",
             )
 
         // ---------------- teams
