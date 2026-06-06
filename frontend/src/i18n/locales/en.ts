@@ -91,6 +91,8 @@ export const en = {
         codeScanningReport: "Code Scanning Report",
         dependencyScanningReport: "Dependency Scanning Report",
         sastReport: "SAST Report",
+        dependabotNotEnabled: "This repository does not have Dependabot enabled.",
+        sastNotEnabled: "This repository does not have SAST enabled.",
     },
     profile: {
         title: "Profile",

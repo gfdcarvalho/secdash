@@ -8,6 +8,8 @@ import Style from './RepoDetails.module.css'
 import type { RepositoryVulnerabilities } from '../../model/vulnerabilities/vulnerabilities'
 import { ProblemTypes } from '../../utils/ProblemTypes'
 import type { RepositorySast } from '../../model/sast/sast'
+import { Toast } from '../../components/Toast'
+import { authorizeWithProvider } from '../../utils/Authenticate'
 
 
 export function RepoDetails() {
@@ -16,6 +18,7 @@ export function RepoDetails() {
     const { repoId } = useParams()
     const [repo, setRepo] = useState<Repository>()
     const [notFound, setNotFound] = useState(false)
+    const [toastMessage, setToastMessage] = useState<string | null>(null)
 
     const getRepo = async () => {
         const response = await api.get<Repository>(`/repos/${repoId}`)
@@ -63,8 +66,11 @@ export function RepoDetails() {
             navigate(`/repos/${repo.rid}/vulnerabilities/${platform.toLowerCase()}`, { state: {vulnerabilities: response.value}})
         } else {
             switch(response.value.type) {
+                case ProblemTypes.unauthorized:
+                    authorizeWithProvider(platform.toLowerCase() as 'github' | 'gitlab', window.location.href)
+                    break
                 case ProblemTypes.repoDoesNotHaveDependabotFeatureEnabled:
-                    // setToast 
+                    setToastMessage(t.repoDetails.dependabotNotEnabled)
             }
         }
 
@@ -83,8 +89,11 @@ export function RepoDetails() {
             navigate(`/repos/${repo.rid}/sast/${platform.toLowerCase()}`, { state: {sastAlerts: response.value}})
         } else {
             switch(response.value.type) {
+                case ProblemTypes.unauthorized:
+                    authorizeWithProvider(platform.toLowerCase() as 'github' | 'gitlab', window.location.href)
+                    break
                 case ProblemTypes.repoDoesNotHaveSastFeatureEnabled:
-                    // setToast
+                    setToastMessage(t.repoDetails.sastNotEnabled)
             }
         }
 
@@ -93,6 +102,7 @@ export function RepoDetails() {
 
     return (
         <div className={Style.content}>
+            {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} duration={5000} />}
             <div className={Style.topSection}>
                 <div className={Style.topSectionLeft}>
                     <span className={Style.repoName}>{repo.name}</span>

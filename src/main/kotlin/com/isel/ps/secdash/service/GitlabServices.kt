@@ -44,7 +44,8 @@ class GitlabServices(
             it.usersRepository.getTokenInfo(userId, AuthProvider.GITLAB)
         } ?: return null
 
-        if (tokenInfo.expiresAt == null || Instant.now().isBefore(tokenInfo.expiresAt)) {
+        val expiresAt = tokenInfo.expiresAt
+        if (expiresAt != null && Instant.now().isBefore(expiresAt.minusSeconds(60))) {
             return tokenInfo.accessToken
         }
 
