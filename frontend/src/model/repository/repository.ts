@@ -25,3 +25,51 @@ export type Repository = {
     forksCount: number,
     visibility: Visibility,
 }
+
+export type CountsBySeverity = {
+    critical: number
+    high: number
+    medium: number
+    low: number
+    unknown: number
+}
+
+export type VulnerabilityStats = {
+    open: number
+    fixed: number
+    dismissed: number
+    countsBySeverity: CountsBySeverity
+}
+
+export type SastStats = {
+    open: number
+    fixed: number
+    dismissed: number
+    countsBySeverity: CountsBySeverity
+}
+
+export type RepoStats = {
+    vulnerabilityStats: VulnerabilityStats
+    sastStats: SastStats
+}
+
+export type DailySastCount = {
+    date: string
+    count: number
+    countsBySeverity: CountsBySeverity
+}
+
+export type DailyVulnerabilityCount = {
+    date: string
+    count: number
+    countsBySeverity: CountsBySeverity
+}
+
+export type DailySastCountList = DailySastCount[]
+
+export type DailyVulnerabilityCountList = DailyVulnerabilityCount[]
+
+export type HistoryStats = {
+    sastList: DailySastCountList
+    vulnList: DailyVulnerabilityCountList
+}

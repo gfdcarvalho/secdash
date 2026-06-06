@@ -60,4 +60,43 @@ class RepoController(
         val result = repoServices.findAllByUser(user.user.uid)
         return ResponseEntity.ok(result)
     }
+
+    @GetMapping("/{repoId}/stats")
+    fun getRepoStats(
+        @PathVariable repoId: Int,
+        user: AuthenticatedUser
+    ): ResponseEntity<*> {
+        val result = repoServices.getRepoStats(user.user.uid, repoId)
+        return when (result) {
+            is Success -> ResponseEntity.ok(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetRepositoryError.Unauthorized -> Problem.response(403, Problem.forbidden)
+                    GetRepositoryError.NotFound  -> Problem.response(404, Problem.repositoryNotFound)
+                }
+        }
+    }
+
+    //fun getRepoVulnerabilityHistory = TODO()
+
+    //fun getRepoSastHistory = TODO()
+
+    //fun getRepoVulnerabilities = TODO()
+
+    /*
+    @GetMapping("/{repoId}/sast")
+    fun getRepoSastAlerts(
+        @PathVariable repoId: Int,
+        user: AuthenticatedUser
+    ): ResponseEntity<*> {
+        val result = repoServices.getRepoSastAlerts(user.user.uid, repoId)
+        return when (result) {
+            is Success -> ResponseEntity.ok(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetRepoSastAlertsError.NotAuthorized -> Problem.response(403, Problem.forbidden)
+                }
+        }
+    }
+    */
 }

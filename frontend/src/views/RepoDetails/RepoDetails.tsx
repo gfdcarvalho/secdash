@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
-import type { Repository } from '../../model/repository/repository'
+import type {Repository, RepoStats} from '../../model/repository/repository'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './RepoDetails.module.css'
@@ -10,7 +10,7 @@ import { ProblemTypes } from '../../utils/ProblemTypes'
 import type { RepositorySast } from '../../model/sast/sast'
 import { Toast } from '../../components/Toast'
 import { authorizeWithProvider } from '../../utils/Authenticate'
-
+import { RepoStatsSection } from './RepoStatsSection'
 
 export function RepoDetails() {
     const { t } = useTranslation()
@@ -18,6 +18,9 @@ export function RepoDetails() {
     const { repoId } = useParams()
     const [repo, setRepo] = useState<Repository>()
     const [notFound, setNotFound] = useState(false)
+
+    const [stats, setStats] = useState<RepoStats>()
+
     const [toastMessage, setToastMessage] = useState<string | null>(null)
 
     const getRepo = async () => {
@@ -29,8 +32,14 @@ export function RepoDetails() {
         }
     }
 
+    const getStats = async () => {
+        const response = await api.get<RepoStats>(`/repos/${repoId}/stats`)
+        if (isSuccess(response)) setStats(response.value.data)
+    }
+
     useEffect(() => {
         getRepo()
+        getStats()
     }, [repoId])
 
     if (notFound) {
@@ -153,6 +162,13 @@ export function RepoDetails() {
                         <span className={Style.statValue}>{updatedAt}</span>
                     </div>
                 </div>
+
+                {stats && (
+                    <RepoStatsSection
+                        stats={stats}
+                        platform={platform}
+                    />
+                )}
 
                 <div className={Style.actions}>
                     <button className={Style.reportsButtons} onClick={() => {getDependabot()}}>

@@ -78,7 +78,6 @@ export type DailyVulnerabilityCount = {
     countsBySeverity: CountsBySeverity
 }
 
-
 export type DailySastCountList = DailySastCount[]
 
 export type DailyVulnerabilityCountList = DailyVulnerabilityCount[]

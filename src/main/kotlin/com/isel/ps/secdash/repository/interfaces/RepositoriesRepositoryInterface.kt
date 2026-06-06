@@ -3,6 +3,8 @@ package com.isel.ps.secdash.repository.interfaces
 import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.repositories.SastStats
+import com.isel.ps.secdash.model.repositories.VulnerabilityStats
 import com.isel.ps.secdash.model.sast.ExternalSastAlerts
 import com.isel.ps.secdash.model.sast.SastAlert
 import com.isel.ps.secdash.model.sast.SastAlertDetail
@@ -51,4 +53,8 @@ interface RepositoriesRepositoryInterface {
     fun getSastAlertDetail(sid: Int): SastAlertDetail?
 
     fun userHasAccessToSastAlert(uid: Int, sid: Int): Boolean
+
+    fun getRepoVulnerabilityStats(rid: Int): VulnerabilityStats
+
+    fun getRepoSastStats(rid: Int): SastStats
 }

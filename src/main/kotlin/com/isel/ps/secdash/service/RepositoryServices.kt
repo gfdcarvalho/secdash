@@ -1,7 +1,12 @@
 package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.repositories.RepositoryStats
+import com.isel.ps.secdash.model.sast.RepositorySast
+import com.isel.ps.secdash.model.teams.TeamStats
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
+import com.isel.ps.secdash.service.responseTypes.GetTeamSastAlertsError
+import com.isel.ps.secdash.service.responseTypes.GetTeamStatsError
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
@@ -20,6 +25,8 @@ sealed class DeleteRepositoryError{
 }
 
 typealias DeleteRepositoryResult = Either<DeleteRepositoryError, Unit>
+
+typealias GetRepoStatsResult = Either<GetRepositoryError, RepositoryStats>
 
 @Service
 class RepositoryServices(
@@ -56,6 +63,20 @@ class RepositoryServices(
 
             repo.deleteRepo(rid)
             success(Unit)
+        }
+    }
+
+    fun getRepoStats(uid: Int, rid: Int): GetRepoStatsResult {
+        return transactionManager.run {
+            val reposRepo = it.repositoriesRepository
+
+            if(!reposRepo.checkRepositoryExistence(rid)) return@run failure(GetRepositoryError.NotFound)
+            if (!reposRepo.userHasAccessToRepository(uid, rid)) return@run failure(GetRepositoryError.Unauthorized)
+
+            success(RepositoryStats(
+                vulnerabilityStats = reposRepo.getRepoVulnerabilityStats(rid),
+                sastStats = reposRepo.getRepoSastStats(rid),
+            ))
         }
     }
 }

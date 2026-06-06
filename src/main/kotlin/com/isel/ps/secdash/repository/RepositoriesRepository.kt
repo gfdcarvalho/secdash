@@ -7,6 +7,9 @@ import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositorySqlDto
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
+import com.isel.ps.secdash.model.repositories.SastStats
+import com.isel.ps.secdash.model.repositories.StatRowSqlDto
+import com.isel.ps.secdash.model.repositories.VulnerabilityStats
 import com.isel.ps.secdash.model.sast.ExternalSastAlerts
 import com.isel.ps.secdash.model.sast.SastAlert
 import com.isel.ps.secdash.model.sast.SastAlertDetail
@@ -510,5 +513,38 @@ class RepositoriesRepository(
             .bind("uid", uid)
             .mapTo<Boolean>()
             .one()
+    }
+
+    override fun getRepoVulnerabilityStats(rid: Int): VulnerabilityStats {
+        val rows = handle.createQuery(
+            """
+        SELECT state, severity, COUNT(*) AS count
+        FROM vulnerabilities
+        WHERE rid = :rid
+        GROUP BY state, severity
+        """.trimIndent()
+        )
+            .bind("rid", rid)
+            .mapTo<StatRowSqlDto>()
+            .list()
+
+        return VulnerabilityStats.from(rows)
+
+    }
+
+    override fun getRepoSastStats(rid: Int): SastStats {
+        val rows = handle.createQuery(
+            """
+        SELECT state, severity, COUNT(*) AS count
+        FROM sast_alerts
+        WHERE rid = :rid
+        GROUP BY state, severity
+        """.trimIndent()
+        )
+            .bind("rid", rid)
+            .mapTo<StatRowSqlDto>()
+            .list()
+
+        return SastStats.from(rows)
     }
 }
