@@ -27,6 +27,7 @@ sealed class DependencyScanError {
     data object Unauthorized : DependencyScanError()
     data object NotFound : DependencyScanError()
     data object RepositoryNotFound : DependencyScanError()
+    data object RepoDoesNotHaveDependancyScanFeatureEnabled : DependencyScanError()
 }
 
 typealias DependencyScanResult = Either<DependencyScanError, RepositoryVulnerabilities>
@@ -133,7 +134,7 @@ class GitlabServices(
                 gitlabClient.getDependencyScan(externalId, accessToken)
             } catch(e: HttpClientErrorException){
                 return@run when (e.statusCode) {
-                    HttpStatus.NOT_FOUND -> failure(DependencyScanError.NotFound)
+                    HttpStatus.NOT_FOUND -> failure(DependencyScanError.RepoDoesNotHaveDependancyScanFeatureEnabled)
                     HttpStatus.UNAUTHORIZED -> failure(DependencyScanError.Unauthorized)
                     else -> failure(DependencyScanError.Unauthorized)
                 }

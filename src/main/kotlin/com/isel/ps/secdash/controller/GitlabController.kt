@@ -101,6 +101,7 @@ class GitlabController(
                     DependencyScanError.NotFound -> Problem.response(404, Problem.notFound)
                     DependencyScanError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
                     DependencyScanError.Unauthorized -> Problem.response( 401, Problem.unauthorized)
+                    DependencyScanError.RepoDoesNotHaveDependancyScanFeatureEnabled -> Problem.response(403, Problem.repoDoesNotHaveDependabotFeatureEnabled)
                 }
         }
     }
@@ -120,7 +121,7 @@ class GitlabController(
                     SastError.Unauthorized -> Problem.response(401, Problem.unauthorized)
                     SastError.NotFound -> Problem.response(404, Problem.notFound)
                     SastError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
-                    SastError.RepoDoesNotHaveSastFeatureEnabled -> Problem.response(403, Problem.repoDoesNotHaveDependabotFeatureEnabled)
+                    SastError.RepoDoesNotHaveSastFeatureEnabled -> Problem.response(403, Problem.repoDoesNotHaveSastFeatureEnabled)
                 }
         }
     }
