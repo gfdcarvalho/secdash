@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import type { SastAlert, TeamSastAlerts, SastSeverity } from '../../model/sast/sast'
 import { api } from '../../utils/fetchApi'
@@ -27,7 +27,14 @@ export function TeamSast() {
     const [alerts, setAlerts] = useState<AlertWithRepo[] | null>(null)
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
-    const [selectedSeverities, setSelectedSeverities] = useState<Set<SastSeverity>>(new Set())
+
+    const location = useLocation()
+    const [selectedSeverities, setSelectedSeverities] = useState<Set<SastSeverity>>(
+        location.state?.severity
+            ? new Set([location.state.severity as SastSeverity])
+            : new Set()
+    )
+
     const [dateFilter, setDateFilter] = useState<DateOption>(0)
     const [sortOption, setSortOption] = useState<SortOption>('none')
 

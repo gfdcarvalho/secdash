@@ -28,7 +28,13 @@ export function RepoSast() {
     )
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
-    const [selectedSeverities, setSelectedSeverities] = useState<Set<SastSeverity>>(new Set())
+
+    const [selectedSeverities, setSelectedSeverities] = useState<Set<SastSeverity>>(
+        location.state?.severity
+            ? new Set([location.state.severity as SastSeverity])
+            : new Set()
+    )
+
     const [dateFilter, setDateFilter] = useState<DateOption>(0)
     const [sortOption, setSortOption] = useState<SortOption>('none')
 

@@ -167,6 +167,7 @@ export function RepoDetails() {
                     <RepoStatsSection
                         stats={stats}
                         platform={platform}
+                        rid={repo.rid}
                     />
                 )}
 

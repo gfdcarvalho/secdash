@@ -3,6 +3,10 @@ import { useNavigate, useParams } from 'react-router'
 import type { CountsBySeverity } from '../../model/teams/teams'
 import type { RepoStats } from '../../model/repository/repository'
 import Style from './RepoStatsSection.module.css'
+import type {RepositoryVulnerabilities} from "../../model/vulnerabilities/vulnerabilities.ts";
+import {api} from "../../utils/fetchApi.ts";
+import {isSuccess} from "../../utils/Either.ts";
+import type {RepositorySast} from "../../model/sast/sast.ts";
 
 const SEVERITY_COLORS = {
     critical: '#e05555',
@@ -27,6 +31,7 @@ const TOOLTIP_STYLE = {
 type Props = {
     stats: RepoStats
     platform: string
+    rid: number
 }
 
 function severityData(counts: CountsBySeverity) {
@@ -154,9 +159,33 @@ function StatCard({
     )
 }
 
-export function RepoStatsSection({ stats }: Props) {
+export function RepoStatsSection({ stats, platform, rid }: Props) {
     const navigate = useNavigate()
     const { repoId } = useParams<{ repoId: string }>()
+
+    const handleVulnClick = async (severity: string) => {
+        const uri = platform === 'GITHUB'
+            ? `/github/repositories/${rid}/dependabot`
+            : `/gitlab/repositories/${rid}/dependency-scanning`
+        const response = await api.get<RepositoryVulnerabilities>(uri)
+        if (isSuccess(response)) {
+            navigate(`/repos/${repoId}/vulnerabilities/${platform.toLowerCase()}`, {
+                state: { vulnerabilities: response.value, severity }
+            })
+        }
+    }
+
+    const handleSastClick = async (severity: string) => {
+        const uri = platform === 'GITHUB'
+            ? `/github/repositories/${rid}/sast`
+            : `/gitlab/repositories/${rid}/sast`
+        const response = await api.get<RepositorySast>(uri)
+        if (isSuccess(response)) {
+            navigate(`/repos/${repoId}/sast/${platform.toLowerCase()}`, {
+                state: { sastAlerts: response.value, severity }
+            })
+        }
+    }
 
     return (
         <div className={Style.statsSection}>
@@ -167,12 +196,7 @@ export function RepoStatsSection({ stats }: Props) {
                     fixed={stats.vulnerabilityStats.fixed}
                     dismissed={stats.vulnerabilityStats.dismissed}
                     counts={stats.vulnerabilityStats.countsBySeverity}
-                    onClickSeverity={(severity) =>
-                        navigate(
-                            `/repos/${repoId}/vulnerabilities`,
-                            { state: { severity } }
-                        )
-                    }
+                    onClickSeverity={handleVulnClick}
                 />
 
                 <StatCard
@@ -181,12 +205,7 @@ export function RepoStatsSection({ stats }: Props) {
                     fixed={stats.sastStats.fixed}
                     dismissed={stats.sastStats.dismissed}
                     counts={stats.sastStats.countsBySeverity}
-                    onClickSeverity={(severity) =>
-                        navigate(
-                            `/repos/${repoId}/sast`,
-                            { state: { severity } }
-                        )
-                    }
+                    onClickSeverity={handleSastClick}
                 />
             </div>
         </div>

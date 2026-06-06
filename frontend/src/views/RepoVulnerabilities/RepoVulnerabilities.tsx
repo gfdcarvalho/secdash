@@ -28,7 +28,13 @@ export function RepoVulnerabilities() {
     )
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
-    const [selectedSeverities, setSelectedSeverities] = useState<Set<VulnerabilitySeverity>>(new Set())
+
+    const [selectedSeverities, setSelectedSeverities] = useState<Set<VulnerabilitySeverity>>(
+        location.state?.severity
+            ? new Set([location.state.severity as VulnerabilitySeverity])
+            : new Set()
+    )
+
     const [dateFilter, setDateFilter] = useState<DateOption>(0)
     const [sortOption, setSortOption] = useState<SortOption>('none')
 
