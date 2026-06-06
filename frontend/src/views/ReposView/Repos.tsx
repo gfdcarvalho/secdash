@@ -7,6 +7,7 @@ import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import { AddFromGithubModal } from './AddFromGithubModal'
 import { AddFromGitlabModal } from './AddFromGitlabModal'
+import {Toast} from "../../components/Toast.tsx";
 
 type OpenModal = 'github' | 'gitlab' | null
 
@@ -17,6 +18,7 @@ export function Repos() {
     const [repositories, setRepositories] = useState<Array<Repository>>()
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
+    const [toastMessage, setToastMessage] = useState<string | null>(null)
     const [openModal, setOpenModal] = useState<OpenModal>(() => {
         const provider = searchParams.get('provider')
         if (provider === 'github' || provider === 'gitlab') return provider
@@ -42,6 +44,17 @@ export function Repos() {
         }
     }, [openModal])
 
+    const deleteRepo = async (repoId: number) => {
+        const response = await api.delete(`/repos/${repoId}`)
+        if (isSuccess(response)) {
+            setRepositories(prev =>
+                prev?.filter(repo => repo.rid !== repoId)
+            )
+        } else {
+            setToastMessage(t.repoDetails.deleteError)
+        }
+    }
+
     const handleClose = () => setOpenModal(null)
     const handleRepoAdded = () => getRepositories()
 
@@ -49,6 +62,7 @@ export function Repos() {
 
     return (
         <div className={Style.repositoriesContent}>
+            {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} duration={5000} />}
             {openModal === 'github' && (
                 <AddFromGithubModal onClose={handleClose} onRepoAdded={handleRepoAdded} alreadyAddedIds={alreadyAddedIds} />
             )}
@@ -101,6 +115,15 @@ export function Repos() {
                                         <span>{t.repos.issues}: {repo.issuesCount}</span>
                                     </div>
                                 </div>
+                                <button
+                                    className={Style.removeButton}
+                                    onClick={e => {
+                                        e.stopPropagation()
+                                        void deleteRepo(repo.rid)
+                                    }}
+                                >
+                                    {t.repos.deleteButton}
+                                </button>
                             </div>
                         ))
                     }

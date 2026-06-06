@@ -77,6 +77,7 @@ export const en = {
         addFromGitlab: "Add repositories from GitLab",
         forks: "Forks",
         issues: "Issues",
+        deleteButton: "Delete repository",
     },
     repoDetails: {
         notFound: "Repository not found.",

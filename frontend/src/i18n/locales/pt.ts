@@ -77,6 +77,7 @@ export const pt = {
         addFromGitlab: "Adicionar repositórios do GitLab",
         forks: "Forks",
         issues: "Issues",
+        deleteButton: "Eliminar repoisitório",
     },
     repoDetails: {
         notFound: "Repositório não encontrado.",
