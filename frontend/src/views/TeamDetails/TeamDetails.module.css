@@ -4,16 +4,13 @@
 
 .topSection {
     composes: topBar from '../../styles/shared.module.css';
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.4em;
+    align-items: center;
 }
 
-.topRow {
+.teamLeft {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+    flex-direction: column;
+    gap: 0.25em;
 }
 
 .topActions {

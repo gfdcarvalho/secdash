@@ -76,18 +76,18 @@ export function TeamDetails() {
     return (
         <div className={Style.content}>
             <div className={Style.topSection}>
-                <div className={Style.topRow}>
+                <div className={Style.teamLeft}>
                     <span className={Style.teamName}>{team.name}</span>
-                    <div className={Style.topActions}>
-                        <button className={Style.actionButton} onClick={() => navigate(`/teams/${team.tid}/vulnerabilities`)}>
-                            {t.teamDetails.vulnerabilities}
-                        </button>
-                        <button className={Style.actionButton} onClick={() => navigate(`/teams/${team.tid}/sast`)}>
-                            {t.teamDetails.sastAlerts}
-                        </button>
-                    </div>
+                    {team.description && <p className={Style.description}>{team.description}</p>}
                 </div>
-                {team.description && <p className={Style.description}>{team.description}</p>}
+                <div className={Style.topActions}>
+                    <button className={Style.actionButton} onClick={() => navigate(`/teams/${team.tid}/vulnerabilities`)}>
+                        {t.teamDetails.vulnerabilities}
+                    </button>
+                    <button className={Style.actionButton} onClick={() => navigate(`/teams/${team.tid}/sast`)}>
+                        {t.teamDetails.sastAlerts}
+                    </button>
+                </div>
             </div>
             <div className={Style.bottomSection}>
                 {stats && <TeamStatsSection stats={stats} historyStats={historyStats}/>}

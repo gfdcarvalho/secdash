@@ -1,24 +1,8 @@
-.statsSection {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75em;
-}
+.statsSection { composes: statsSection from '../../styles/shared.module.css'; }
 
-.toggleBar {
-    display: flex;
-    gap: 0.4em;
-}
+.toggleBar { composes: toggleBar from '../../styles/shared.module.css'; }
 
-.toggleBtn {
-    font-size: 0.8em;
-    padding: 0.3em 0.8em;
-    border-radius: 0.4em;
-    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
-    background: transparent;
-    color: color-mix(in srgb, var(--color-text) 60%, transparent);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
+.toggleBtn { composes: toggleBtn from '../../styles/shared.module.css'; }
 
 .toggleBtn[data-active="true"] {
     border-color: color-mix(in srgb, var(--color-text) 50%, transparent);
@@ -26,98 +10,36 @@
     color: var(--color-text);
 }
 
-.lineChartInner {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6em;
-    flex: 1;
-    min-width: 0;
-}
+.lineChartInner { composes: lineChartInner from '../../styles/shared.module.css'; }
 
-.lineChartHeader {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4em;
-}
+.lineChartHeader { composes: lineChartHeader from '../../styles/shared.module.css'; }
 
-.severityToggleBar {
-    display: flex;
-    gap: 0.3em;
-    flex-wrap: wrap;
-}
+.severityToggleBar { composes: severityToggleBar from '../../styles/shared.module.css'; }
 
-.severityToggleBtn {
-    font-size: 0.7em;
-    padding: 0.2em 0.55em;
-    border-radius: 0.4em;
-    border: 1px solid color-mix(in srgb, var(--severity-color) 40%, transparent);
-    background: transparent;
-    color: color-mix(in srgb, var(--color-text) 45%, transparent);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-}
+.severityToggleBtn { composes: severityToggleBtn from '../../styles/shared.module.css'; }
 
 .severityToggleBtn[data-active="true"] {
     background: color-mix(in srgb, var(--severity-color) 15%, transparent);
     color: var(--severity-color);
 }
 
-.loadingMessage {
-    font-size: 0.85em;
-    color: color-mix(in srgb, var(--color-text) 50%, transparent);
-}
+.loadingMessage { composes: loadingMessage from '../../styles/shared.module.css'; }
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1em;
-}
+.grid { composes: statsGrid from '../../styles/shared.module.css'; }
 
 @media (max-width: 600px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
+    .grid { grid-template-columns: 1fr; }
 }
 
-.card {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5em;
-    padding: 1em 1em 1em 1.2em;
-    border: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
-    border-radius: 0.6em;
-    background: color-mix(in srgb, var(--color-text) 4%, transparent);
-}
+.card { composes: statsCard from '../../styles/shared.module.css'; }
 
-/* left side */
-.cardLeft {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    flex: 1;
-    min-width: 0;
-}
+.cardLeft { composes: statsCardLeft from '../../styles/shared.module.css'; }
 
-.cardTitle {
-    font-size: 0.85em;
-    font-weight: 600;
-    color: color-mix(in srgb, var(--color-text) 70%, transparent);
-}
+.cardTitle { composes: statsCardTitle from '../../styles/shared.module.css'; }
 
-.cardBadges {
-    display: flex;
-    gap: 0.4em;
-    flex-wrap: wrap;
-}
+.cardBadges { composes: statsCardBadges from '../../styles/shared.module.css'; }
 
-.badge {
-    font-size: 0.75em;
-    padding: 0.2em 0.55em;
-    border-radius: 0.4em;
-    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
-    color: color-mix(in srgb, var(--color-text) 65%, transparent);
-}
+.badge { composes: statsBadge from '../../styles/shared.module.css'; }
 
 .badge[data-variant="open"] {
     border-color: color-mix(in srgb, var(--color-text) 35%, transparent);
@@ -125,51 +47,16 @@
     font-weight: 600;
 }
 
-/* severity list */
-.severityList {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3em;
-}
+.severityList { composes: severityList from '../../styles/shared.module.css'; }
 
-.severityRow {
-    display: flex;
-    align-items: center;
-    gap: 0.45em;
-    font-size: 0.8em;
-}
+.severityRow { composes: severityRow from '../../styles/shared.module.css'; }
 
-.severityDot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
+.severityDot { composes: severityDot from '../../styles/shared.module.css'; }
 
-.severityLabel {
-    color: color-mix(in srgb, var(--color-text) 70%, transparent);
-    min-width: 4.5em;
-}
+.severityLabel { composes: severityLabel from '../../styles/shared.module.css'; }
 
-.severityValue {
-    font-weight: 600;
-}
+.severityValue { composes: severityValue from '../../styles/shared.module.css'; }
 
-/* donut */
-.donutWrapper {
-    position: relative;
-    flex-shrink: 0;
-    width: 160px;
-    height: 160px;
-}
+.donutWrapper { composes: donutWrapper from '../../styles/shared.module.css'; }
 
-.donutTotal {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3em;
-    font-weight: 700;
-    pointer-events: none;
-}
+.donutTotal { composes: donutTotal from '../../styles/shared.module.css'; }

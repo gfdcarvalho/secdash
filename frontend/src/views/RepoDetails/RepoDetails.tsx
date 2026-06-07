@@ -163,14 +163,6 @@ export function RepoDetails() {
                     </div>
                 </div>
 
-                {stats && (
-                    <RepoStatsSection
-                        stats={stats}
-                        platform={platform}
-                        rid={repo.rid}
-                    />
-                )}
-
                 <div className={Style.actions}>
                     <button className={Style.reportsButtons} onClick={() => {getDependabot()}}>
                         {platform === 'GITHUB' ? t.repoDetails.dependabotReport : t.repoDetails.dependencyScanningReport}
@@ -179,6 +171,14 @@ export function RepoDetails() {
                         {platform === 'GITHUB' ? t.repoDetails.codeScanningReport : t.repoDetails.sastReport}
                     </button>
                 </div>
+
+                {stats && (
+                    <RepoStatsSection
+                        stats={stats}
+                        platform={platform}
+                        rid={repo.rid}
+                    />
+                )}
             </div>
         </div>
     )

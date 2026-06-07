@@ -172,3 +172,179 @@
     text-align: center;
     color: color-mix(in srgb, var(--color-text) 60%, transparent);
 }
+
+/* ── StatsSection (shared by TeamStatsSection + RepoStatsSection) ── */
+
+.statsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+}
+
+.toggleBar {
+    display: flex;
+    gap: 0.4em;
+}
+
+.toggleBtn {
+    font-size: 0.8em;
+    padding: 0.3em 0.8em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+    background: transparent;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.toggleBtn[data-active="true"] {
+    border-color: color-mix(in srgb, var(--color-text) 50%, transparent);
+    background: color-mix(in srgb, var(--color-text) 8%, transparent);
+    color: var(--color-text);
+}
+
+.lineChartInner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    flex: 1;
+    min-width: 0;
+}
+
+.lineChartHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+}
+
+.severityToggleBar {
+    display: flex;
+    gap: 0.3em;
+    flex-wrap: wrap;
+}
+
+.severityToggleBtn {
+    font-size: 0.7em;
+    padding: 0.2em 0.55em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--severity-color) 40%, transparent);
+    background: transparent;
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.severityToggleBtn[data-active="true"] {
+    background: color-mix(in srgb, var(--severity-color) 15%, transparent);
+    color: var(--severity-color);
+}
+
+.loadingMessage {
+    font-size: 0.85em;
+    color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+}
+
+@media (max-width: 600px) {
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.statsCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+    padding: 1em 1em 1em 1.2em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+    border-radius: 0.6em;
+    background: color-mix(in srgb, var(--color-text) 4%, transparent);
+}
+
+.statsCardLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    flex: 1;
+    min-width: 0;
+}
+
+.statsCardTitle {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+
+.statsCardBadges {
+    display: flex;
+    gap: 0.4em;
+    flex-wrap: wrap;
+}
+
+.statsBadge {
+    font-size: 0.75em;
+    padding: 0.2em 0.55em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+    color: color-mix(in srgb, var(--color-text) 65%, transparent);
+}
+
+.statsBadge[data-variant="open"] {
+    border-color: color-mix(in srgb, var(--color-text) 35%, transparent);
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+
+.severityList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+}
+
+.severityRow {
+    display: flex;
+    align-items: center;
+    gap: 0.45em;
+    font-size: 0.8em;
+}
+
+.severityDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.severityLabel {
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    min-width: 4.5em;
+}
+
+.severityValue {
+    font-weight: 600;
+}
+
+.donutWrapper {
+    position: relative;
+    flex-shrink: 0;
+    width: 160px;
+    height: 160px;
+}
+
+.donutTotal {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3em;
+    font-weight: 700;
+    pointer-events: none;
+}
