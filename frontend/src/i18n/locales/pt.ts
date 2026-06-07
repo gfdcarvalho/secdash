@@ -215,6 +215,14 @@ export const pt = {
         updatedAt: "Atualizado em",
         references: "Referências",
     },
+    home: {
+        title: "As Minhas Equipas",
+        loading: "A carregar...",
+        error: "Erro ao carregar equipas.",
+        noTeams: "Ainda não tens equipas.",
+        members: "membros",
+        repositories: "repositórios",
+    },
     gitlab: {
         title: "GitLab",
         searchPlaceholder: "Pesquisa nos teus repositórios GitLab",

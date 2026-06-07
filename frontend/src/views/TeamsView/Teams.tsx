@@ -47,8 +47,20 @@ export function Teams() {
                     {teams?.length === 0 && <TeamsMessage text={t.teams.noTeams} />}
                     {teams?.map(team => (
                         <div key={team.tid} className={Style.teamCard} onClick={() => navigate(`/teams/${team.tid}`)}>
-                            <h3>{team.name}</h3>
-                            {team.description && <p>{team.description}</p>}
+                            <div className={Style.teamInfo}>
+                                <h3>{team.name}</h3>
+                                {team.description && <p>{team.description}</p>}
+                            </div>
+                            <div className={Style.teamCounts}>
+                                <div className={Style.countItem}>
+                                    <span className={Style.countNumber}>{team.memberCount}</span>
+                                    <span className={Style.countLabel}>{t.home.members}</span>
+                                </div>
+                                <div className={Style.countItem}>
+                                    <span className={Style.countNumber}>{team.repoCount}</span>
+                                    <span className={Style.countLabel}>{t.home.repositories}</span>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>

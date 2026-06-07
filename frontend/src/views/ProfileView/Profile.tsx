@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import { useAuthentication } from '../../utils/Authentication'
 import type { Repository } from '../../model/repository/repository'
-import type { SimpleTeam } from '../../model/teams/teams'
+import type { SimpleTeamWithCount } from '../../model/teams/teams'
 import type { User } from '../../model/user/user'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
@@ -49,7 +49,7 @@ export function Profile() {
                     <h3 className={Style.sectionTitle}>{t.profile.teams} ({user?.teams.length ?? 0})</h3>
                     <div className={Style.reposListDiv}>
                         {user?.teams.length === 0 && <ListMessage text={t.profile.noTeams} />}
-                        {user?.teams.map(team => teamCard(team, () => navigate(`/teams/${team.tid}`)))}
+                        {user?.teams.map(team => teamCard(team, () => navigate(`/teams/${team.tid}`), t.home.members, t.home.repositories))}
                     </div>
                 </div>
             </div>
@@ -81,11 +81,23 @@ function repositoryCard(repo: Repository, onClick: () => void) {
 }
 
 
-function teamCard(team: SimpleTeam, onClick: () => void) {
+function teamCard(team: SimpleTeamWithCount, onClick: () => void, membersLabel: string, repositoriesLabel: string) {
     return (
         <div key={team.tid} className={Style.teamCard} onClick={onClick}>
-            <span className={Style.teamName}>{team.name}</span>
-            {team.description && <p className={Style.teamDescription}>{team.description}</p>}
+            <div className={Style.teamInfo}>
+                <span className={Style.teamName}>{team.name}</span>
+                {team.description && <p className={Style.teamDescription}>{team.description}</p>}
+            </div>
+            <div className={Style.teamCounts}>
+                <div className={Style.countItem}>
+                    <span className={Style.countNumber}>{team.memberCount}</span>
+                    <span className={Style.countLabel}>{membersLabel}</span>
+                </div>
+                <div className={Style.countItem}>
+                    <span className={Style.countNumber}>{team.repoCount}</span>
+                    <span className={Style.countLabel}>{repositoriesLabel}</span>
+                </div>
+            </div>
         </div>
     )
 }

@@ -105,11 +105,13 @@
     margin: 0;
 }
 
-/* team card — simpler than repo card, no avatar */
+/* team card */
 .teamCard {
     display: flex;
-    flex-direction: column;
-    gap: 0.2em;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
     padding: 0.75em 1em;
     border-bottom: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
     cursor: pointer;
@@ -121,13 +123,44 @@
     background: color-mix(in srgb, var(--color-text) 6%, transparent);
 }
 
+.teamInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+
 .teamName {
     font-weight: 600;
     font-size: 0.95em;
+    margin: 0;
 }
 
 .teamDescription {
     font-size: 0.82em;
     color: color-mix(in srgb, var(--color-text) 65%, transparent);
     margin: 0;
+}
+
+.teamCounts {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5em;
+    flex-shrink: 0;
+}
+
+.countItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1em;
+}
+
+.countNumber {
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.countLabel {
+    font-size: 0.75em;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
 }

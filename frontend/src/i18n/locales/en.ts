@@ -215,6 +215,14 @@ export const en = {
         updatedAt: "Updated",
         references: "References",
     },
+    home: {
+        title: "My Teams",
+        loading: "Loading...",
+        error: "Failed to load teams.",
+        noTeams: "No teams yet.",
+        members: "members",
+        repositories: "repositories",
+    },
     gitlab: {
         title: "GitLab",
         searchPlaceholder: "Search in your GitLab repositories",
