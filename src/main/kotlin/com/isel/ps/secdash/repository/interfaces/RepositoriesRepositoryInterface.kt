@@ -3,6 +3,7 @@ package com.isel.ps.secdash.repository.interfaces
 import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
+import com.isel.ps.secdash.model.repositories.RepositoryVulnerabilityHistory
 import com.isel.ps.secdash.model.repositories.SastStats
 import com.isel.ps.secdash.model.repositories.VulnerabilityStats
 import com.isel.ps.secdash.model.sast.ExternalSastAlerts
@@ -57,4 +58,6 @@ interface RepositoriesRepositoryInterface {
     fun getRepoVulnerabilityStats(rid: Int): VulnerabilityStats
 
     fun getRepoSastStats(rid: Int): SastStats
+
+    fun getRepoVulnerabilityHistory(rid: Int): List<RepositoryVulnerabilityHistory>
 }

@@ -1,5 +1,7 @@
 package com.isel.ps.secdash.service
 
+import com.isel.ps.secdash.model.repositories.CountsBySeverity
+import com.isel.ps.secdash.model.repositories.DailyVulnerabilityCount
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryStats
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
@@ -7,6 +9,7 @@ import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.failure
 import com.isel.ps.secdash.utils.success
 import org.springframework.stereotype.Service
+import java.time.ZoneOffset
 
 sealed class GetRepositoryError{
     data object NotFound : GetRepositoryError()
@@ -23,6 +26,8 @@ sealed class DeleteRepositoryError{
 typealias DeleteRepositoryResult = Either<DeleteRepositoryError, Unit>
 
 typealias GetRepoStatsResult = Either<GetRepositoryError, RepositoryStats>
+
+typealias GetRepoVulnerabilityHistoryResult = Either<GetRepositoryError, List<DailyVulnerabilityCount>>
 
 @Service
 class RepositoryServices(
@@ -73,6 +78,41 @@ class RepositoryServices(
                 vulnerabilityStats = reposRepo.getRepoVulnerabilityStats(rid),
                 sastStats = reposRepo.getRepoSastStats(rid),
             ))
+        }
+    }
+
+    fun getRepoVulnerabilityHistory(uid: Int, rid: Int): GetRepoVulnerabilityHistoryResult {
+        return transactionManager.run {
+            val reposRepo = it.repositoriesRepository
+
+            if (!reposRepo.userHasAccessToRepository(rid, uid))
+                return@run failure(GetRepositoryError.Unauthorized)
+
+            val scans = reposRepo.getRepoVulnerabilityHistory(rid)
+
+            val dailyCounts = scans
+                .groupBy { scan ->
+                    scan.scannedAt.atZone(ZoneOffset.UTC).toLocalDate()
+                }
+                .map { (date, scansOnDay) ->
+
+                    val latestScan = scansOnDay.maxBy { it.scannedAt }
+
+                    DailyVulnerabilityCount(
+                        date = date,
+                        count = latestScan.vulnerabilityCount,
+                        countsBySeverity = CountsBySeverity(
+                            critical = latestScan.criticalCount,
+                            high = latestScan.highCount,
+                            medium = latestScan.mediumCount,
+                            low = latestScan.lowCount,
+                            unknown = latestScan.unknownCount,
+                        )
+                    )
+                }
+                .sortedBy { it.date }
+
+            success(dailyCounts)
         }
     }
 }

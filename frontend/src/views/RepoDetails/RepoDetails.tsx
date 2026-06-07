@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
-import type {Repository, RepoStats} from '../../model/repository/repository'
+import type {
+    DailySastCountList,
+    DailyVulnerabilityCountList,
+    HistoryStats,
+    Repository,
+    RepoStats
+} from '../../model/repository/repository'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './RepoDetails.module.css'
@@ -20,6 +26,7 @@ export function RepoDetails() {
     const [notFound, setNotFound] = useState(false)
 
     const [stats, setStats] = useState<RepoStats>()
+    const [historyStats, setHistoryStats] = useState<HistoryStats>()
 
     const [toastMessage, setToastMessage] = useState<string | null>(null)
 
@@ -37,9 +44,20 @@ export function RepoDetails() {
         if (isSuccess(response)) setStats(response.value.data)
     }
 
+    const getHistory = async () => {
+        const sastResponse = await api.get<DailySastCountList>(`/repos/${repoId}/sast/history`)
+        if (isSuccess(sastResponse)) {
+            const vulnResponse = await api.get<DailyVulnerabilityCountList>(`/repos/${repoId}/vulnerability/history`)
+            if (isSuccess(vulnResponse)) {
+                setHistoryStats({ sastList: vulnResponse.value.data, vulnList: vulnResponse.value.data })
+            }
+        }
+    }
+
     useEffect(() => {
         getRepo()
         getStats()
+        getHistory()
     }, [repoId])
 
     if (notFound) {
@@ -177,7 +195,7 @@ export function RepoDetails() {
                         stats={stats}
                         platform={platform}
                         rid={repo.rid}
-                    />
+                        historyStats={historyStats} />
                 )}
             </div>
         </div>

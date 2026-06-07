@@ -77,26 +77,19 @@ class RepoController(
         }
     }
 
-    //fun getRepoVulnerabilityHistory = TODO()
-
-    //fun getRepoSastHistory = TODO()
-
-    //fun getRepoVulnerabilities = TODO()
-
-    /*
-    @GetMapping("/{repoId}/sast")
-    fun getRepoSastAlerts(
+    @GetMapping("/{repoId}/vulnerability/history")
+    fun getRepoVulnerabilityHistory(
         @PathVariable repoId: Int,
-        user: AuthenticatedUser
+        user: AuthenticatedUser,
     ): ResponseEntity<*> {
-        val result = repoServices.getRepoSastAlerts(user.user.uid, repoId)
+        val result = repoServices.getRepoVulnerabilityHistory(user.user.uid, repoId)
         return when (result) {
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
                 when (result.value) {
-                    GetRepoSastAlertsError.NotAuthorized -> Problem.response(403, Problem.forbidden)
+                    GetRepositoryError.Unauthorized -> Problem.response(403, Problem.forbidden)
+                    GetRepositoryError.NotFound  -> Problem.response(404, Problem.repositoryNotFound)
                 }
         }
     }
-    */
 }

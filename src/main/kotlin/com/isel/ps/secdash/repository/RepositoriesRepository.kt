@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositorySqlDto
+import com.isel.ps.secdash.model.repositories.RepositoryVulnerabilityHistory
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
 import com.isel.ps.secdash.model.repositories.SastStats
 import com.isel.ps.secdash.model.repositories.StatRowSqlDto
@@ -546,5 +547,20 @@ class RepositoriesRepository(
             .list()
 
         return SastStats.from(rows)
+    }
+
+    override fun getRepoVulnerabilityHistory(rid: Int): List<RepositoryVulnerabilityHistory> {
+        return handle.createQuery(
+            """
+        SELECT scan_id, rid, scanned_at, vulnerability_count,
+               critical_count, high_count, medium_count, low_count, unknown_count
+        FROM repo_vulnerability_scans
+        WHERE rid = :rid
+        ORDER BY scanned_at
+        """.trimIndent()
+        )
+            .bind("rid", rid)
+            .mapTo<RepositoryVulnerabilityHistory>()
+            .list()
     }
 }

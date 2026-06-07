@@ -1,12 +1,14 @@
-import { PieChart, Pie, Cell, Tooltip } from 'recharts'
+import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts'
 import { useNavigate, useParams } from 'react-router'
 import type { CountsBySeverity } from '../../model/teams/teams'
-import type { RepoStats } from '../../model/repository/repository'
+import type {HistoryStats, RepoStats} from '../../model/repository/repository'
 import Style from './RepoStatsSection.module.css'
 import type {RepositoryVulnerabilities} from "../../model/vulnerabilities/vulnerabilities.ts";
 import {api} from "../../utils/fetchApi.ts";
 import {isSuccess} from "../../utils/Either.ts";
 import type {RepositorySast} from "../../model/sast/sast.ts";
+import { useState } from 'react'
+
 
 const SEVERITY_COLORS = {
     critical: '#e05555',
@@ -15,6 +17,64 @@ const SEVERITY_COLORS = {
     low: '#5ba85a',
     unknown: '#888888',
 }
+
+const SEVERITY_LINES = [
+    { key: 'count',    label: 'Total',    color: '#a0a0a0' },
+    { key: 'critical', label: 'Critical', color: SEVERITY_COLORS.critical },
+    { key: 'high',     label: 'High',     color: SEVERITY_COLORS.high },
+    { key: 'medium',   label: 'Medium',   color: SEVERITY_COLORS.medium },
+    { key: 'low',      label: 'Low',      color: SEVERITY_COLORS.low },
+    { key: 'unknown',  label: 'Unknown',  color: SEVERITY_COLORS.unknown },
+]
+
+function HistoryLineChart({ title, data }: {
+    title: string
+    data: Array<{ date: string; count: number; countsBySeverity: CountsBySeverity }>
+}) {
+    const [active, setActive] = useState<Set<string>>(new Set(SEVERITY_LINES.map(s => s.key)))
+    const flatData = data.map(d => ({ date: d.date, count: d.count, ...d.countsBySeverity }))
+    const toggle = (key: string) =>
+        setActive(prev => {
+            const next = new Set(prev)
+            next.has(key) ? next.delete(key) : next.add(key)
+            return next
+        })
+
+    return (
+        <div className={Style.card}>
+            <div className={Style.lineChartInner}>
+                <div className={Style.lineChartHeader}>
+                    <span className={Style.cardTitle}>{title}</span>
+                    <div className={Style.severityToggleBar}>
+                        {SEVERITY_LINES.map(s => (
+                            <button
+                                key={s.key}
+                                className={Style.severityToggleBtn}
+                                data-active={active.has(s.key)}
+                                style={{ '--severity-color': s.color } as React.CSSProperties}
+                                onClick={() => toggle(s.key)}
+                            >
+                                {s.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <ResponsiveContainer width="100%" height={160}>
+                    <LineChart data={flatData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.15)" />
+                        <XAxis dataKey="date" tick={{ fontSize: '0.7em', fill: 'var(--color-text)' }} tickLine={false} tickFormatter={d => d.slice(5)} />
+                        <YAxis tick={{ fontSize: '0.7em', fill: 'var(--color-text)' }} tickLine={false} axisLine={false} allowDecimals={false} />
+                        <Tooltip {...TOOLTIP_STYLE} />
+                        {SEVERITY_LINES.map(s => (
+                            <Line key={s.key} type="monotone" dataKey={s.key} stroke={s.color} strokeWidth={2} dot={{ r: 3, fill: s.color }} hide={!active.has(s.key)} />
+                        ))}
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    )
+}
+
 
 const TOOLTIP_STYLE = {
     contentStyle: {
@@ -32,6 +92,7 @@ type Props = {
     stats: RepoStats
     platform: string
     rid: number
+    historyStats?: HistoryStats
 }
 
 function severityData(counts: CountsBySeverity) {
@@ -159,7 +220,8 @@ function StatCard({
     )
 }
 
-export function RepoStatsSection({ stats, platform, rid }: Props) {
+export function RepoStatsSection({ stats, platform, rid, historyStats }: Props) {
+    const [view, setView] = useState<'pie' | 'line'>('pie')
     const navigate = useNavigate()
     const { repoId } = useParams<{ repoId: string }>()
 
@@ -189,25 +251,34 @@ export function RepoStatsSection({ stats, platform, rid }: Props) {
 
     return (
         <div className={Style.statsSection}>
-            <div className={Style.grid}>
-                <StatCard
-                    title="Vulnerabilities"
-                    open={stats.vulnerabilityStats.open}
-                    fixed={stats.vulnerabilityStats.fixed}
-                    dismissed={stats.vulnerabilityStats.dismissed}
-                    counts={stats.vulnerabilityStats.countsBySeverity}
-                    onClickSeverity={handleVulnClick}
-                />
-
-                <StatCard
-                    title="SAST Alerts"
-                    open={stats.sastStats.open}
-                    fixed={stats.sastStats.fixed}
-                    dismissed={stats.sastStats.dismissed}
-                    counts={stats.sastStats.countsBySeverity}
-                    onClickSeverity={handleSastClick}
-                />
+            <div className={Style.toggleBar}>
+                <button className={Style.toggleBtn} data-active={view === 'pie'} onClick={() => setView('pie')}>
+                    Overview
+                </button>
+                <button className={Style.toggleBtn} data-active={view === 'line'} onClick={() => setView('line')}>
+                    History
+                </button>
             </div>
+
+            {view === 'pie' && (
+                <div className={Style.grid}>
+                    <StatCard title="Vulnerabilities" open={stats.vulnerabilityStats.open} fixed={stats.vulnerabilityStats.fixed} dismissed={stats.vulnerabilityStats.dismissed} counts={stats.vulnerabilityStats.countsBySeverity} onClickSeverity={handleVulnClick} />
+                    <StatCard title="SAST Alerts" open={stats.sastStats.open} fixed={stats.sastStats.fixed} dismissed={stats.sastStats.dismissed} counts={stats.sastStats.countsBySeverity} onClickSeverity={handleSastClick} />
+                </div>
+            )}
+
+            {view === 'line' && (
+                <div className={Style.grid}>
+                    {historyStats ? (
+                        <>
+                            <HistoryLineChart title="Vulnerabilities" data={historyStats.vulnList} />
+                            <HistoryLineChart title="SAST Alerts" data={historyStats.sastList} />
+                        </>
+                    ) : (
+                        <p className={Style.loadingMessage}>Loading history...</p>
+                    )}
+                </div>
+            )}
         </div>
     )
 }
