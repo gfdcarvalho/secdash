@@ -164,7 +164,8 @@ class UserRepository(
     override fun getTokenInfo(userId: Int, authProvider: AuthProvider): UserTokenInfo? {
         return handle.createQuery(
             """
-                SELECT access_token, refresh_token, expires_at
+                SELECT access_token, refresh_token, expires_at,
+                       (expires_at IS NOT NULL AND expires_at < NOW() + INTERVAL '60 seconds') AS needs_refresh
                 FROM user_authorization
                 WHERE user_id = :user_id AND provider = :provider::auth_provider
             """.trimIndent()

@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.controller.pipeline
 
 import jakarta.servlet.FilterChain
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component
@@ -21,7 +22,12 @@ class OAuthRedirectFilter : OncePerRequestFilter() {
     ) {
         val redirectUri = request.getParameter("redirect_uri")
         if (redirectUri != null) {
-            request.session.setAttribute(SESSION_OAUTH_REDIRECT_URI, redirectUri)
+            val cookie = Cookie(SESSION_OAUTH_REDIRECT_URI, redirectUri).apply {
+                path = "/"
+                isHttpOnly = true
+                maxAge = 300
+            }
+            response.addCookie(cookie)
         }
         filterChain.doFilter(request, response)
     }

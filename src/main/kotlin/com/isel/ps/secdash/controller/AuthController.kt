@@ -18,7 +18,9 @@ import com.isel.ps.secdash.service.UserLoginError
 import com.isel.ps.secdash.utils.Failure
 import com.isel.ps.secdash.utils.Success
 import com.isel.ps.secdash.controller.pipeline.SESSION_OAUTH_REDIRECT_URI
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -149,7 +151,8 @@ class AuthController(
     fun githubAuthorize(
         @AuthenticationPrincipal principal: OAuth2User,
         @RegisteredOAuth2AuthorizedClient("github-api") authorizedClient: OAuth2AuthorizedClient,
-        request: HttpServletRequest
+        request: HttpServletRequest,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val user = requestTokenProcessor.processCookies(request.cookies)
             ?: return Problem.response(401, Problem.unauthorized)
@@ -162,14 +165,15 @@ class AuthController(
             refreshToken = null,     // GitHub OAuth App tokens não expiram
             expiresAt = null,
         )
-        return handleAuthorizationResponse(user, result, Platform.GITHUB, request)
+        return handleAuthorizationResponse(user, result, Platform.GITHUB, request, response)
     }
 
     @GetMapping("/authorize/gitlab")
     fun gitlabAuthorize(
         @AuthenticationPrincipal principal: OAuth2User?,
         @RegisteredOAuth2AuthorizedClient("gitlab-api") authorizedClient: OAuth2AuthorizedClient?,
-        request: HttpServletRequest
+        request: HttpServletRequest,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         val user = requestTokenProcessor.processCookies(request.cookies)
             ?: return Problem.response(401, Problem.unauthorized)
@@ -182,20 +186,28 @@ class AuthController(
             refreshToken = authorizedClient.refreshToken?.tokenValue,
             expiresAt = authorizedClient.accessToken?.expiresAt,
         )
-        return handleAuthorizationResponse(user, result, Platform.GITLAB, request)
+        return handleAuthorizationResponse(user, result, Platform.GITLAB, request, response)
     }
 
     private fun handleAuthorizationResponse(
         user: AuthenticatedUser,
         result: AuthorizationResult,
         provider: Platform,
-        request: HttpServletRequest
+        request: HttpServletRequest,
+        response: HttpServletResponse
     ): ResponseEntity<*> {
         return when (result) {
             is Success -> {
-                val redirectUri = request.session.getAttribute(SESSION_OAUTH_REDIRECT_URI) as? String
-                    ?: "$frontendUrl/repos/${provider.name.lowercase()}"
-                request.session.removeAttribute(SESSION_OAUTH_REDIRECT_URI)
+                val redirectUri = request.cookies
+                    ?.firstOrNull { it.name == SESSION_OAUTH_REDIRECT_URI }
+                    ?.value
+                    ?: "$frontendUrl/repos" //fallback se por algum motivo a cookie não funcionar
+                val clearCookie = Cookie(SESSION_OAUTH_REDIRECT_URI, "").apply {
+                    path = "/"
+                    isHttpOnly = true
+                    maxAge = 0
+                }
+                response.addCookie(clearCookie)
                 ResponseEntity.status(302)
                     .header(HttpHeaders.LOCATION, redirectUri)
                     .build<Unit>()
