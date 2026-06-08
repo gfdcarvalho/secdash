@@ -26,6 +26,3 @@ export function AuthenticationProvider({ children }: AuthenticationProviderProp)
   };
   return <AuthenticationContext value={value}>{children}</AuthenticationContext>;
 }
-
-
-// aqui vamos fazer o pedido a /me para ver se o user esta authenticado 

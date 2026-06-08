@@ -7,11 +7,11 @@ import Style from './StatsComponents.module.css'
 
 export function severityData(counts: CountsBySeverity, labels: { critical: string; high: string; medium: string; low: string; unknown: string }) {
     return [
-        { name: labels.critical, value: counts.critical, color: SEVERITY_COLORS.critical },
-        { name: labels.high,     value: counts.high,     color: SEVERITY_COLORS.high },
-        { name: labels.medium,   value: counts.medium,   color: SEVERITY_COLORS.medium },
-        { name: labels.low,      value: counts.low,      color: SEVERITY_COLORS.low },
-        { name: labels.unknown,  value: counts.unknown,  color: SEVERITY_COLORS.unknown },
+        { name: labels.critical, key: 'CRITICAL', value: counts.critical, color: SEVERITY_COLORS.critical },
+        { name: labels.high,     key: 'HIGH',     value: counts.high,     color: SEVERITY_COLORS.high },
+        { name: labels.medium,   key: 'MEDIUM',   value: counts.medium,   color: SEVERITY_COLORS.medium },
+        { name: labels.low,      key: 'LOW',      value: counts.low,      color: SEVERITY_COLORS.low },
+        { name: labels.unknown,  key: 'UNKNOWN',  value: counts.unknown,  color: SEVERITY_COLORS.unknown },
     ].filter(d => d.value > 0) // este filtro tira os valores com 0 para o grafico não desenhar fatias que não devia
 }
 
@@ -37,7 +37,7 @@ export function SeverityDonut({ counts, total, onClickSeverity }: {
                             <Cell
                                 key={i}
                                 fill={entry.color}
-                                onClick={(e) => { e.stopPropagation(); onClickSeverity?.(entry.name.toUpperCase()) }}
+                                onClick={(e) => { e.stopPropagation(); onClickSeverity?.(entry.key) }}
                                 style={{ cursor: 'pointer' }}
                             />
                         ))}
