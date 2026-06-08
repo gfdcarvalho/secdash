@@ -1,7 +1,9 @@
 package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.repositories.CountsBySeverity
+import com.isel.ps.secdash.model.repositories.DailySastCount
 import com.isel.ps.secdash.model.repositories.DailyVulnerabilityCount
+import com.isel.ps.secdash.model.repositories.RepositorySastHistory
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryStats
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
@@ -28,6 +30,12 @@ typealias DeleteRepositoryResult = Either<DeleteRepositoryError, Unit>
 typealias GetRepoStatsResult = Either<GetRepositoryError, RepositoryStats>
 
 typealias GetRepoVulnerabilityHistoryResult = Either<GetRepositoryError, List<DailyVulnerabilityCount>>
+
+sealed class GetRepoSastHistoryError {
+    data object Unauthorized : GetRepoSastHistoryError()
+}
+
+typealias GetRepoSastHistoryResult = Either<GetRepoSastHistoryError, List<DailySastCount>>
 
 @Service
 class RepositoryServices(
@@ -85,7 +93,7 @@ class RepositoryServices(
         return transactionManager.run {
             val reposRepo = it.repositoriesRepository
 
-            if (!reposRepo.userHasAccessToRepository(rid, uid))
+            if (!reposRepo.userHasAccessToRepository(uid, rid))
                 return@run failure(GetRepositoryError.Unauthorized)
 
             val scans = reposRepo.getRepoVulnerabilityHistory(rid)
@@ -107,6 +115,37 @@ class RepositoryServices(
                             medium = latestScan.mediumCount,
                             low = latestScan.lowCount,
                             unknown = latestScan.unknownCount,
+                        )
+                    )
+                }
+                .sortedBy { it.date }
+
+            success(dailyCounts)
+        }
+    }
+
+    fun getRepoSastHistory(uid: Int, rid: Int): GetRepoSastHistoryResult {
+        return transactionManager.run {
+            val reposRepo = it.repositoriesRepository
+
+            if (!reposRepo.userHasAccessToRepository(uid, rid))
+                return@run failure(GetRepoSastHistoryError.Unauthorized)
+
+            val scans = reposRepo.getRepoSastHistory(rid)
+
+            val dailyCounts = scans
+                .groupBy { scan -> scan.scannedAt.atZone(ZoneOffset.UTC).toLocalDate() }
+                .map { (date, scansOnDay) ->
+                    val latestScan = scansOnDay.maxBy { it.scannedAt }
+                    DailySastCount(
+                        date = date,
+                        count = latestScan.alertCount,
+                        countsBySeverity = CountsBySeverity(
+                            critical = latestScan.criticalCount,
+                            high     = latestScan.highCount,
+                            medium   = latestScan.mediumCount,
+                            low      = latestScan.lowCount,
+                            unknown  = latestScan.unknownCount,
                         )
                     )
                 }

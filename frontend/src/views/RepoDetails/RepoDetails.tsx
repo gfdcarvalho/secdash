@@ -49,9 +49,10 @@ export function RepoDetails() {
         if (isSuccess(sastResponse)) {
             const vulnResponse = await api.get<DailyVulnerabilityCountList>(`/repos/${repoId}/vulnerability/history`)
             if (isSuccess(vulnResponse)) {
-                setHistoryStats({ sastList: vulnResponse.value.data, vulnList: vulnResponse.value.data })
+                setHistoryStats({ sastList: sastResponse.value.data, vulnList: vulnResponse.value.data })
             }
         }
+       
     }
 
     useEffect(() => {

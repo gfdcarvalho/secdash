@@ -1,0 +1,38 @@
+.statsSection { composes: statsSection from '../styles/shared.module.css'; }
+.toggleBar { composes: toggleBar from '../styles/shared.module.css'; }
+.toggleBtn { composes: toggleBtn from '../styles/shared.module.css'; }
+.toggleBtn[data-active="true"] {
+    border-color: color-mix(in srgb, var(--color-text) 50%, transparent);
+    background: color-mix(in srgb, var(--color-text) 8%, transparent);
+    color: var(--color-text);
+}
+.lineChartInner { composes: lineChartInner from '../styles/shared.module.css'; }
+.lineChartHeader { composes: lineChartHeader from '../styles/shared.module.css'; }
+.severityToggleBar { composes: severityToggleBar from '../styles/shared.module.css'; }
+.severityToggleBtn { composes: severityToggleBtn from '../styles/shared.module.css'; }
+.severityToggleBtn[data-active="true"] {
+    background: color-mix(in srgb, var(--severity-color) 15%, transparent);
+    color: var(--severity-color);
+}
+.loadingMessage { composes: loadingMessage from '../styles/shared.module.css'; }
+.grid { composes: statsGrid from '../styles/shared.module.css'; }
+@media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+}
+.card { composes: statsCard from '../styles/shared.module.css'; }
+.cardLeft { composes: statsCardLeft from '../styles/shared.module.css'; }
+.cardTitle { composes: statsCardTitle from '../styles/shared.module.css'; }
+.cardBadges { composes: statsCardBadges from '../styles/shared.module.css'; }
+.badge { composes: statsBadge from '../styles/shared.module.css'; }
+.badge[data-variant="open"] {
+    border-color: color-mix(in srgb, var(--color-text) 35%, transparent);
+    color: var(--color-text);
+    font-weight: 600;
+}
+.severityList { composes: severityList from '../styles/shared.module.css'; }
+.severityRow { composes: severityRow from '../styles/shared.module.css'; }
+.severityDot { composes: severityDot from '../styles/shared.module.css'; }
+.severityLabel { composes: severityLabel from '../styles/shared.module.css'; }
+.severityValue { composes: severityValue from '../styles/shared.module.css'; }
+.donutWrapper { composes: donutWrapper from '../styles/shared.module.css'; }
+.donutTotal { composes: donutTotal from '../styles/shared.module.css'; }

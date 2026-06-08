@@ -3,6 +3,7 @@ package com.isel.ps.secdash.controller
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.DeleteRepositoryError
+import com.isel.ps.secdash.service.GetRepoSastHistoryError
 import com.isel.ps.secdash.service.GetRepositoryError
 import com.isel.ps.secdash.service.RepositoryServices
 import com.isel.ps.secdash.utils.Failure
@@ -89,6 +90,21 @@ class RepoController(
                 when (result.value) {
                     GetRepositoryError.Unauthorized -> Problem.response(403, Problem.forbidden)
                     GetRepositoryError.NotFound  -> Problem.response(404, Problem.repositoryNotFound)
+                }
+        }
+    }
+
+    @GetMapping("{repoId}/sast/history")
+    fun getRepoSastHistory(
+        @PathVariable repoId: Int,
+        user: AuthenticatedUser,
+    ): ResponseEntity<*> {
+        val result = repoServices.getRepoSastHistory(user.user.uid, repoId)
+        return when (result) {
+            is Success -> ResponseEntity.ok(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetRepoSastHistoryError.Unauthorized -> Problem.response(403, Problem.forbidden)
                 }
         }
     }
