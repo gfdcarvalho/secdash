@@ -3,7 +3,9 @@ CREATE OR REPLACE FUNCTION init() RETURNS VOID AS $$
 BEGIN
     -- Drop Tables
     DROP TABLE IF EXISTS vulnerability_references;
+    DROP TABLE IF EXISTS repo_sast_scans;
     DROP TABLE IF EXISTS sast_alerts;
+    DROP TABLE IF EXISTS repo_vulnerability_scans;
     DROP TABLE IF EXISTS vulnerabilities;
     DROP TABLE IF EXISTS user_repositories;
     DROP TABLE IF EXISTS team_repos;
@@ -16,7 +18,7 @@ BEGIN
     DROP TABLE IF EXISTS teams;
     DROP TABLE IF EXISTS users;
 
-    -- Drop Enums
+-- Drop Enums
     DROP TYPE IF EXISTS sast_state;
     DROP TYPE IF EXISTS sast_severity;
     DROP TYPE IF EXISTS vulnerability_state;
@@ -27,7 +29,7 @@ BEGIN
     DROP TYPE IF EXISTS app_roles;
     DROP TYPE IF EXISTS team_roles;
 
-    -- Enums
+-- Enums
     CREATE TYPE platform AS ENUM ('GITHUB', 'GITLAB');
     CREATE TYPE visibility AS ENUM ('PUBLIC', 'PRIVATE', 'INTERNAL');
     CREATE TYPE vulnerability_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN');
@@ -37,8 +39,7 @@ BEGIN
     CREATE TYPE auth_provider AS ENUM ('GOOGLE', 'GITHUB', 'GITLAB');
     CREATE TYPE app_roles as ENUM ('ADMIN', 'USER');
     CREATE TYPE team_roles as ENUM ('LEADER', 'COLLABORATOR');
-
-    -- Users
+-- Users
     CREATE TABLE users (
                            uid                     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                            name                    VARCHAR(255) NOT NULL,
@@ -47,7 +48,7 @@ BEGIN
                            role                    app_roles NOT NULL DEFAULT 'USER'
     );
 
-    -- user_identities (authentication)
+-- user_identities (authentication)
     CREATE TABLE user_authentication (
                                          user_id     INT           NOT NULL REFERENCES users(uid),
                                          provider    auth_provider NOT NULL,
@@ -56,7 +57,7 @@ BEGIN
                                          UNIQUE      (provider, provider_id) -- dangerous!!
     );
 
-    -- user_oauth_tokens (authorization)
+-- user_oauth_tokens (authorization)
     CREATE TABLE user_authorization (
                                         user_id       INT           NOT NULL REFERENCES users(uid),
                                         provider      auth_provider NOT NULL,
@@ -66,7 +67,7 @@ BEGIN
                                         PRIMARY KEY   (user_id, provider)
     );
 
-    -- tokens
+-- tokens
     CREATE TABLE tokens (
                             token_validation    VARCHAR(256) primary key,
                             user_id             int references users(uid),
@@ -74,7 +75,7 @@ BEGIN
                             last_used_at        bigint not null
     );
 
-    -- Owners
+-- Owners
     CREATE TABLE owners (
                             oid             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                             external_id     VARCHAR(255),
@@ -85,7 +86,7 @@ BEGIN
                             UNIQUE (external_id, platform)
     );
 
-    -- Repositories
+-- Repositories
     CREATE TABLE repositories (
                                   rid          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                                   name         VARCHAR(255) NOT NULL,
@@ -102,7 +103,7 @@ BEGIN
                                   UNIQUE  (external_id, platform)
     );
 
-    -- Vulnerabilities
+-- Vulnerabilities
     CREATE TABLE vulnerabilities (
                                      vid                      INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                                      external_id              VARCHAR(255)           NOT NULL,
@@ -126,7 +127,7 @@ BEGIN
                                      UNIQUE (external_id, platform, rid)
     );
 
-    -- Vulnerability Scan History
+-- Vulnerability Scan History
     CREATE TABLE repo_vulnerability_scans (
                                               scan_id             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                                               rid                 INT         NOT NULL REFERENCES repositories(rid),
@@ -139,21 +140,21 @@ BEGIN
                                               unknown_count       INT         NOT NULL DEFAULT 0
     );
 
-    -- Vulnerability References
+-- Vulnerability References
     CREATE TABLE vulnerability_references (
                                               id      INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                                               vuln_id INT  NOT NULL REFERENCES vulnerabilities(vid),
                                               url     TEXT NOT NULL
     );
 
-    -- User Repositories
+-- User Repositories
     CREATE TABLE user_repositories (
                                        uid INT NOT NULL REFERENCES users(uid),
                                        rid INT NOT NULL REFERENCES repositories(rid),
                                        PRIMARY KEY (uid, rid)
     );
 
-    -- SAST Alerts
+-- SAST Alerts
     CREATE TABLE sast_alerts (
                                  sid              INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                                  rid              INT           NOT NULL REFERENCES repositories(rid),
@@ -174,17 +175,17 @@ BEGIN
                                  UNIQUE (external_id, platform, rid)
     );
 
-    -- SAST Scan History
+-- SAST Scan History
     CREATE TABLE repo_sast_scans (
-                                     scan_id        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                                     rid            INT         NOT NULL REFERENCES repositories(rid),
-                                     scanned_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                                     alert_count    INT         NOT NULL,
-                                     critical_count INT         NOT NULL DEFAULT 0,
-                                     high_count     INT         NOT NULL DEFAULT 0,
-                                     medium_count   INT         NOT NULL DEFAULT 0,
-                                     low_count      INT         NOT NULL DEFAULT 0,
-                                     unknown_count  INT         NOT NULL DEFAULT 0
+                                     scan_id       INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                                     rid           INT         NOT NULL REFERENCES repositories(rid),
+                                     scanned_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                                     alert_count   INT         NOT NULL,
+                                     critical_count INT        NOT NULL DEFAULT 0,
+                                     high_count     INT        NOT NULL DEFAULT 0,
+                                     medium_count   INT        NOT NULL DEFAULT 0,
+                                     low_count      INT        NOT NULL DEFAULT 0,
+                                     unknown_count  INT        NOT NULL DEFAULT 0
     );
 
     CREATE TABLE teams (

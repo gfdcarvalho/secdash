@@ -176,5 +176,3 @@ CREATE TABLE team_repos (
     rid     INT NOT NULL REFERENCES repositories(rid),
     PRIMARY KEY (tid, rid)
 );
-
-SELECT refresh_token, expires_at FROM user_authorization WHERE provider = 'GITLAB';
