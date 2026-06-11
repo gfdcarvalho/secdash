@@ -5,6 +5,7 @@ import { type SastAlertDetail } from '../../model/sast/sast'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './SastDetails.module.css'
+import Markdown from 'react-markdown'
 
 const SEVERITY_CLASS: Record<string, string> = {
     CRITICAL: Style.severity_critical,
@@ -112,7 +113,7 @@ export function SastDetails() {
                 {alert.message && (
                     <div className={Style.section}>
                         <h3 className={Style.sectionTitle}>{t.sastDetails.message}</h3>
-                        <p className={Style.description}>{alert.message}</p>
+                        <div className={Style.description}><Markdown>{alert.message}</Markdown></div>
                     </div>
                 )}
 

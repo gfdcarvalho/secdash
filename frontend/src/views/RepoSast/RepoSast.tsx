@@ -5,6 +5,7 @@ import type { SastAlert, RepositorySast, SastSeverity } from '../../model/sast/s
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
 import Style from './RepoSast.module.css'
+import Markdown from 'react-markdown'
 
 const ALL_SEVERITIES: SastSeverity[] = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN']
 const DATE_OPTIONS = [0, 7, 30, 90] as const
@@ -204,7 +205,7 @@ export function RepoSast() {
                             </div>
 
                             {alert.message && (
-                                <p className={Style.alertMessage}>{alert.message}</p>
+                                <div className={Style.alertMessage}><Markdown>{alert.message}</Markdown></div>
                             )}
 
                             <div className={Style.alertMeta}>
