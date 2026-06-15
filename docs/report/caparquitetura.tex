@@ -36,7 +36,7 @@ Após autenticação bem sucedida, o utilizador deverá poder consultar os seus 
 
 \subsection{Controlo de acesso com base em papéis}
 
-O sistema deverá implementar um mecanismo de controlo de acesso baseados em papéis (\textbf{Role-Based Access Control} ou \textbf{RBAC}), permitindo restringir funcionalidades de acordo com o tipo de utilizador.\\
+O sistema deverá implementar um mecanismo de controlo de acesso baseados em papéis (\textbf{Role-Based Access Control} ou \textbf{RBAC}), permitindo restringir funcionalidades de acordo com o tipo de utilizador. Pretende-se assim que os responsáveis pela manutenção do serviço possam ter total controlo pela gestão da aplicação. \\
 
 Deverão ser suportados os seguintes papéis:
 \begin{itemize}
@@ -196,3 +196,36 @@ Os fatores que motivaram esta escolha foram os seguintes:
 
 \subsubsection{Vite}
 Como \textit{module bundler} optou-se pela utilização de \textbf{Vite} em alternativa a Webpack, por ser o standard \textit{de facto} para projetos em React. O Vite utiliza \textit{ES Modules} nativos do browser ao correr o servidor de desenvolvimento em vez de fazer bundle de todo o código, tornando o seu arranque e \textit{hot reloading} mais rápido. \\
+
+\section{Modelo de dados} \label{implementacao:modelo}
+A elaboração de um modelo Entidade-Associação é indispensável para a estruturação lógica do projeto. Com efeito, é a existência de um modelo entidade-associação que permite estruturar de forma concreta as entidades do domínio da aplicação e as suas relações entre si. \\
+
+O modelo de dados serve também de ponte entre os requisitos de negócio da plataforma e a sua implementação física na base de dados. Este mapeamento garante que a existência uma visão clara de como os utilizadores, repositórios e vulnerabilidades se relacionam entre si, permitindo orientar a implementação lógica do sistema prevenindo assim o aparecimento de inconsistências estruturais que pudessem pôr em causa a robustez da aplicação ou atrasar o seu desenvolvimento. \\
+
+Como referido no capítulo anterior, os dados obtidos das APIs externas do GitHub e GitLab são altamente estruturados e com dependências e relações claras entre si. Assim sendo, a elaboração de um modelo Entidade-Associação, indispensável para a estruturação lógica do projeto, torna-se relativamente trivial. \\
+
+O diagrama do modelo obtido encontra-se apresentado na figura 4.1. É importante salientar que, de forma a facilitar a apresentação e visualização do modelo no presente documento, os atributos das entidades, bem como a cardinalidade das suas relações, foram omitidos do diagrama. O script SQL utilizado para criar todo o esquema da base de dados, onde se pode consultar todos os atributos, encontra-se no Apêndice \ref{ap:schema}. \\
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.95\linewidth]{./figures/secdash-ea.drawio.png}
+	\caption{diagrama do modelo de dados}
+\end{figure}
+
+\begin{itemize}
+	\item Cada \textbf{USER} possui um \textbf{id} que os identificará na aplicação, bem como um \textbf{name} e \textbf{email}. Poderão também ter um campo \textit{\textbf{password\_validation}}, opcional, caso optem por se registar na aplicação diretamente com o seu email em vez de utilizarem uma das opções OAuth 2.0. \\
+	
+	Cada user terá também uma \textit{\textbf{role}}, que o identificará como um utilizador normal ou administrador, tendo este último acesso a funcionalidades vedadas a utilizadores normais, tais como eliminar utilizadores ou equipas que não lhe pertencem. \\
+	
+	As informações de autenticação são guardadas na tabela \textbf{USER\_AUTHENTICATION}, que irá conter os IDs de cada utilizador, o provedor de autenticação OAuth 2.0  (Google, GitHub ou GitLab) e o ID do utilizador nessa plataforma. \\
+	
+	Os \textit{access tokens} de cada utilizador ficam armazenados na tabela \textbf{USER\_AUTHORIZATION}. Os \textit{tokens} internos gerados e usados pelo próprio \textbf{SecDash}, por sua vez, são armazedados na tabela \textbf{TOKENS}. \\
+	
+	\item Cada repositório vigiado pela aplicação é armazenado na tabela \textbf{REPOSITORIES}. A tabela \textbf{OWNERS} armazena algumas informações referentes aos proprietários dos repositórios nas plataformas de origem, seja ela GitHub ou GitLab. Para fazer a ligação entre os repositórios armazenados e os utilizadores que os vigiam existe a tabela \textbf{USER\_REPOSITORIES}. \\ 
+	
+	Os alertas SAST e vulnerabilidades detetadas nas dependências de cada repositório são armazenados nas tabelas \textbf{SAST\_ALERTS} e \textbf{VULNERABILITIES} respetivamente. Esta última tabela encontra-se também ligada à tabela \textbf{VULNERABILITY\_REFERENCES}, que armazena ligações as CVEs onde essas vulnerabilidades estão catalogadas. \\
+	
+	\item Finalmente, as informações de cada equipa criada no âmbito da aplicação são armazenadas da tabela \textbf{TEAMS}. Os repositórios e utilizadores ligados a cada uma são armazenados nas tabelas \textbf{TEAM\_REPOS} e \textbf{TEAM\_USERS} respetivamente. \\
+\end{itemize}
+
+É importante indicar que ao obter os dados das APIs externas, sejam estes referentes a repositórios ou vulnerabilidades, a informação devolvida contém inúmeros campos que não consideramos relevantes de armazenar ou exibir aos utilizadores para os propósitos do \textbf{SecDash}. A título de exemplo, o objeto JSON referente a um repoisitório GitHub devolvido pela sua API contém mais de 80 campos, sendo vários deles objetos que por sua vez contém também múltiplos campos. Um exemplo deste formato pode ser consultado no Apêndice \ref{ap:repogithub}. Como tal, optou-se por filtrar muitos destes campos, sendo apenas armazenados aqueles que considerámos relevantes para o propósito da aplicação. \\

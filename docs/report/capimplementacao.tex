@@ -14,44 +14,12 @@ A aplicação encontra-se dividida em três níveis, numa estrutura hierárquica
 
 Os detalhes e especifidades da implementação e desenvolvimeto de cada uma destas camadas serão explorados ao longo deste capítulo. \\
 
-\section{Modelo de dados} \label{implementacao:modelo}
-A elaboração de um modelo Entidade-Associação é indispensável para a estruturação lógica do projeto. Com efeito, é a existência de um modelo entidade-associação que permite estruturar de forma concreta as entidades do domínio da aplicação e as suas relações entre si. \\
-
-O modelo de dados serve também de ponte entre os requisitos de negócio da plataforma e a sua implementação física na base de dados. Este mapeamento garante que a existência uma visão clara de como os utilizadores, repositórios e vulnerabilidades se relacionam entre si, permitindo orientar a implementação lógica do sistema prevenindo assim o aparecimento de inconsistências estruturais que pudessem pôr em causa a robustez da aplicação ou atrasar o seu desenvolvimento. \\
-
-Como referido no capítulo anterior, os dados obtidos das APIs externas do GitHub e GitLab são altamente estruturados e com dependências e relações claras entre si. Assim sendo, a elaboração de um modelo Entidade-Associação, indispensável para a estruturação lógica do projeto, torna-se relativamente trivial. \\
-
-O diagrama do modelo obtido encontra-se apresentado na figura abaixo. É importante salientar que, de forma a facilitar a apresentação e visualização do modelo no presente documento, os atributos das entidades, bem como a cardinalidade das suas relações, foram omitidos do diagrama. O script SQL utilizado para criar todo o esquema da base de dados, onde se pode consultar todos os atributos, encontra-se no Apêndice \ref{ap:schema}. \\
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.95\linewidth]{./figures/secdash-ea.drawio.png}
-	\caption{diagrama do modelo de dados}
-\end{figure}
-
-\begin{itemize}
-	\item Cada \textbf{USER} possui um \textbf{id} que os identificará na aplicação, bem como um \textbf{name} e \textbf{email}. Poderão também ter um campo \textit{\textbf{password\_validation}}, opcional, caso optem por se registar na aplicação diretamente com o seu email em vez de utilizarem uma das opções OAuth 2.0. \\
-	
-	Cada user terá também uma \textit{\textbf{role}}, que o identificará como um utilizador normal ou administrador, tendo este último acesso a funcionalidades vedadas a utilizadores normais, tais como eliminar utilizadores ou equipas que não lhe pertencem. \\
-	
-	As informações de autenticação são guardadas na tabela \textbf{USER\_AUTHENTICATION}, que irá conter os IDs de cada utilizador, o provedor de autenticação OAuth 2.0  (Google, GitHub ou GitLab) e o ID do utilizador nessa plataforma. \\
-	
- 	Os \textit{access tokens} de cada utilizador ficam armazenados na tabela \textbf{USER\_AUTHORIZATION}. Os \textit{tokens} internos gerados e usados pelo próprio \textbf{SecDash}, por sua vez, são armazedados na tabela \textbf{TOKENS}. \\
-	
-	\item Cada repositório vigiado pela aplicação é armazenado na tabela \textbf{REPOSITORIES}. A tabela \textbf{OWNERS} armazena algumas informações referentes aos proprietários dos repositórios nas plataformas de origem, seja ela GitHub ou GitLab. Para fazer a ligação entre os repositórios armazenados e os utilizadores que os vigiam existe a tabela \textbf{USER\_REPOSITORIES}. \\ 
-	
-	Os alertas SAST e vulnerabilidades detetadas nas dependências de cada repositório são armazenados nas tabelas \textbf{SAST\_ALERTS} e \textbf{VULNERABILITIES} respetivamente. Esta última tabela encontra-se também ligada à tabela \textbf{VULNERABILITY\_REFERENCES}, que armazena ligações as CVEs onde essas vulnerabilidades estão catalogadas. \\
-	
-	\item Finalmente, as informações de cada equipa criada no âmbito da aplicação são armazenadas da tabela \textbf{TEAMS}. Os repositórios e utilizadores ligados a cada uma são armazenados nas tabelas \textbf{TEAM\_REPOS} e \textbf{TEAM\_USERS} respetivamente. \\
-\end{itemize}
-
-É importante indicar que ao obter os dados das APIs externas, sejam estes referentes a repositórios ou vulnerabilidades, a informação devolvida contém inúmeros campos que não consideramos relevantes de armazenar ou exibir aos utilizadores para os propósitos do \textbf{SecDash}. A título de exemplo, o objeto JSON referente a um repoisitório GitHub devolvido pela sua API contém mais de 80 campos, sendo vários deles objetos que por sua vez contém também múltiplos campos. Um exemplo deste formato pode ser consultado no Apêndice \ref{ap:repogithub}. Como tal, optou-se por filtrar muitos destes campos, sendo apenas armazenados aqueles que considerámos relevantes para o propósito da aplicação.
 
 \section{Backend} \label{implementacao:backend}
 O \textit{backend} do \textbf{SecDash} encontra-se estruturado com o padrão de desenho \textbf{Controller-Service-Repository (CSR)}. Pretende-se deste modo isolar o tratamento de pedidos HTTP, a lógica de negócio e operações de base de dados em componentes independentes. Organizar a aplicação desta forma tem o intuito de facilitar o seu desenvolvimento e manutenção. \\
 
 \subsection{Controllers}
-A camada dos \textit{controllers} tem como principal objetivo receber pedidos HTTP para consequentemente devolver respostas HTTP. A camada conta com cinco controllers distintos, cada um com endpoints próprios para cada operação suportada pela aplicação: 
+A camada dos \textit{controllers} tem como principal objetivo receber pedidos HTTP para consequentemente devolver respostas HTTP. A camada conta com oito controllers distintos, cada um com endpoints próprios para cada operação suportada pela aplicação: 
 \begin{itemize}
 	\item \textbf{Auth Controller:} Responsável por receber pedidos HTTP relacionados com autorização externa , tais como pedidos de \textit{login} através de OAuth 2.0 na aplicação ou conceder acesso aos repositórios de um utilizador de uma das plataformas externas;
 	
@@ -65,13 +33,15 @@ A camada dos \textit{controllers} tem como principal objetivo receber pedidos HT
 	
 	\item \textbf{User Controller:} Responsável por receber e responder a pedidos HTTP para registo na aplicação através do formulário de registo ou de obter informação do utilizador com sessão ativa;
 	
+	\item \textbf{Vulnerability Controller:} Responsável por obter as vulnerabilidades já registadas no domínio da aplicação;
+	
+	\item \textbf{Sast Controller:} Responsável por obter os alertas Sast já registados no domínio da aplicação;
+	
 \end{itemize}
 
-Para manter o isolamento das camadas, nenhuma lógica de negócio ou processamento de dados é executado nesta camada. Esse tipo de tarefas é delegado para a camada dos serviços, que será detalhada na subseção seguinte. Não obstante, para efeitos de organização do código, optou-se por colocar alguns componentes necessários para uma utilização mais eficiente da \textit{framerwork} Spring e evitar repetição de código numa subpackage entitulada \textit{pipeline} na \textit{package} dos controllers. Estes componentes encontram-se explicitados na subsecção Pipeline. \\
+Para manter o isolamento das camadas, nenhuma lógica de negócio ou processamento de dados é executado nesta camada. Esse tipo de tarefas é delegado para a camada dos serviços, que será detalhada na subseção seguinte. Não obstante, para efeitos de organização do código, optou-se por colocar alguns componentes necessários para uma utilização mais eficiente da \textit{framerwork} Spring e evitar repetição de código numa subpackage entitulada \textit{pipeline} na \textit{package} dos controllers. Estes componentes encontram-se explicitados na tabela \ref{tab:pipeline_components}. \\
 
-\subsection{Pipeline}
-
-\begin{table}[htbp]
+\begin{table}[htbp] 
 	\centering
 	\caption{Responsabilidades dos componentes do pipeline de execução no Backend.}
 	\label{tab:pipeline_components}
@@ -108,6 +78,7 @@ A anotação \textbf{@EnableWebSecurity} ativa o suporte ao \textbf{Spring Secur
 
 Os métodos anotados com \textbf{@Bean} são registados no contexto do Spring como beans por ele geridos, permitindo assim que componentes como o \textbf{SecurityFilterChain} e o \textbf{AuthenticationSuccessHandler} sejam instanciados e geridos automaticamente pela framework e injetados onde necessário. Sem esse registo no \textit{startup} da aplicação não seria possível integrar a lógica de autenticação por nós desenvolvida com recurso ao \textbf{BearerTokenAuthFilter} e ao \textbf{OAuthRedirectFilter} anteriormente discutidos no presente capítulo. \\
 
+% FALTAM PRINTS
 \section{Frontend} \label{implementacao:frontend}
 A arquitetura do cliente web foi desenvolvida recorrendo à biblioteca \textbf{React}, com um foco na modularidade e reatividade da interface de utilizador. \\
 
@@ -127,7 +98,7 @@ O \textbf{ThemeProvider} é o componente responsável por gerir e persistir o es
 
 O tema atual é disponibilizado a todo o frontend através do \textbf{ThemeContext}. \\
 
-\subsection{i18n}
+\subsection{\textit{Internationalization} (i18n)}
 
 O frontend do \textbf{SecDash} foi implementado tendo em vista a possibilidade de exibir uma interface com várias línguas distintas. \\
 
