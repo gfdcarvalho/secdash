@@ -67,7 +67,12 @@ class AuthController(
     }
 
     @PostMapping("/logout")
-    fun logoutUser() { // implementar !!!
+    fun logoutUser(user: AuthenticatedUser): ResponseEntity<Unit> {
+        authServices.logout(user.token)
+        val deletionCookie = requestTokenProcessor.createDeletionCookie()
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, deletionCookie.toString())
+            .build()
     }
 
     @GetMapping("/login/google")

@@ -97,6 +97,12 @@ class UserRepository(
             .execute()
     }
 
+    override fun deleteToken(tokenValidationInfo: TokenValidationInfo) {
+        handle.createUpdate("DELETE FROM tokens WHERE token_validation = :token_validation")
+            .bind("token_validation", tokenValidationInfo.validationInfo)
+            .execute()
+    }
+
     override fun storeExternalUser(
         username: String,
         email: String,

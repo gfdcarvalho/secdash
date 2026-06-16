@@ -22,6 +22,12 @@ export function Profile() {
         }
     }
 
+    const handleLogout = async () => {
+        await api.post("/auth/logout", {})
+        setUser(undefined)
+        navigate("/login")
+    }
+
     useEffect(() => {
         refreshUser()
     }, [])
@@ -30,11 +36,16 @@ export function Profile() {
         <div className={Style.content}>
             <div className={Style.bottomSection}>
                 <div className={Style.userCard}>
-                    <div className={Style.userHeader}>
-                        <span className={Style.userName}>{user?.name}</span>
-                        <span className={Style.roleBadge}>{user?.role}</span>
+                    <div className={Style.userCardInfo}>
+                        <div className={Style.userHeader}>
+                            <span className={Style.userName}>{user?.name}</span>
+                            <span className={Style.roleBadge}>{user?.role}</span>
+                        </div>
+                        <span className={Style.userEmail}>{user?.email}</span>
                     </div>
-                    <span className={Style.userEmail}>{user?.email}</span>
+                    <button className={Style.logoutButton} onClick={handleLogout}>
+                        {t.profile.logout}
+                    </button>
                 </div>
 
                 <div className={Style.section}>

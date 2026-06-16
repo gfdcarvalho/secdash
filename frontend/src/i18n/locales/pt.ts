@@ -103,6 +103,7 @@ export const pt = {
         noRepositories: "Ainda não tem repositórios.",
         teams: "Equipas",
         noTeams: "Ainda não pertence a nenhuma equipa.",
+        logout: "Terminar sessão",
     },
     stats: {
         overview: "Visão geral",

@@ -61,11 +61,19 @@
 /* profile-specific */
 .userCard {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: 0.3em;
     padding: 1em 1.25em;
     border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
     border-radius: 0.5em;
+}
+
+.userCardInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
 }
 
 .userHeader {
@@ -90,6 +98,24 @@
 .userEmail {
     font-size: 0.85em;
     color: color-mix(in srgb, var(--color-text) 65%, transparent);
+}
+
+.logoutButton {
+    flex-shrink: 0;
+    padding: 0.4em 1em;
+    font-size: 0.85em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    border-radius: 0.4em;
+    background: transparent;
+    color: color-mix(in srgb, var(--color-text) 80%, transparent);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.logoutButton:hover {
+    background: color-mix(in srgb, #e53e3e 12%, transparent);
+    border-color: color-mix(in srgb, #e53e3e 50%, transparent);
+    color: #e53e3e;
 }
 
 .section {

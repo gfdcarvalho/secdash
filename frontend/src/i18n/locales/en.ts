@@ -103,6 +103,7 @@ export const en = {
         noRepositories: "No repositories yet.",
         teams: "Teams",
         noTeams: "No teams yet.",
+        logout: "Logout",
     },
     stats: {
         overview: "Overview",

@@ -67,6 +67,13 @@ class AuthServices(
         }
     }
 
+    fun logout(token: String) {
+        transactionManager.run {
+            val tokenValidationInfo = userDomain.createTokenValidationInformation(token)
+            it.usersRepository.deleteToken(tokenValidationInfo)
+        }
+    }
+
     fun getUserByToken(token: String): User? {
         if (!userDomain.canBeToken(token)) {
             return null

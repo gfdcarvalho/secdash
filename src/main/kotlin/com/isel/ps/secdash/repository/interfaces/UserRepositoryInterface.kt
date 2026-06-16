@@ -30,6 +30,8 @@ interface UserRepositoryInterface {
         now: Instant,
     )
 
+    fun deleteToken(tokenValidationInfo: TokenValidationInfo)
+
     fun storeExternalUser(
         username: String,
         email: String,
