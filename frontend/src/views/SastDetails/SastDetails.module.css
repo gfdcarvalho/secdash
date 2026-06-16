@@ -132,6 +132,36 @@
     line-height: 1.55;
 }
 
+.description :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: 2em;
+    margin-bottom: 0;
+}
+
+.description :is(h1, h2, h3, h4, h5, h6):first-child {
+    margin-top: 0;
+}
+
+.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+}
+
+.tocItem {
+    font-size: 0.75em;
+    padding: 0.25em 0.65em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+    color: color-mix(in srgb, var(--color-text) 65%, transparent);
+    text-decoration: none;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.tocItem:hover {
+    border-color: color-mix(in srgb, var(--color-text) 50%, transparent);
+    color: var(--color-text);
+}
+
 .detailsGrid {
     display: flex;
     flex-wrap: wrap;
