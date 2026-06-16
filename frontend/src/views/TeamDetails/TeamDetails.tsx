@@ -5,6 +5,7 @@ import { type DailySastCountList, type Team, type TeamStats, type HistoryStats, 
 import type { Repository } from '../../model/repository/repository'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
+import { useAuthentication } from '../../utils/Authentication'
 import Style from './TeamDetails.module.css'
 import { AddRepoModal } from './AddRepoModal'
 import { AddMemberModal } from './AddMemberModal'
@@ -15,6 +16,7 @@ export function TeamDetails() {
     const { t } = useTranslation()
     const { teamId } = useParams()
     const navigate = useNavigate()
+    const [loggedUser] = useAuthentication()
     const [team, setTeam] = useState<Team>()
     const [stats, setStats] = useState<TeamStats>()
     const [historyStats, setHistoryStats] = useState<HistoryStats>()
@@ -73,6 +75,8 @@ export function TeamDetails() {
         )
     }
 
+    const isLeader = team.members.find(m => m.uid === loggedUser?.id)?.teamRole === 'LEADER'
+
     return (
         <div className={Style.content}>
             <div className={Style.topSection}>
@@ -95,9 +99,11 @@ export function TeamDetails() {
                 <div className={Style.section}>
                     <div className={Style.sectionHeader}>
                         <h3 className={Style.sectionTitle}>{t.teamDetails.members} ({team.members.length})</h3>
-                        <button className={Style.addReposButton} onClick={() => setShowAddMemberModal(true)}>
-                            {t.teamDetails.addMembers}
-                        </button>
+                        {isLeader && (
+                            <button className={Style.addReposButton} onClick={() => setShowAddMemberModal(true)}>
+                                {t.teamDetails.addMembers}
+                            </button>
+                        )}
                     </div>
                     <div className={Style.membersList}>
                         {team.members.map(member => (
@@ -108,6 +114,21 @@ export function TeamDetails() {
                                     <span className={Style.memberEmail}>{member.email}</span>
                                 </div>
                                 <span className={Style.roleBadge}>{member.teamRole.toLowerCase()}</span>
+                                {isLeader && (
+                                    <div className={Style.removeMemberSlot}>
+                                        {member.uid !== loggedUser?.id && (
+                                            <button
+                                                className={Style.removeButton}
+                                                onClick={async () => {
+                                                    await api.delete(`/teams/${team.tid}/users/${member.uid}`)
+                                                    refresh()
+                                                }}
+                                            >
+                                                {t.teamDetails.removeMember}
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -116,14 +137,17 @@ export function TeamDetails() {
                 <div className={Style.section}>
                     <div className={Style.sectionHeader}>
                         <h3 className={Style.sectionTitle}>{t.teamDetails.repositories} ({team.repos.length})</h3>
-                        <button className={Style.addReposButton} onClick={() => setShowAddModal(true)}>
-                            {t.teamDetails.addRepos}
-                        </button>
+                        {isLeader && (
+                            <button className={Style.addReposButton} onClick={() => setShowAddModal(true)}>
+                                {t.teamDetails.addRepos}
+                            </button>
+                        )}
                     </div>
                     <div className={Style.reposList}>
                         {team.repos.length === 0 && <p className={Style.emptyMessage}>{t.teamDetails.noRepositories}</p>}
                         {team.repos.map(repo => repoCard(
                             repo,
+                            isLeader,
                             t.teamDetails.removeFromTeam,
                             () => navigate(`/repos/${repo.rid}`),
                             async () => {
@@ -156,7 +180,7 @@ export function TeamDetails() {
 }
 
 
-function repoCard(repo: Repository, removeLabel: string, onClick: () => void, onRemove: () => void) {
+function repoCard(repo: Repository, isLeader: boolean, removeLabel: string, onClick: () => void, onRemove: () => void) {
     const owner = repo.owner
     return (
         <div key={repo.rid} className={Style.repoCard} onClick={onClick}>
@@ -175,12 +199,14 @@ function repoCard(repo: Repository, removeLabel: string, onClick: () => void, on
                     <span>{repo.platform}</span>
                 </div>
             </div>
-            <button
-                className={Style.removeButton}
-                onClick={e => { e.stopPropagation(); onRemove() }}
-            >
-                {removeLabel}
-            </button>
+            {isLeader && (
+                <button
+                    className={Style.removeButton}
+                    onClick={e => { e.stopPropagation(); onRemove() }}
+                >
+                    {removeLabel}
+                </button>
+            )}
         </div>
     )
 }

@@ -139,6 +139,7 @@ export const en = {
         addReposAdded: "Added",
         addReposError: "Error",
         removeFromTeam: "Remove from team",
+        removeMember: "Remove",
         vulnerabilities: "Vulnerabilities",
         sastAlerts: "SAST Alerts",
         addMembers: "+ Add",

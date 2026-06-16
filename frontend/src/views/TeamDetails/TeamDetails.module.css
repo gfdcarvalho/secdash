@@ -176,6 +176,13 @@
     composes: repoCardMeta from '../../styles/shared.module.css';
 }
 
+.removeMemberSlot {
+    width: 4.5em;
+    display: flex;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+
 .removeButton {
     font-size: 0.78em;
     padding: 0.35em 0.7em;
