@@ -54,7 +54,7 @@ export const pt = {
     },
     github: {
         title: "GitHub",
-        searchPlaceholder: "Pesquisa nos teus repositórios GitHub",
+        searchPlaceholder: "Pesquisa nos teus repositórios GitHub ou por link",
         loading: "A carregar...",
         noRepositories: "Nenhum repositório encontrado.",
         error: "Erro ao carregar repositórios.",
@@ -66,6 +66,7 @@ export const pt = {
         added: "Adicionado",
         addError: "Erro",
         repositoryAlreadyAdded: "Repositório já adicionado.",
+        searchByLink: "Pesquisar por link",
     },
     repos: {
         title: "Repositórios",

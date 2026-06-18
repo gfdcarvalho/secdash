@@ -9,6 +9,8 @@ import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.restclient.GithubRestClient
 import com.isel.ps.secdash.service.responseTypes.AddRepositoryError
 import com.isel.ps.secdash.service.responseTypes.AddRepositoryResult
+import com.isel.ps.secdash.service.responseTypes.GetRepoByLinkError
+import com.isel.ps.secdash.service.responseTypes.GetRepoByLinkResult
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesByOwnerError
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesByOwnerResult
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesError
@@ -140,6 +142,27 @@ class GithubServices(
             }
             val sastAlerts = repositoriesRepo.storeSastAlerts(rid, externalSastAlerts)
             success(RepositorySast(rid, sastAlerts))
+        }
+    }
+
+    fun getRepoByLink(
+        link: String,
+        uid: Int,
+    ): GetRepoByLinkResult {
+        val accessToken: String = transactionManager.run {
+            it.usersRepository.getAccessToken(uid, AuthProvider.GITHUB)
+        } ?: return failure(GetRepoByLinkError.Unauthorized)
+        val fullName = link.trimEnd('/').removeSuffix(".git").substringAfter("github.com/")
+        return try {
+            val repo = githubClient.getRepositoryByName(fullName, accessToken)
+                ?: return failure(GetRepoByLinkError.RepositoryNotFound)
+            success(repo)
+        } catch (e: HttpClientErrorException) {
+            when (e.statusCode) {
+                HttpStatus.NOT_FOUND -> failure(GetRepoByLinkError.RepositoryNotFound)
+                HttpStatus.FORBIDDEN -> failure(GetRepoByLinkError.Unauthorized)
+                else -> failure(GetRepoByLinkError.Unauthorized)
+            }
         }
     }
 }

@@ -122,6 +122,8 @@ class GithubRestClient {
         return results.map { it.toExternalSastAlerts() }
     }
 
+
+
     private data class GithubEmail(
         val email: String,
         val primary: Boolean,

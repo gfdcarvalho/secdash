@@ -46,8 +46,14 @@
     opacity: 1;
 }
 
+.searchRow {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+}
+
 .search {
-    width: 100%;
+    flex: 1;
     padding: 0.75em 1em;
     color: var(--color-text);
     background-color: var(--color-bg);
@@ -57,10 +63,35 @@
     font-size: 0.9em;
     box-sizing: border-box;
     transition: border-color 0.2s ease;
+    min-width: 0;
 }
 
 .search:focus {
     border-color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.linkSearchButton {
+    flex-shrink: 0;
+    padding: 0.75em 1em;
+    border-radius: 0.5em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 30%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 0.85em;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+    opacity: 0.8;
+}
+
+.linkSearchButton:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-text) 10%, transparent);
+    opacity: 1;
+}
+
+.linkSearchButton:disabled {
+    cursor: default;
+    opacity: 0.5;
 }
 
 .list {

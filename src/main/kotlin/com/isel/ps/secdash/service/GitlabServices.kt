@@ -2,6 +2,7 @@ package com.isel.ps.secdash.service
 
 import com.isel.ps.secdash.model.AuthProvider
 import com.isel.ps.secdash.model.Platform
+import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.RepositoryCreationDto
 import com.isel.ps.secdash.model.sast.RepositorySast
 import com.isel.ps.secdash.model.vulnerability.RepositoryVulnerabilities
@@ -9,6 +10,7 @@ import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.restclient.GitLabRestClient
 import com.isel.ps.secdash.service.responseTypes.AddRepositoryError
 import com.isel.ps.secdash.service.responseTypes.AddRepositoryResult
+import com.isel.ps.secdash.service.responseTypes.GetRepoByLinkResult
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesByOwnerError
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesByOwnerResult
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesError
@@ -163,6 +165,13 @@ class GitlabServices(
             val sastAlerts = repositoriesRepo.storeSastAlerts(rid, externalSastAlerts)
             success(RepositorySast(rid, sastAlerts))
         }
+    }
+
+    fun getRepoByLink(
+        link: String,
+        uid: Int,
+    ): GetRepoByLinkResult {
+        TODO()
     }
 
 }

@@ -54,7 +54,7 @@ export const en = {
     },
     github: {
         title: "GitHub",
-        searchPlaceholder: "Search in your GitHub repositories",
+        searchPlaceholder: "Search in your GitHub repositories or by link",
         loading: "Loading...",
         noRepositories: "No repositories found.",
         error: "Failed to load repositories.",
@@ -66,6 +66,7 @@ export const en = {
         added: "Added",
         addError: "Error",
         repositoryAlreadyAdded: "Repository already added.",
+        searchByLink: "Search by link",
     },
     repos: {
         title: "Repositories",

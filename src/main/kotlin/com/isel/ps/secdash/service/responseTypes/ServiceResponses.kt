@@ -40,3 +40,11 @@ sealed class SastError {
 }
 
 typealias SastResult = Either<SastError, RepositorySast>
+
+
+sealed class GetRepoByLinkError {
+    data object Unauthorized : GetRepoByLinkError()
+    data object RepositoryNotFound : GetRepoByLinkError()
+}
+
+typealias GetRepoByLinkResult = Either<GetRepoByLinkError, ExternalRepository>

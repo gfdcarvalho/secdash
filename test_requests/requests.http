@@ -16,8 +16,8 @@ PRIVATE-TOKEN: {{GITLAB_TOKEN}}
 
 
 ### GitHub - SAST (Code Scanning Alerts)
-GET https://api.github.com/repos/{{GITHUB_USER}}/HomeApp/code-scanning/alerts?state=open
-Authorization: Bearer {{GITLAB_TOKEN}}
+GET https://api.github.com/repos/{{GITHUB_USER}}/SecDash-sast-test/code-scanning/alerts?state=open
+Authorization: Bearer {{GITHUB_TOKEN}}
 Accept: application/vnd.github+json
 
 >> test_requests/sast-response-github.json

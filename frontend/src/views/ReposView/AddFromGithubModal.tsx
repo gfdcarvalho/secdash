@@ -23,6 +23,8 @@ export function AddFromGithubModal({ onClose, onRepoAdded, alreadyAddedIds }: Pr
     const [search, setSearch] = useState('')
     const [addStates, setAddStates] = useState<Record<string, AddState>>({})
     const [toastMessage, setToastMessage] = useState<string | null>(null)
+    const [linkRepo, setLinkRepo] = useState<ExternalRepository | null>(null)
+    const [linkSearching, setLinkSearching] = useState(false)
 
     useEffect(() => {
         const getRepos = async () => {
@@ -41,6 +43,28 @@ export function AddFromGithubModal({ onClose, onRepoAdded, alreadyAddedIds }: Pr
         }
         getRepos()
     }, [])
+
+    const handleSearchByLink = async () => {
+        if (!search.trim()) return
+        setLinkSearching(true)
+        setLinkRepo(null)
+        const response = await api.get<ExternalRepository>(`/github/repository?link=${encodeURIComponent(search.trim())}`)
+        if (isSuccess(response)) {
+            setLinkRepo(response.value.data)
+            setError(false)
+        } else {
+            setError(true)
+        }
+        setLinkSearching(false)
+    }
+
+    const handleSearchChange = (value: string) => {
+        setSearch(value)
+        if (!value.trim()) {
+            setLinkRepo(null)
+            setError(false)
+        }
+    }
 
     const handleAddRepo = async (repo: ExternalRepository) => {
         setAddStates(prev => ({ ...prev, [repo.externalId]: 'adding' }))
@@ -64,9 +88,11 @@ export function AddFromGithubModal({ onClose, onRepoAdded, alreadyAddedIds }: Pr
         return () => clearTimeout(timer)
     }, [toastMessage])
 
-    const filtered = repositories
-        ?.filter(r => !alreadyAddedIds.has(r.externalId))
-        .filter(r => r.name.toLowerCase().includes(search.toLowerCase()))
+    const filtered = linkRepo
+        ? [linkRepo]
+        : repositories
+            ?.filter(r => !alreadyAddedIds.has(r.externalId))
+            .filter(r => r.name.toLowerCase().includes(search.toLowerCase()))
 
     return (
         <div className={Style.overlay} onClick={e => { if (e.target === e.currentTarget) onClose() }}>
@@ -76,14 +102,25 @@ export function AddFromGithubModal({ onClose, onRepoAdded, alreadyAddedIds }: Pr
                     <button className={Style.closeButton} onClick={onClose}>✕</button>
                 </div>
 
-                <input
-                    className={Style.search}
-                    type="text"
-                    placeholder={t.github.searchPlaceholder}
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    autoFocus
-                />
+                <div className={Style.searchRow}>
+                    <input
+                        className={Style.search}
+                        type="text"
+                        placeholder={t.github.searchPlaceholder}
+                        value={search}
+                        onChange={e => handleSearchChange(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter') handleSearchByLink() }}
+                        autoFocus
+                    />
+                    <button
+                        className={Style.linkSearchButton}
+                        onClick={handleSearchByLink}
+                        disabled={linkSearching || !search.trim()}
+                        title={t.github.searchByLink}
+                    >
+                        {linkSearching ? t.github.loading : t.github.searchByLink}
+                    </button>
+                </div>
 
                 <div className={Style.list}>
                     {error && <p className={Style.message}>{t.github.error}</p>}
