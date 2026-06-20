@@ -3,6 +3,8 @@ package com.isel.ps.secdash.repository
 import com.isel.ps.secdash.model.repositories.RepositoryWithOwnerSqlDto
 import com.isel.ps.secdash.model.sast.SastAlertWithRepoSqlDto
 import com.isel.ps.secdash.model.sast.TeamSastAlerts
+import com.isel.ps.secdash.model.teams.RepoProblemCount
+import com.isel.ps.secdash.model.teams.RepoProblemCountSqlDto
 import com.isel.ps.secdash.model.teams.SastStats
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.SimpleTeamWithCounts
@@ -274,6 +276,53 @@ class TeamRepository(
             .mapTo<StatRowSqlDto>()
             .list()
         return SastStats.from(rows)
+    }
+
+    override fun getTeamRepoProblemCounts(tid: Int): List<RepoProblemCount> {
+        return handle.createQuery(
+            """
+            SELECT
+                COALESCE(v.rid, s.rid)   AS rid,
+                COALESCE(v.critical, 0)  AS v_critical,
+                COALESCE(v.high, 0)      AS v_high,
+                COALESCE(v.medium, 0)    AS v_medium,
+                COALESCE(v.low, 0)       AS v_low,
+                COALESCE(v.unknown, 0)   AS v_unknown,
+                COALESCE(s.critical, 0)  AS s_critical,
+                COALESCE(s.high, 0)      AS s_high,
+                COALESCE(s.medium, 0)    AS s_medium,
+                COALESCE(s.low, 0)       AS s_low,
+                COALESCE(s.unknown, 0)   AS s_unknown
+            FROM (
+                SELECT v.rid,
+                    COUNT(*) FILTER (WHERE v.severity = 'CRITICAL') AS critical,
+                    COUNT(*) FILTER (WHERE v.severity = 'HIGH')     AS high,
+                    COUNT(*) FILTER (WHERE v.severity = 'MEDIUM')   AS medium,
+                    COUNT(*) FILTER (WHERE v.severity = 'LOW')      AS low,
+                    COUNT(*) FILTER (WHERE v.severity = 'UNKNOWN')  AS unknown
+                FROM vulnerabilities v
+                JOIN team_repos tr ON v.rid = tr.rid
+                WHERE tr.tid = :tid AND v.state = 'OPEN'
+                GROUP BY v.rid
+            ) v
+            FULL OUTER JOIN (
+                SELECT s.rid,
+                    COUNT(*) FILTER (WHERE s.severity = 'CRITICAL') AS critical,
+                    COUNT(*) FILTER (WHERE s.severity = 'HIGH')     AS high,
+                    COUNT(*) FILTER (WHERE s.severity = 'MEDIUM')   AS medium,
+                    COUNT(*) FILTER (WHERE s.severity = 'LOW')      AS low,
+                    COUNT(*) FILTER (WHERE s.severity = 'UNKNOWN')  AS unknown
+                FROM sast_alerts s
+                JOIN team_repos tr ON s.rid = tr.rid
+                WHERE tr.tid = :tid AND s.state = 'OPEN'
+                GROUP BY s.rid
+            ) s ON v.rid = s.rid
+            """.trimIndent()
+        )
+            .bind("tid", tid)
+            .mapTo<RepoProblemCountSqlDto>()
+            .list()
+            .map { it.toDomain() }
     }
 
     override fun getTeamVulnerabilityHistory(tid: Int): List<TeamVulnerabilityHistory> {

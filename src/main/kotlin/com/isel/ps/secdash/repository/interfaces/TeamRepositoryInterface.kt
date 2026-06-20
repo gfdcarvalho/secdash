@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.repository.interfaces
 
+import com.isel.ps.secdash.model.teams.RepoProblemCount
 import com.isel.ps.secdash.model.teams.SastStats
 import com.isel.ps.secdash.model.teams.SimpleTeam
 import com.isel.ps.secdash.model.teams.Team
@@ -43,6 +44,8 @@ interface TeamRepositoryInterface {
     fun getTeamVulnerabilityStats(tid: Int): VulnerabilityStats
 
     fun getTeamSastStats(tid: Int): SastStats
+
+    fun getTeamRepoProblemCounts(tid: Int): List<RepoProblemCount>
 
     fun getTeamVulnerabilityHistory(tid: Int): List<TeamVulnerabilityHistory>
 

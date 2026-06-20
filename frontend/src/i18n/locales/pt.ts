@@ -124,6 +124,12 @@ export const pt = {
             unknown: "Desconhecido",
         },
     },
+    topRepos: {
+        vulnTitle: "Maior risco · Vulnerabilidades",
+        sastTitle: "Maior risco · Alertas SAST",
+        empty: "Nenhum repositório com alertas abertos.",
+        total: "total",
+    },
     teamDetails: {
         notFound: "Equipa não encontrada.",
         loading: "A carregar...",

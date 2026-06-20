@@ -238,6 +238,7 @@ class TeamServices(
             success(TeamStats(
                 vulnerabilityStats = teamsRepo.getTeamVulnerabilityStats(tid),
                 sastStats = teamsRepo.getTeamSastStats(tid),
+                repoCounts = teamsRepo.getTeamRepoProblemCounts(tid),
             ))
         }
     }

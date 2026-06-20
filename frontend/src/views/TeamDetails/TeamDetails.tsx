@@ -10,6 +10,7 @@ import Style from './TeamDetails.module.css'
 import { AddRepoModal } from './AddRepoModal'
 import { AddMemberModal } from './AddMemberModal'
 import { TeamStatsSection } from './TeamStatsSection'
+import { TopProblemRepos } from './TopProblemRepos'
 
 
 export function TeamDetails() {
@@ -43,7 +44,6 @@ export function TeamDetails() {
         if (isSuccess(sastReponse)) {
             const vulnResponse = await api.get<DailyVulnerabilityCountList>(`/teams/${teamId}/vulnerability/history`)
             if (isSuccess(vulnResponse)) {
-                console.log(`vulnlist + ${vulnResponse.value.data} \n sastList = ${sastReponse.value.data}`)
                 setHistoryStats({ sastList: sastReponse.value.data, vulnList: vulnResponse.value.data})
             }
         }
@@ -95,6 +95,7 @@ export function TeamDetails() {
             </div>
             <div className={Style.bottomSection}>
                 {stats && <TeamStatsSection stats={stats} historyStats={historyStats}/>}
+                {stats && <TopProblemRepos repoCounts={stats.repoCounts} repos={team.repos} />}
 
                 <div className={Style.section}>
                     <div className={Style.sectionHeader}>

@@ -124,6 +124,12 @@ export const en = {
             unknown: "Unknown",
         },
     },
+    topRepos: {
+        vulnTitle: "Top risk · Vulnerabilities",
+        sastTitle: "Top risk · SAST alerts",
+        empty: "No repositories with open alerts.",
+        total: "total",
+    },
     teamDetails: {
         notFound: "Team not found.",
         loading: "Loading...",

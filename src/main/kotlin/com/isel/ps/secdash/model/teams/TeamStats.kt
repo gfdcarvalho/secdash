@@ -12,7 +12,46 @@ data class StatRowSqlDto(
 data class TeamStats(
     val vulnerabilityStats: VulnerabilityStats,
     val sastStats: SastStats,
+    val repoCounts: List<RepoProblemCount>,
 )
+
+data class RepoProblemCount(
+    val rid: Int,
+    val vulnerabilities: CountsBySeverity,
+    val sastAlerts: CountsBySeverity,
+)
+
+data class RepoProblemCountSqlDto(
+    val rid: Int,
+    val vCritical: Int,
+    val vHigh: Int,
+    val vMedium: Int,
+    val vLow: Int,
+    val vUnknown: Int,
+    val sCritical: Int,
+    val sHigh: Int,
+    val sMedium: Int,
+    val sLow: Int,
+    val sUnknown: Int,
+) {
+    fun toDomain() = RepoProblemCount(
+        rid = rid,
+        vulnerabilities = CountsBySeverity(
+            critical = vCritical,
+            high     = vHigh,
+            medium   = vMedium,
+            low      = vLow,
+            unknown  = vUnknown,
+        ),
+        sastAlerts = CountsBySeverity(
+            critical = sCritical,
+            high     = sHigh,
+            medium   = sMedium,
+            low      = sLow,
+            unknown  = sUnknown,
+        ),
+    )
+}
 
 data class VulnerabilityStats(
     val open: Int,

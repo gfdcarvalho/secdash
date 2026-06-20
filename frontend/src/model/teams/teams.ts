@@ -61,9 +61,16 @@ export type SastStats = {
     countsBySeverity: CountsBySeverity
 }
 
+export type RepoProblemCount = {
+    rid: number
+    vulnerabilities: CountsBySeverity
+    sastAlerts: CountsBySeverity
+}
+
 export type TeamStats = {
     vulnerabilityStats: VulnerabilityStats
     sastStats: SastStats
+    repoCounts: RepoProblemCount[]
 }
 
 export type DailySastCount = {
