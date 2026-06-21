@@ -2,7 +2,6 @@ package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.users.AuthenticatedUser
-import com.isel.ps.secdash.service.RepositoryServices
 import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.service.UserDeletionError
 import com.isel.ps.secdash.service.UserServices
