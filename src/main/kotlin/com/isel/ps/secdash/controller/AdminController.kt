@@ -58,9 +58,9 @@ class AdminController(
     @PostMapping("/promote-user/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     fun promoteUser(
-        @PathVariable uid: Int
+        @PathVariable userId: Int
     ): ResponseEntity<*> {
-        return when (val result = userServices.promoteUser(uid)) {
+        return when (val result = userServices.promoteUser(userId)) {
             is Success -> ResponseEntity.noContent().build<Unit>()
             is Failure -> when (result.value) {
                 UserPromotionError.UserNotFound -> Problem.response(404, Problem.UserNotFound)
