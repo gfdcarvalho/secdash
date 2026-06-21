@@ -43,7 +43,7 @@ class RepoController(
         @PathVariable repoId: Int,
         user: AuthenticatedUser
     ): ResponseEntity<*> {
-        val result = repoServices.deleteRepository(repoId, user.user.uid)
+        val result = repoServices.deleteRepository(repoId, user.user.role, user.user.uid)
         return when (result) {
             is Success -> ResponseEntity.noContent().build<Any>()
             is Failure ->

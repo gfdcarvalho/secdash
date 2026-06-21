@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.repositories.DailyVulnerabilityCount
 import com.isel.ps.secdash.model.repositories.RepositorySastHistory
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryStats
+import com.isel.ps.secdash.model.users.AppRole
 import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.utils.Either
 import com.isel.ps.secdash.utils.failure
@@ -63,12 +64,12 @@ class RepositoryServices(
         }
     }
 
-    fun deleteRepository(rid: Int, uid: Int): DeleteRepositoryResult {
+    fun deleteRepository(rid: Int, userRole: AppRole, uid: Int): DeleteRepositoryResult {
         return transactionManager.run {
             val repo = it.repositoriesRepository
 
             if (!repo.checkRepositoryExistence(rid)) return@run failure(DeleteRepositoryError.NotFound)
-            if (!repo.userHasAccessToRepository(uid, rid)) return@run failure(DeleteRepositoryError.Unauthorized)
+            if (!repo.userHasAccessToRepository(uid, rid) && userRole != AppRole.ADMIN) return@run failure(DeleteRepositoryError.Unauthorized)
 
             repo.deleteRepo(rid)
             success(Unit)
