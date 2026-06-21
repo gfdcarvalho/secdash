@@ -73,20 +73,6 @@ class UserController(
         )
     }
 
-    @DeleteMapping("/delete/{uid}")
-    @PreAuthorize("hasRole('ADMIN')") // isto funciona o user não tem que estar authenticato ?
-    fun deleteUser(
-        @PathVariable uid: Int
-    ): ResponseEntity<*> {
-        return when (val result = userServices.deleteUser(uid)) {
-            is Success -> ResponseEntity.noContent().build<Unit>()
-            is Failure -> when (result.value) {
-                UserDeletionError.UserNotFound -> Problem.response(404, Problem.UserNotFound)
-                UserDeletionError.Forbidden -> Problem.response(403, Problem.forbidden)
-            }
-        }
-    }
-
     @GetMapping()
     fun getAllUsers(
         user: AuthenticatedUser,
