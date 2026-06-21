@@ -4,6 +4,7 @@ import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.service.UserDeletionError
+import com.isel.ps.secdash.service.UserPromotionError
 import com.isel.ps.secdash.service.UserServices
 import com.isel.ps.secdash.service.responseTypes.DeleteTeamError
 import com.isel.ps.secdash.utils.Failure
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -37,6 +39,7 @@ class AdminController(
     }
 
     @DeleteMapping("/delete-team/{teamId}")
+    @PreAuthorize("hasRole('ADMIN')")
     fun deleteTeam(
         user: AuthenticatedUser,
         @PathVariable teamId: Int
@@ -51,5 +54,19 @@ class AdminController(
                 }
         }
     }
+
+    @PostMapping("/promote-user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun promoteUser(
+        @PathVariable uid: Int
+    ): ResponseEntity<*> {
+        return when (val result = userServices.promoteUser(uid)) {
+            is Success -> ResponseEntity.noContent().build<Unit>()
+            is Failure -> when (result.value) {
+                UserPromotionError.UserNotFound -> Problem.response(404, Problem.UserNotFound)
+            }
+        }
+    }
+
 
 }

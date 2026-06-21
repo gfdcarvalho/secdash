@@ -27,6 +27,13 @@ sealed class UserDeletionError {
 
 typealias UserDeletionResult = Either<UserDeletionError, Unit>
 
+sealed class UserPromotionError {
+    data object UserNotFound : UserPromotionError()
+}
+
+typealias UserPromotionResult = Either<UserPromotionError, Unit>
+
+
 @Service
 class UserServices(
     private val transactionManager: TransactionManager,
@@ -78,4 +85,14 @@ class UserServices(
             it.usersRepository.getAllUsers().map { user -> user.toOutputDto() }
         }
     }
+
+    fun promoteUser(targetUid: Int): UserPromotionResult {
+        return transactionManager.run {
+            val userRepo = it.usersRepository
+            if (!userRepo.checkIfUserExists(targetUid)) return@run Failure(UserPromotionError.UserNotFound)
+            userRepo.promoteUser(targetUid)
+            success(Unit)
+        }
+    }
+
 }

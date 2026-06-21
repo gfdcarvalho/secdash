@@ -77,4 +77,6 @@ interface UserRepositoryInterface {
     fun deleteUser(uid: Int)
 
     fun getAllUsers(): List<User>
+
+    fun promoteUser(uid: Int): Int
 }

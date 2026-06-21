@@ -267,4 +267,15 @@ class UserRepository(
             .mapTo<User>()
             .list()
     }
+
+    override fun promoteUser(uid: Int): Int {
+       return handle.createUpdate("""
+            UPDATE users
+            SET role = 'ADMIN'
+            WHERE uid = :userId
+        """.trimIndent())
+                .bind("userId", uid)
+                .execute()
+    }
+
 }
