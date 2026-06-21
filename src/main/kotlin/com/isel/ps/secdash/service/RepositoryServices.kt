@@ -3,7 +3,6 @@ package com.isel.ps.secdash.service
 import com.isel.ps.secdash.model.repositories.CountsBySeverity
 import com.isel.ps.secdash.model.repositories.DailySastCount
 import com.isel.ps.secdash.model.repositories.DailyVulnerabilityCount
-import com.isel.ps.secdash.model.repositories.RepositorySastHistory
 import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.model.repositories.RepositoryStats
 import com.isel.ps.secdash.model.users.AppRole

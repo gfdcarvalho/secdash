@@ -22,7 +22,6 @@ import java.net.URI
 @RequestMapping("/users")
 class UserController(
     private val userServices: UserServices,
-    private val repositoryServices: RepositoryServices,
 ) {
 
 //    @PreAuthorize("hasRole('ADMIN')") // so exemplo ...
