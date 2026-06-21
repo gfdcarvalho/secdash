@@ -5,7 +5,6 @@ import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.model.users.UserCreationModel
 import com.isel.ps.secdash.model.users.UserCreationOutputDto
 import com.isel.ps.secdash.model.users.UserProfileInformation
-import com.isel.ps.secdash.service.RepositoryServices
 import com.isel.ps.secdash.service.UserCreationError
 import com.isel.ps.secdash.service.UserServices
 import com.isel.ps.secdash.utils.Failure
