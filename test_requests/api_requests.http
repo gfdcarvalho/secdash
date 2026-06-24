@@ -76,5 +76,5 @@ Content-Type: application/json
 
 
 ### admin tries deletes User
-DELETE http://localhost:8080/admin/delete-user/4
+DELETE http://localhost:8080/admin/delete-user/8
 Authorization: Bearer {{token}}

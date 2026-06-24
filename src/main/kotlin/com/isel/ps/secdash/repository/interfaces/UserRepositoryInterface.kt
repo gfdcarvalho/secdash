@@ -79,4 +79,6 @@ interface UserRepositoryInterface {
     fun getAllUsers(): List<User>
 
     fun promoteUser(uid: Int): Int
+
+    fun getUserById(uid: Int): User
 }

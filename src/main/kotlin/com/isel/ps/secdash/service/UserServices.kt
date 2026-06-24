@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.service
 
+import com.isel.ps.secdash.model.users.User
 import com.isel.ps.secdash.model.users.UserDomain
 import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.model.users.UserTeamsAndRepos
@@ -32,6 +33,12 @@ sealed class UserPromotionError {
 }
 
 typealias UserPromotionResult = Either<UserPromotionError, Unit>
+
+sealed class GetUserError {
+    data object UserNotFound : GetUserError()
+}
+
+typealias GetUserResult = Either<GetUserError, User>
 
 
 @Service
@@ -92,6 +99,15 @@ class UserServices(
             if (!userRepo.checkIfUserExists(targetUid)) return@run Failure(UserPromotionError.UserNotFound)
             userRepo.promoteUser(targetUid)
             success(Unit)
+        }
+    }
+
+    fun getUser(uid: Int): GetUserResult {
+        return transactionManager.run {
+            val userRepo = it.usersRepository
+            if (!userRepo.checkIfUserExists(uid)) return@run Failure(GetUserError.UserNotFound)
+            val user = userRepo.getUserById(uid)
+            success(user)
         }
     }
 

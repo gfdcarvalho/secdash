@@ -309,4 +309,14 @@ class UserRepository(
                 .execute()
     }
 
+    override fun getUserById(uid: Int): User {
+        return handle.createQuery("""
+            select * from users where uid = :uid
+        """.trimIndent())
+            .bind("uid", uid)
+            .mapTo<User>()
+            .single()
+
+    }
+
 }

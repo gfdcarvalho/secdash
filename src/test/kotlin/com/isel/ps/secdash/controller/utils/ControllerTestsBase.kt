@@ -1,12 +1,14 @@
 package com.isel.ps.secdash.controller.utils
 
 import com.isel.ps.secdash.model.users.UserLoginDto
+import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel
 import com.isel.ps.secdash.utils.configureWithAppRequirements
 import com.isel.ps.secdash.utils.env
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.ResponseEntity
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
 
@@ -45,4 +47,15 @@ abstract class ControllerTestsBase {
             .expectBody<UserTokenOutputModel>()
             .returnResult()
             .responseBody?.token ?: throw IllegalStateException("Token not found problem with login")
+
+    protected fun adminGetUser(userId: Int, token: String): UserOutputDto? {
+        return client().get()
+            .uri("/admin/users/$userId")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<UserOutputDto>()
+            .returnResult()
+            .responseBody
+    }
 }

@@ -268,9 +268,18 @@ BEGIN
     VALUES (1, 'GITHUB', 'testToken');
 END;
 $$ LANGUAGE plpgsql;
-
+create or replace function test_data_for_AdminControllerTests() returns void as $$
+BEGIN
+    INSERT INTO users (name, password_validation, email, role)
+    VALUES
+        -- password: testpassword1
+        ('testUsername1','$2a$10$pbZFnR8NSKtxZ5ERtXYqreiyZNTMFAb1efUBT0RnrKsYOn3PimMii','test1@email.com', 'ADMIN'),
+        -- password: testpassword2
+        ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','test2@email.com', 'USER');
+END;
+$$ LANGUAGE plpgsql;
 
 
 UPDATE users
 SET role = 'ADMIN'
-WHERE uid = 5
+WHERE uid = 8
