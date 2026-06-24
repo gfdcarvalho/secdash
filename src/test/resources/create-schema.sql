@@ -268,3 +268,9 @@ BEGIN
     VALUES (1, 'GITHUB', 'testToken');
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+UPDATE users
+SET role = 'ADMIN'
+WHERE uid = 5

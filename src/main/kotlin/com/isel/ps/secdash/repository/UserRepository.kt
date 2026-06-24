@@ -257,6 +257,37 @@ class UserRepository(
     }
 
     override fun deleteUser(uid: Int) {
+
+        handle.createUpdate("""
+            delete from user_authentication where user_id = :uid
+        """.trimIndent())
+            .bind("uid", uid)
+            .execute()
+
+        handle.createUpdate("""
+            delete from user_authorization where user_id = :uid
+        """.trimIndent())
+            .bind("uid", uid)
+            .execute()
+
+        handle.createUpdate("""
+            delete from tokens where user_id = :uid
+        """.trimIndent())
+            .bind("uid", uid)
+            .execute()
+
+        handle.createUpdate("""
+            delete from user_repositories where uid = :uid
+        """.trimIndent())
+            .bind("uid", uid)
+            .execute()
+
+        handle.createUpdate("""
+            delete from team_users where uid = :uid
+        """.trimIndent())
+            .bind("uid", uid)
+            .execute()
+
         handle.createUpdate("DELETE FROM users WHERE uid = :uid")
             .bind("uid", uid)
             .execute()

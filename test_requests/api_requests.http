@@ -1,4 +1,4 @@
-@token = G4jJLY5czAgNItrBAFlmKAgfIDyXqAbGsVDo432k4q8=
+@token = T-g-BrJaRJ6YyFuS0J939Nua0xdM0uteMSxm7iCP2vM=
 @token2 = OmZjdyvgEhrgpjqj-r2KjaqUtp193HZCguMdr-SQNfE=
 
 
@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
   "username": "testeUserSemRepos",
-  "password": "teste1",
+  "password": "teste10",
   "email": "testeUserSemRepos@test.com"
 }
 
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
   "username": "testeUserSemRepos",
-  "password": "teste1"
+  "password": "teste10"
 }
 
 ### user profile
@@ -73,3 +73,8 @@ Content-Type: application/json
 {
   "externalId": "80515032"
 }
+
+
+### admin tries deletes User
+DELETE http://localhost:8080/admin/delete-user/4
+Authorization: Bearer {{token}}
