@@ -1,4 +1,4 @@
-package com.isel.ps.secdash.controller
+package com.isel.ps.secdash.controller.utils
 
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel

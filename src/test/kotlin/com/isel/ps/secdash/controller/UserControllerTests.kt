@@ -1,6 +1,8 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.SecdashApplication
+import com.isel.ps.secdash.controller.utils.ControllerTestsBase
+import com.isel.ps.secdash.controller.utils.TestJdbiConfig
 import com.isel.ps.secdash.model.users.UserCreationModel
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach

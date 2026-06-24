@@ -1,6 +1,8 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.SecdashApplication
+import com.isel.ps.secdash.controller.utils.ControllerTestsBase
+import com.isel.ps.secdash.controller.utils.TestJdbiConfig
 import com.isel.ps.secdash.model.Platform
 import com.isel.ps.secdash.model.repositories.ExternalRepository
 import com.isel.ps.secdash.model.repositories.Repository

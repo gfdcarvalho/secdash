@@ -2,6 +2,8 @@ package com.isel.ps.secdash.controller
 
 import org.springframework.boot.test.context.SpringBootTest
 import com.isel.ps.secdash.SecdashApplication
+import com.isel.ps.secdash.controller.utils.ControllerTestsBase
+import com.isel.ps.secdash.controller.utils.TestJdbiConfig
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel
 import org.junit.jupiter.api.AfterAll
@@ -104,6 +106,29 @@ class AuthControllerTests : ControllerTestsBase() {
             .bodyValue(UserLoginDto("InexistentUser", "testpassword"))
             .exchange()
             .expectStatus().isBadRequest
+    }
+
+    @Test
+    fun `logout with logged in user should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+
+        client().post()
+            .uri("/auth/logout")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().exists("Set-Cookie")
+    }
+
+    @Test
+    fun `logout with user that is not logged in should return 401`() {
+        val expiredToken = "cERGsgMlNTMOV4-gHdMf9nUoAoEAecPBhZ1IY_PayLk="
+
+        client().post()
+            .uri("/auth/logout")
+            .header("Authorization", "Bearer $expiredToken")
+            .exchange()
+            .expectStatus().isUnauthorized
     }
 
 }

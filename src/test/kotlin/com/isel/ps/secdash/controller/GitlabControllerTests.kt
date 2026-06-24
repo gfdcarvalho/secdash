@@ -1,10 +1,10 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.SecdashApplication
+import com.isel.ps.secdash.controller.utils.ControllerTestsBase
+import com.isel.ps.secdash.controller.utils.TestJdbiConfig
 import com.isel.ps.secdash.model.Platform
-import com.isel.ps.secdash.model.repositories.ExternalOwner
 import com.isel.ps.secdash.model.repositories.ExternalRepository
-import com.isel.ps.secdash.model.repositories.Repository
 import com.isel.ps.secdash.restclient.GitLabRestClient
 import com.isel.ps.secdash.testExternalRepository
 import org.junit.jupiter.api.AfterAll
@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.reactive.server.expectBody
-import java.time.Instant
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(
