@@ -28,6 +28,7 @@ import java.time.Instant
 sealed class DependencyScanError {
     data object Unauthorized : DependencyScanError()
     data object NotFound : DependencyScanError()
+    data object UserAuthorizationIsRequired : DependencyScanError()
     data object RepositoryNotFound : DependencyScanError()
     data object RepoDoesNotHaveDependancyScanFeatureEnabled : DependencyScanError()
 }
@@ -125,12 +126,12 @@ class GitlabServices(
         }
     }
 
-    fun getDependencyScan(uid: Int, rid: Int): DependencyScanResult {
+    fun  getDependencyScan(uid: Int, rid: Int): DependencyScanResult {
         return transactionManager.run {
             val repositoriesRepo = it.repositoriesRepository
             val externalId = repositoriesRepo.getExternalId(rid) ?: return@run failure(DependencyScanError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(uid, rid)) return@run failure(DependencyScanError.Unauthorized)
-            val accessToken = getValidToken(uid) ?: return@run failure(DependencyScanError.Unauthorized)
+            val accessToken = getValidToken(uid) ?: return@run failure(DependencyScanError.UserAuthorizationIsRequired)
             val externalVulnerabilities = try {
                 gitlabClient.getDependencyScan(externalId, accessToken)
             } catch(e: HttpClientErrorException){
@@ -153,7 +154,7 @@ class GitlabServices(
             val repositoriesRepo = it.repositoriesRepository
             val externalId = repositoriesRepo.getExternalId(rid) ?: return@run failure(SastError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(SastError.Unauthorized)
-            val accessToken = getValidToken(userId) ?: return@run failure(SastError.Unauthorized)
+            val accessToken = getValidToken(userId) ?: return@run failure(SastError.UserAuthorizationIsRequired)
             val externalSastAlerts = try {
                 gitlabClient.getSast(externalId, accessToken)
             }catch (e: HttpClientErrorException){

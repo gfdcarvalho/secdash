@@ -99,6 +99,7 @@ class GitlabController(
             is Failure ->
                 when (result.value) {
                     DependencyScanError.NotFound -> Problem.response(404, Problem.notFound)
+                    DependencyScanError.UserAuthorizationIsRequired -> Problem.response(401, Problem.userAuthorizationRequired)
                     DependencyScanError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
                     DependencyScanError.Unauthorized -> Problem.response( 401, Problem.unauthorized)
                     DependencyScanError.RepoDoesNotHaveDependancyScanFeatureEnabled -> Problem.response(403, Problem.repoDoesNotHaveDependabotFeatureEnabled)

@@ -82,6 +82,20 @@ class GithubControllerTests : ControllerTestsBase() {
     }
 
     @Test
+    fun `get repositories returns 404 when no repositories are found`() {
+        val token = login("testUsername1", "testpassword1")
+
+        whenever(githubRestClient.getRepositoriesFromAuthenticatedUser("testToken"))
+            .thenReturn(null)
+
+        client().get()
+            .uri("/github/repos")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.repositoryNotFound)
+    }
+
+    @Test
     fun `get repositories returns 401 when request has no auth token`() {
         client().get()
             .uri("/github/repos")

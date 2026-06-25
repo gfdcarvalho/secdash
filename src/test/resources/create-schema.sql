@@ -246,6 +246,14 @@ BEGIN
             ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','testemail@test2.com', 'USER'); -- testpassword2
     INSERT INTO user_authorization (user_id, provider, access_token)
     VALUES  (1,'GITLAB','testToken');
+    INSERT INTO owners (external_id, name, url, avatar_url, platform)
+    VALUES  ('123','testOwner','https://example.com/owner/repo','https://example.com/owner/avatar','GITLAB');
+    INSERT INTO repositories (name, external_id, platform, owner_id, html_url, description, issues_count, created_at, updated_at, forks_count, visibility)
+    VALUES  ('testRepository', '123','GITLAB',1,'https://www.example.com','test',0 , '2026-03-23 15:31:04.000000 +00:00','2026-03-23 16:30:55.000000 +00:00', 0, 'PUBLIC' ),
+            ('testRepository1', '1234','GITLAB',1,'https://www.example.com','test',0 , '2026-03-23 15:31:04.000000 +00:00','2026-03-23 16:30:55.000000 +00:00', 0, 'PUBLIC' );
+    INSERT INTO user_repositories (uid, rid)
+    VALUES  (1,1),
+            (2,2);
 END;
 $$ LANGUAGE plpgsql;
 
