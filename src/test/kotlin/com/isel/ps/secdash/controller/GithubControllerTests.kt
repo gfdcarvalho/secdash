@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.SecdashApplication
+import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.controller.utils.ControllerTestsBase
 import com.isel.ps.secdash.controller.utils.TestJdbiConfig
 import com.isel.ps.secdash.model.Platform
@@ -20,9 +21,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.reactive.server.expectBody
+import org.springframework.web.client.HttpClientErrorException
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(
@@ -75,8 +78,7 @@ class GithubControllerTests : ControllerTestsBase() {
             .uri("/github/repos")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isUnauthorized
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.UNAUTHORIZED, Problem.userAuthorizationRequired)
     }
 
     @Test
@@ -114,8 +116,7 @@ class GithubControllerTests : ControllerTestsBase() {
             .uri("/github/repos/$owner")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isBadRequest
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.ownerIsRequired)
     }
 
     @Test
@@ -161,8 +162,7 @@ class GithubControllerTests : ControllerTestsBase() {
             .header("Authorization", "Bearer $token")
             .bodyValue(RepositoryCreationDto(name = name))
             .exchange()
-            .expectStatus().isBadRequest
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.repositoryAlreadyAdded)
     }
 
     @Test
@@ -180,8 +180,7 @@ class GithubControllerTests : ControllerTestsBase() {
             .header("Authorization", "Bearer $token")
             .bodyValue(RepositoryCreationDto(name = name))
             .exchange()
-            .expectStatus().isNotFound
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.repositoryNotFound)
     }
 
     @Test
@@ -194,8 +193,7 @@ class GithubControllerTests : ControllerTestsBase() {
             .header("Authorization", "Bearer $token")
             .bodyValue(RepositoryCreationDto(name = name))
             .exchange()
-            .expectStatus().isBadRequest
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.nameIsRequired)
     }
 
     @Test
@@ -208,8 +206,7 @@ class GithubControllerTests : ControllerTestsBase() {
             .header("Authorization", "Bearer $token")
             .bodyValue(RepositoryCreationDto(name = name))
             .exchange()
-            .expectStatus().isUnauthorized
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.UNAUTHORIZED, Problem.userAuthorizationRequired)
     }
 
     @Test
@@ -217,7 +214,7 @@ class GithubControllerTests : ControllerTestsBase() {
         val token = login("testUsername1", "testpassword1")
         val rid = 1
 
-        whenever(githubRestClient.getDependabot("testRepo", "testToken"))
+        whenever(githubRestClient.getDependabot("testRepository", "testToken"))
             .thenReturn(
                 testListExternalVulnerabilities()
             )
@@ -240,21 +237,19 @@ class GithubControllerTests : ControllerTestsBase() {
             .uri("/github/repositories/$rid/dependabot")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isNotFound
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.repositoryNotFound)
     }
 
     @Test
     fun `get dependabot without user authorization should return 401`() {
         val token = login("testUsername2", "testpassword2")
-        val rid = 1
+        val rid = 2
 
         client().get()
             .uri("/github/repositories/$rid/dependabot")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isUnauthorized
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.UNAUTHORIZED, Problem.userAuthorizationRequired)
     }
 
     @Test
@@ -266,8 +261,23 @@ class GithubControllerTests : ControllerTestsBase() {
             .uri("/github/repositories/$rid/dependabot")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isUnauthorized
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.UNAUTHORIZED, Problem.unauthorized)
+    }
+
+    @Test
+    fun `get dependabot from repo that does not have dependabot enabled should return 403`() {
+        val token = login("testUsername1", "testpassword1")
+        val rid = 1
+
+        whenever(githubRestClient.getDependabot("testRepository", "testToken"))
+            .thenThrow(HttpClientErrorException(HttpStatus.FORBIDDEN))
+
+        client().get()
+            .uri("/github/repositories/$rid/dependabot")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.repoDoesNotHaveDependabotFeatureEnabled)
+
     }
 
     @Test
@@ -275,7 +285,7 @@ class GithubControllerTests : ControllerTestsBase() {
         val token = login("testUsername1", "testpassword1")
         val rid = 1
 
-        whenever(githubRestClient.getSastAlerts("testRepo", "testToken"))
+        whenever(githubRestClient.getSastAlerts("testRepository", "testToken"))
             .thenReturn(
                 testListExternalSast()
             )
@@ -292,14 +302,13 @@ class GithubControllerTests : ControllerTestsBase() {
     @Test
     fun `get sast without user authorization should return 401`() {
         val token = login("testUsername2", "testpassword2")
-        val rid = 1
+        val rid = 2
 
         client().get()
             .uri("/github/repositories/$rid/sast")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isUnauthorized
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.UNAUTHORIZED, Problem.userAuthorizationRequired)
     }
 
     @Test
@@ -311,7 +320,21 @@ class GithubControllerTests : ControllerTestsBase() {
             .uri("/github/repositories/$rid/sast")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isNotFound
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.repositoryNotFound)
+    }
+
+    @Test
+    fun `get sast from repo that does not have sast enabled should return 403`() {
+        val token = login("testUsername1", "testpassword1")
+        val rid = 1
+
+        whenever(githubRestClient.getSastAlerts("testRepository", "testToken"))
+            .thenThrow(HttpClientErrorException(HttpStatus.FORBIDDEN))
+
+        client().get()
+            .uri("/github/repositories/$rid/sast")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.repoDoesNotHaveSastFeatureEnabled)
     }
 }

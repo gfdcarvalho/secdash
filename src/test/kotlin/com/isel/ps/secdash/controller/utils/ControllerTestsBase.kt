@@ -1,5 +1,6 @@
 package com.isel.ps.secdash.controller.utils
 
+import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.users.UserLoginDto
 import com.isel.ps.secdash.model.users.UserOutputDto
 import com.isel.ps.secdash.model.users.UserTokenOutputModel
@@ -8,9 +9,13 @@ import com.isel.ps.secdash.utils.env
 import org.jdbi.v3.core.Jdbi
 import org.postgresql.ds.PGSimpleDataSource
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.test.web.reactive.server.expectBody
+import java.awt.PageAttributes
+import kotlin.test.assertEquals
 
 abstract class ControllerTestsBase {
     companion object {
@@ -57,5 +62,17 @@ abstract class ControllerTestsBase {
             .expectBody<UserOutputDto>()
             .returnResult()
             .responseBody
+    }
+
+    protected fun WebTestClient.ResponseSpec.expectProblem(
+        status: HttpStatus,
+        expected: Problem,
+    ) {
+        this.expectStatus().isEqualTo(status)
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectBody<ProblemTests>()
+            .value { problem ->
+                assertEquals(expected.type, problem?.type)
+            }
     }
 }

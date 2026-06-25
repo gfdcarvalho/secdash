@@ -28,6 +28,7 @@ sealed class DependabotError {
     data object Unauthorized : DependabotError()
     data object NotFound : DependabotError()
     data object RepositoryNotFound : DependabotError()
+    data object UserAuthorizationIsRequired : DependabotError()
     data object RepoDoesNotHaveDependabotFeature: DependabotError()
 }
 
@@ -105,7 +106,7 @@ class GithubServices(
             val repositoriesRepo = it.repositoriesRepository
             val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(DependabotError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(DependabotError.Unauthorized) // could this return 403 forbidden ??
-            val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(DependabotError.Unauthorized)
+            val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(DependabotError.UserAuthorizationIsRequired)
             val externalVulnerabilities = try {
                 githubClient.getDependabot(fullName, accessToken)
             }catch(e: HttpClientErrorException){
@@ -130,7 +131,7 @@ class GithubServices(
             val repositoriesRepo = it.repositoriesRepository
             val fullName = repositoriesRepo.getRepositoryFullName(rid) ?: return@run failure(SastError.RepositoryNotFound)
             if (!repositoriesRepo.userHasAccessToRepository(userId, rid)) return@run failure(SastError.Unauthorized)
-            val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(SastError.Unauthorized)
+            val accessToken = userRepo.getAccessToken(userId, AuthProvider.GITHUB) ?: return@run failure(SastError.UserAuthorizationIsRequired)
             val externalSastAlerts = try {
                 githubClient.getSastAlerts(fullName, accessToken)
             } catch (e: HttpClientErrorException) {

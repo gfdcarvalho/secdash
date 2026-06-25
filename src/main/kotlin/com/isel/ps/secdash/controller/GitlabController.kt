@@ -119,6 +119,7 @@ class GitlabController(
             is Failure ->
                 when (result.value) {
                     SastError.Unauthorized -> Problem.response(401, Problem.unauthorized)
+                    SastError.UserAuthorizationIsRequired -> Problem.response(401, Problem.userAuthorizationRequired)
                     SastError.NotFound -> Problem.response(404, Problem.notFound)
                     SastError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
                     SastError.RepoDoesNotHaveSastFeatureEnabled -> Problem.response(403, Problem.repoDoesNotHaveSastFeatureEnabled)

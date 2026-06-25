@@ -36,6 +36,7 @@ sealed class SastError {
     data object Unauthorized : SastError()
     data object NotFound : SastError()
     data object RepositoryNotFound : SastError()
+    data object UserAuthorizationIsRequired : SastError()
     data object RepoDoesNotHaveSastFeatureEnabled : SastError()
 }
 
