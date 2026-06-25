@@ -87,6 +87,77 @@ class AdminControllerTests: ControllerTestsBase() {
         assertEquals(AppRole.ADMIN, promotedUser.role)
     }
 
+    @Test
+    fun `Admin promotes User that does not exist should return not found`() {
+        val token = login("testUsername1", "testpassword1")
+        val userIdToPromote = 999
+        client().post()
+            .uri("/admin/promote-user/$userIdToPromote")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNotFound
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `Normal user tries to promote normal user should return 403 forbidden`() {
+        val token = login("testUsername2", "testpassword2")
+        val userIdToPromote = 3
+        client().post()
+            .uri("/admin/promote-user/$userIdToPromote")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isForbidden
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
     // delete team
+
+    @Test
+    fun `Admin deletes a Team that he is not a member of should return 204 no content`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamIdToDelete = 1
+        client().delete()
+            .uri("/admin/delete-team/$teamIdToDelete")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNoContent
+    }
+
+    @Test
+    fun `Admin deletes Team that does not exist should return not found`() {
+        val token = login("testUsername1", "testpassword1")
+        val userIdToDelete = 999
+        client().delete()
+            .uri("/admin/delete-team/$userIdToDelete")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNotFound
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `Normal user tries to delete Team that he is not a member of should return 403 forbidden`() {
+        val token = login("testUsername3", "testpassword3")
+        val userIdToDelete = 1
+        client().delete()
+            .uri("/admin/delete-team/$userIdToDelete")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isForbidden
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
+
+    @Test
+    fun `Normal user tries to delete Team that he is leader of should return 403 forbidden`() {
+        val token = login("testUsername2", "testpassword2")
+        val userIdToDelete = 2
+        client().delete()
+            .uri("/admin/delete-team/$userIdToDelete")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isForbidden
+            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+    }
 
 }

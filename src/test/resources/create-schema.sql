@@ -275,7 +275,22 @@ BEGIN
         -- password: testpassword1
         ('testUsername1','$2a$10$pbZFnR8NSKtxZ5ERtXYqreiyZNTMFAb1efUBT0RnrKsYOn3PimMii','test1@email.com', 'ADMIN'),
         -- password: testpassword2
-        ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','test2@email.com', 'USER');
+        ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','test2@email.com', 'USER'),
+        -- password: testpassword3
+        ('testUsername3','$2a$10$.gAsQtGdm7JdjR/4kD9p1eT1L28cvCtAByxtqt0rpStbkq.9dqyqW','test3@email.com', 'USER'),
+        -- password: testpassword4
+        ('testUsername4','$2a$10$hXld1iw19GwU4O5NPk4GqO5a233ycPfP5Y/mMRP9g8P.blZ3L9H.u','test4@email.com', 'USER'),
+        -- password: testpassword5
+        ('testUsername5','$2a$10$3GKVyzFZdsXvdtx39y1U5eXEdSwAHNadnQXpIGnzmtWaiisrz5C7e','test5@email.com', 'USER');
+
+    INSERT INTO teams (name, description, last_scan_at)
+    VALUES
+        ('testeTeam1', null, null);
+
+    insert into team_users (tid, uid, role)
+    VALUES
+        (1, 2, 'LEADER');
+
 END;
 $$ LANGUAGE plpgsql;
 

@@ -1,4 +1,4 @@
-@token = T-g-BrJaRJ6YyFuS0J939Nua0xdM0uteMSxm7iCP2vM=
+@token = JsQpCzSlmhl3F90yR4te1etMz0809T-UQ0qNucEpjb4=
 @token2 = OmZjdyvgEhrgpjqj-r2KjaqUtp193HZCguMdr-SQNfE=
 
 
@@ -15,9 +15,9 @@ POST http://localhost:8080/users/register
 Content-Type: application/json
 
 {
-  "username": "testeUserSemRepos",
-  "password": "teste10",
-  "email": "testeUserSemRepos@test.com"
+  "username": "testeUsername5",
+  "password": "testpassword5",
+  "email": "testUser5@test.com"
 }
 
 
@@ -74,6 +74,15 @@ Content-Type: application/json
   "externalId": "80515032"
 }
 
+
+### create a team
+POST http://localhost:8080/teams
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "testeTeam"
+}
 
 ### admin tries deletes User
 DELETE http://localhost:8080/admin/delete-user/8
