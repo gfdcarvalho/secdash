@@ -51,7 +51,7 @@ class AdminController(
             is Failure ->
                 when (result.value) {
                     DeleteTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
-                    DeleteTeamError.OnlyTeamLeaderOrAdmin -> Problem.response(401, Problem.onlyTeamLeader)
+                    DeleteTeamError.OnlyTeamLeaderOrAdmin -> Problem.response(401, Problem.onlyTeamLeader) // this will never happen here ...
                 }
         }
     }

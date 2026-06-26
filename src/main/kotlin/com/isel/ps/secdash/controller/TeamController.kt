@@ -56,7 +56,7 @@ class TeamController(
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
                 when (result.value){
-                    GetTeamError.Unauthorized -> Problem.response(401, Problem.unauthorized)
+                    GetTeamError.Unauthorized -> Problem.response(403, Problem.forbidden)
                     GetTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                 }
         }
@@ -94,7 +94,7 @@ class TeamController(
             is Failure ->
                 when (result.value) {
                     DeleteTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
-                    DeleteTeamError.OnlyTeamLeaderOrAdmin -> Problem.response(401, Problem.onlyTeamLeader)
+                    DeleteTeamError.OnlyTeamLeaderOrAdmin -> Problem.response(403, Problem.onlyTeamLeader)
                 }
         }
     }
@@ -113,7 +113,7 @@ class TeamController(
                     AddUserToTeamError.OnlyTeamLeader -> Problem.response(403, Problem.onlyTeamLeader)
                     AddUserToTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                     AddUserToTeamError.UserAlreadyOnTeam -> Problem.response(409, Problem.userAlreadyOnTeam)
-                    AddUserToTeamError.UserNotFound -> Problem.response(400, Problem.UserNotFound)
+                    AddUserToTeamError.UserNotFound -> Problem.response(404, Problem.UserNotFound)
                 }
         }
     }
