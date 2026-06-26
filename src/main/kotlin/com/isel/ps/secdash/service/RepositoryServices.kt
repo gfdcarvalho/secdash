@@ -33,6 +33,7 @@ typealias GetRepoVulnerabilityHistoryResult = Either<GetRepositoryError, List<Da
 
 sealed class GetRepoSastHistoryError {
     data object Unauthorized : GetRepoSastHistoryError()
+    data object NotFound : GetRepoSastHistoryError()
 }
 
 typealias GetRepoSastHistoryResult = Either<GetRepoSastHistoryError, List<DailySastCount>>
@@ -93,6 +94,8 @@ class RepositoryServices(
         return transactionManager.run {
             val reposRepo = it.repositoriesRepository
 
+            if (!reposRepo.checkRepositoryExistence(rid)) return@run failure(GetRepositoryError.NotFound)
+
             if (!reposRepo.userHasAccessToRepository(uid, rid))
                 return@run failure(GetRepositoryError.Unauthorized)
 
@@ -127,6 +130,8 @@ class RepositoryServices(
     fun getRepoSastHistory(uid: Int, rid: Int): GetRepoSastHistoryResult {
         return transactionManager.run {
             val reposRepo = it.repositoriesRepository
+
+            if (!reposRepo.checkRepositoryExistence(rid)) return@run failure(GetRepoSastHistoryError.NotFound)
 
             if (!reposRepo.userHasAccessToRepository(uid, rid))
                 return@run failure(GetRepoSastHistoryError.Unauthorized)

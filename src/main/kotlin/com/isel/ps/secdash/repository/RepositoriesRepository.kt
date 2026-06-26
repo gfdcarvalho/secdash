@@ -229,12 +229,42 @@ class RepositoriesRepository(
 
     /**
      * Dangerous!...
-     * Deletes a repository and all its associations (team_repos, user_repositories).
+     * Deletes a repository and all its associations: team_repos, user_repositories,
+     * its vulnerabilities (and their references), SAST alerts and the scan history
+     * tables (repo_vulnerability_scans, repo_sast_scans).
      * Should only be called after confirming the repo is no longer used via [isRepoUsed].
+     *
+     * Child rows must be removed before the repository itself to satisfy the foreign
+     * keys; vulnerability_references is removed first since it references vulnerabilities.
      *
      * @param rid the id of the repository to delete
      */
     override fun deleteRepo(rid: Int) {
+        handle.createUpdate(
+            """
+            DELETE FROM vulnerability_references
+            WHERE vuln_id IN (SELECT vid FROM vulnerabilities WHERE rid = :rid)
+            """.trimIndent(),
+        )
+            .bind("rid", rid)
+            .execute()
+
+        handle.createUpdate("DELETE FROM vulnerabilities WHERE rid = :rid")
+            .bind("rid", rid)
+            .execute()
+
+        handle.createUpdate("DELETE FROM repo_vulnerability_scans WHERE rid = :rid")
+            .bind("rid", rid)
+            .execute()
+
+        handle.createUpdate("DELETE FROM sast_alerts WHERE rid = :rid")
+            .bind("rid", rid)
+            .execute()
+
+        handle.createUpdate("DELETE FROM repo_sast_scans WHERE rid = :rid")
+            .bind("rid", rid)
+            .execute()
+
         handle.createUpdate("DELETE FROM team_repos WHERE rid = :rid")
             .bind("rid", rid)
             .execute()

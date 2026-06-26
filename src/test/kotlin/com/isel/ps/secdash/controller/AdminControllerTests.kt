@@ -1,6 +1,7 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.SecdashApplication
+import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.controller.utils.ControllerTestsBase
 import com.isel.ps.secdash.controller.utils.TestJdbiConfig
 import com.isel.ps.secdash.model.users.AppRole
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertNotNull
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import kotlin.test.assertEquals
 
@@ -55,8 +57,7 @@ class AdminControllerTests: ControllerTestsBase() {
             .uri("/admin/delete-user/$userIdToDelete")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isNotFound
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.UserNotFound)
     }
 
     @Test
@@ -67,8 +68,7 @@ class AdminControllerTests: ControllerTestsBase() {
             .uri("/admin/delete-user/$userIdToDelete")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isForbidden
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.forbidden)
     }
 
     // promote user
@@ -95,8 +95,7 @@ class AdminControllerTests: ControllerTestsBase() {
             .uri("/admin/promote-user/$userIdToPromote")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isNotFound
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.UserNotFound)
     }
 
     @Test
@@ -107,8 +106,7 @@ class AdminControllerTests: ControllerTestsBase() {
             .uri("/admin/promote-user/$userIdToPromote")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isForbidden
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.forbidden)
     }
 
     // delete team
@@ -132,8 +130,7 @@ class AdminControllerTests: ControllerTestsBase() {
             .uri("/admin/delete-team/$userIdToDelete")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isNotFound
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
     }
 
     @Test
@@ -144,8 +141,7 @@ class AdminControllerTests: ControllerTestsBase() {
             .uri("/admin/delete-team/$userIdToDelete")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isForbidden
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.forbidden)
     }
 
     @Test
@@ -156,8 +152,7 @@ class AdminControllerTests: ControllerTestsBase() {
             .uri("/admin/delete-team/$userIdToDelete")
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectStatus().isForbidden
-            .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.forbidden)
     }
 
 }

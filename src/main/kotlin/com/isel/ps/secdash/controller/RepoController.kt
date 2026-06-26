@@ -31,8 +31,8 @@ class RepoController(
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
                 when (result.value) {
-                    GetRepositoryError.Unauthorized -> Problem.response(401, Problem.unauthorized)
-                    GetRepositoryError.NotFound -> Problem.response(404, Problem.notFound)
+                    GetRepositoryError.Unauthorized -> Problem.response(403, Problem.forbidden)
+                    GetRepositoryError.NotFound -> Problem.response(404, Problem.repositoryNotFound)
                 }
 
         }
@@ -48,8 +48,8 @@ class RepoController(
             is Success -> ResponseEntity.noContent().build<Any>()
             is Failure ->
                 when (result.value) {
-                    DeleteRepositoryError.NotFound -> Problem.response(404, Problem.notFound)
-                    DeleteRepositoryError.Unauthorized -> Problem.response(401, Problem.unauthorized)
+                    DeleteRepositoryError.NotFound -> Problem.response(404, Problem.repositoryNotFound)
+                    DeleteRepositoryError.Unauthorized -> Problem.response(403, Problem.forbidden)
                 }
         }
     }
@@ -105,6 +105,7 @@ class RepoController(
             is Failure ->
                 when (result.value) {
                     GetRepoSastHistoryError.Unauthorized -> Problem.response(403, Problem.forbidden)
+                    GetRepoSastHistoryError.NotFound -> Problem.response(404, Problem.repositoryNotFound)
                 }
         }
     }
