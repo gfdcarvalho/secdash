@@ -22,9 +22,9 @@ class SastServices(
         return transactionManager.run {
             val reposRepo = it.repositoriesRepository
 
-            if (!reposRepo.userHasAccessToSastAlert(uid, sid)) return@run failure(GetSastAlertError.Forbidden)
-
             val detail = reposRepo.getSastAlertDetail(sid) ?: return@run failure(GetSastAlertError.NotFound)
+
+            if (!reposRepo.userHasAccessToSastAlert(uid, sid)) return@run failure(GetSastAlertError.Forbidden)
 
             success(detail)
         }

@@ -378,6 +378,40 @@ BEGIN
         (1, '2026-03-21 09:00:00+00', 3, 1, 2, 0, 0, 0);
 END;
 $$ LANGUAGE plpgsql;
+create or replace function test_data_for_SastControllerTests() returns void as $$
+BEGIN
+    INSERT INTO users (name, password_validation, email, role)
+    VALUES
+        -- password: testpassword1
+        ('testUsername1','$2a$10$pbZFnR8NSKtxZ5ERtXYqreiyZNTMFAb1efUBT0RnrKsYOn3PimMii','test1@email.com', 'ADMIN'),
+        -- password: testpassword2
+        ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','test2@email.com', 'USER'),
+        -- password: testpassword3
+        ('testUsername3','$2a$10$.gAsQtGdm7JdjR/4kD9p1eT1L28cvCtAByxtqt0rpStbkq.9dqyqW','test3@email.com', 'USER'),
+        -- password: testpassword4
+        ('testUsername4','$2a$10$hXld1iw19GwU4O5NPk4GqO5a233ycPfP5Y/mMRP9g8P.blZ3L9H.u','test4@email.com', 'USER'),
+        -- password: testpassword5
+        ('testUsername5','$2a$10$3GKVyzFZdsXvdtx39y1U5eXEdSwAHNadnQXpIGnzmtWaiisrz5C7e','test5@email.com', 'USER');
+
+    insert into owners (external_id, name, url, avatar_url, platform)
+    VALUES
+        ('123', 'testOwner', 'https://github.com/tests', 'https://github.com/tests/avatar', 'GITHUB');
+
+    insert into repositories (name, external_id, platform, owner_id, html_url, description, issues_count, created_at, updated_at, forks_count, visibility)
+    VALUES
+        ('testRepo1', '12345', 'GITHUB', 1, 'https://github.com/tests/testRepo1', 'repo with a sast alert', 0, '2026-03-23 15:31:04.000000 +00:00', '2026-03-23 16:30:55.000000 +00:00', 0, 'PUBLIC');
+
+    -- testUsername1 (uid 1) has access to the repo (rid 1)
+    insert into user_repositories (uid, rid)
+    VALUES
+        (1, 1);
+
+    -- One SAST alert (sid 1) on rid 1 to test GET /sast/{sid}
+    insert into sast_alerts (rid, external_id, state, severity, rule_id, rule_description, tool_name, file_path, start_line, end_line, message, html_url, platform, detected_at, updated_at)
+    VALUES
+        (1, 'SAST-1', 'OPEN', 'CRITICAL', 'js/sql-injection', 'Database query built from user-controlled sources', 'CodeQL', 'src/db.js', 42, 45, 'This query depends on a user-provided value', 'https://github.com/tests/testRepo1/security/code-scanning/1', 'GITHUB', '2026-03-20 10:00:00', '2026-03-20 10:00:00');
+END;
+$$ LANGUAGE plpgsql;
 
 
 UPDATE users
