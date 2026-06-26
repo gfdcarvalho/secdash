@@ -8,6 +8,8 @@ import com.isel.ps.secdash.model.teams.SimpleTeamWithCounts
 import com.isel.ps.secdash.model.teams.SimpleTeamWithCountsListOutput
 import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamCreationInput
+import com.isel.ps.secdash.model.teams.TeamRepositoryInput
+import com.isel.ps.secdash.model.teams.TeamRoles
 import com.isel.ps.secdash.model.teams.TeamUserInput
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -377,9 +379,263 @@ class TeamControllerTests: ControllerTestsBase() {
             }
     }
 
+    @Test
+    fun `removes user from team that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 999
+        val userToRemove = 2
+
+        client().delete()
+            .uri("/teams/$teamId/users/$userToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
+
+    @Test
+    fun `user that is not team Leader tries to removes user from team should return 403`() {
+        val token = login("testUsername2", "testpassword2")
+        val teamId = 1
+        val userToRemove = 1
+
+        client().delete()
+            .uri("/teams/$teamId/users/$userToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.onlyTeamLeader)
+    }
+
+    @Test
+    fun `team leader tries to remove user that is not on the team should return 400`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val userToRemove = 5
+
+        client().delete()
+            .uri("/teams/$teamId/users/$userToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.userNotOnTeam)
+    }
+
+    @Test
+    fun `team leader tries to remove user that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val userToRemove = 999
+
+        client().delete()
+            .uri("/teams/$teamId/users/$userToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.UserNotFound)
+    }
+
+    @Test
+    fun `team leader tries to remove the same user twice should return 204 and then 400`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val userToRemove = 2
+
+        client().delete()
+            .uri("/teams/$teamId/users/$userToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNoContent
+
+        client().delete()
+            .uri("/teams/$teamId/users/$userToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.userNotOnTeam)
+    }
+
     // pathc makeUserTeamLeader /teams/tid/users/uidTopromote
+    @Test
+    fun `team leader promotes team member to leader should return 200 ok`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val userToPromote = 2
+
+        client().patch()
+            .uri("/teams/$teamId/users/$userToPromote")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+
+        client().get()
+            .uri("/teams/$teamId")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<Team>()
+            .value { team ->
+                assertTrue { team?.members?.find { it.uid == userToPromote }?.teamRole == TeamRoles.LEADER }
+            }
+    }
+
+    @Test
+    fun `make user team leader from team that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 999
+        val userToPromote = 2
+
+        client().patch()
+            .uri("/teams/$teamId/users/$userToPromote")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
+
+    @Test
+    fun `team leader tries to promote a user that is not on the team should return 400`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val userToPromote = 5
+
+        client().patch()
+            .uri("/teams/$teamId/users/$userToPromote")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.userNotOnTeam)
+    }
+
+    @Test
+    fun `user that is not team leader tries to promote someone should return 403`() {
+        val token = login("testUsername2", "testpassword2")
+        val teamId = 1
+        val userToPromote = 2
+
+        client().patch()
+            .uri("/teams/$teamId/users/$userToPromote")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.onlyTeamLeader)
+    }
+
+    @Test
+    fun `team leader tries to promote someone that is already a team leader should return 400`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val userToPromote = 1
+
+        client().patch()
+            .uri("/teams/$teamId/users/$userToPromote")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.CONFLICT, Problem.userAlreadyLeader)
+    }
+
 
     // post add repository to Team /teams/tid/repository
+    @Test
+    fun `team leader add a repository to the team should return 200 ok`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val repoIdToAdd = TeamRepositoryInput(3)
+
+        client().post()
+            .uri("/teams/$teamId/repository")
+            .header("Authorization", "Bearer $token")
+            .header("Content-Type", "application/json")
+            .bodyValue(repoIdToAdd)
+            .exchange()
+            .expectStatus().isOk
+
+        client().get()
+            .uri("/teams/$teamId")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<Team>()
+            .value { team ->
+                assertTrue { team?.repos?.any { it.rid == repoIdToAdd.repositoryId } ?: false }
+            }
+    }
+
+    @Test
+    fun `add repository that does not exist to Team should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val repoIdToAdd = TeamRepositoryInput(999)
+
+        client().post()
+            .uri("/teams/$teamId/repository")
+            .header("Authorization", "Bearer $token")
+            .header("Content-Type", "application/json")
+            .bodyValue(repoIdToAdd)
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.repositoryNotFound)
+    }
+
+    @Test
+    fun `team member that is not team leader tries to add a repository should return 403`() {
+        val token = login("testUsername2", "testpassword2")
+        val teamId = 1
+        val repoIdToAdd = TeamRepositoryInput(3)
+
+        client().post()
+            .uri("/teams/$teamId/repository")
+            .header("Authorization", "Bearer $token")
+            .header("Content-Type", "application/json")
+            .bodyValue(repoIdToAdd)
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.onlyTeamLeader)
+    }
+
+    @Test
+    fun `leader tries to add a repository that is already on the team should return 400`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val repoIdToAdd = TeamRepositoryInput(2)
+
+        client().post()
+            .uri("/teams/$teamId/repository")
+            .header("Authorization", "Bearer $token")
+            .header("Content-Type", "application/json")
+            .bodyValue(repoIdToAdd)
+            .exchange()
+            .expectProblem(HttpStatus.CONFLICT, Problem.repositoryAlreadyAdded)
+    }
+
+    @Test
+    fun `add repository to a team that does not exist to Team should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 999
+        val repoIdToAdd = TeamRepositoryInput(3)
+
+        client().post()
+            .uri("/teams/$teamId/repository")
+            .header("Authorization", "Bearer $token")
+            .header("Content-Type", "application/json")
+            .bodyValue(repoIdToAdd)
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
+
+    @Test
+    fun `team leader adds the same repository twice should return 200 and then 409`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val repoIdToAdd = TeamRepositoryInput(3)
+
+        client().post()
+            .uri("/teams/$teamId/repository")
+            .header("Authorization", "Bearer $token")
+            .header("Content-Type", "application/json")
+            .bodyValue(repoIdToAdd)
+            .exchange()
+            .expectStatus().isOk
+
+        client().post()
+            .uri("/teams/$teamId/repository")
+            .header("Authorization", "Bearer $token")
+            .header("Content-Type", "application/json")
+            .bodyValue(repoIdToAdd)
+            .exchange()
+            .expectProblem(HttpStatus.CONFLICT, Problem.repositoryAlreadyAdded)
+    }
+
 
     // delete remove repository from team /teams/tid/repository/repoToRemove
 

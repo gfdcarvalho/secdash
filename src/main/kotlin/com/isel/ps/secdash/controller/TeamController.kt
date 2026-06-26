@@ -130,7 +130,7 @@ class TeamController(
             is Failure ->
                 when (result.value) {
                     RemoveUserFromTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
-                    RemoveUserFromTeamError.OnlyTeamLeader -> Problem.response(401, Problem.onlyTeamLeader)
+                    RemoveUserFromTeamError.OnlyTeamLeader -> Problem.response(403, Problem.onlyTeamLeader)
                     RemoveUserFromTeamError.UserNotOnTeam -> Problem.response(400 , Problem.userNotOnTeam)
                     RemoveUserFromTeamError.UserNotFound -> Problem.response(404, Problem.UserNotFound)
                 }
@@ -150,8 +150,8 @@ class TeamController(
                 when (result.value) {
                     PromoteUserToLeaderError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                     PromoteUserToLeaderError.UserNotOnTeam -> Problem.response(400, Problem.userNotOnTeam)
-                    PromoteUserToLeaderError.OnlyTeamLeader -> Problem.response(401, Problem.onlyTeamLeader)
-                    PromoteUserToLeaderError.UserAlreadyLeader -> Problem.response(400, Problem.userAlreadyLeader)
+                    PromoteUserToLeaderError.OnlyTeamLeader -> Problem.response(403, Problem.onlyTeamLeader)
+                    PromoteUserToLeaderError.UserAlreadyLeader -> Problem.response(409, Problem.userAlreadyLeader)
                 }
         }
     }
