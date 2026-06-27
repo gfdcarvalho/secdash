@@ -183,7 +183,7 @@ class TeamController(
     ): ResponseEntity<*> {
         val result = teamServices.removeRepositoryFromTeam(user.user.uid, tid, repoToRemove)
         return when (result) {
-            is Success -> ResponseEntity.ok().build<Any>()
+            is Success -> ResponseEntity.noContent().build<Any>()
             is Failure ->
                 when (result.value) {
                     RemoveRepoFromTeamError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
@@ -203,7 +203,7 @@ class TeamController(
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
                 when (result.value) {
-                    GetTeamStatsError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                    GetTeamStatsError.NotTeamMember -> Problem.response(403, Problem.userNotOnTeam)
                     GetTeamStatsError.TeamNotFound  -> Problem.response(404, Problem.teamNotFound)
                 }
         }
@@ -222,7 +222,8 @@ class TeamController(
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
                 when (result.value) {
-                    GetTeamVulnerabilityHistoryError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                    GetTeamVulnerabilityHistoryError.NotTeamMember -> Problem.response(403, Problem.userNotOnTeam)
+                    GetTeamVulnerabilityHistoryError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                 }
         }
     }
@@ -237,7 +238,8 @@ class TeamController(
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
                 when (result.value) {
-                    GetTeamSastHistoryError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                    GetTeamSastHistoryError.NotTeamMember -> Problem.response(403, Problem.userNotOnTeam)
+                    GetTeamSastHistoryError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                 }
         }
     }
@@ -252,7 +254,8 @@ class TeamController(
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
                 when (result.value) {
-                    GetTeamVulnerabilitiesError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                    GetTeamVulnerabilitiesError.NotTeamMember -> Problem.response(403, Problem.userNotOnTeam)
+                    GetTeamVulnerabilitiesError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                 }
         }
     }
@@ -267,7 +270,8 @@ class TeamController(
             is Success -> ResponseEntity.ok(result.value)
             is Failure ->
                 when (result.value) {
-                    GetTeamSastAlertsError.NotTeamMember -> Problem.response(403, Problem.forbidden)
+                    GetTeamSastAlertsError.NotTeamMember -> Problem.response(403, Problem.userNotOnTeam)
+                    GetTeamSastAlertsError.TeamNotFound -> Problem.response(404, Problem.teamNotFound)
                 }
         }
     }

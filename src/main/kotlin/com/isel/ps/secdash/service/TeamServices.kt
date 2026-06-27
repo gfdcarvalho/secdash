@@ -233,6 +233,8 @@ class TeamServices(
         return transactionManager.run {
             val teamsRepo = it.teamRepository
 
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(GetTeamStatsError.TeamNotFound)
+
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamStatsError.NotTeamMember)
 
             success(TeamStats(
@@ -246,6 +248,8 @@ class TeamServices(
     fun getTeamVulnerabilityHistory(uid: Int, tid: Int): GetTeamVulnerabilityHistoryResult {
         return transactionManager.run {
             val teamsRepo = it.teamRepository
+
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(GetTeamVulnerabilityHistoryError.TeamNotFound)
 
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamVulnerabilityHistoryError.NotTeamMember)
 
@@ -279,6 +283,8 @@ class TeamServices(
         return transactionManager.run {
             val teamsRepo = it.teamRepository
 
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(GetTeamSastHistoryError.TeamNotFound)
+
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamSastHistoryError.NotTeamMember)
 
             val scans = teamsRepo.getTeamSastHistory(tid)
@@ -311,6 +317,8 @@ class TeamServices(
         return transactionManager.run {
             val teamsRepo = it.teamRepository
 
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(GetTeamVulnerabilitiesError.TeamNotFound)
+
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamVulnerabilitiesError.NotTeamMember)
 
             success(teamsRepo.getTeamVulnerabilities(tid))
@@ -320,6 +328,8 @@ class TeamServices(
     fun getTeamSastAlerts(uid: Int, tid: Int): GetTeamSastAlertsResult {
         return transactionManager.run {
             val teamsRepo = it.teamRepository
+
+            if (!teamsRepo.checkTeamExistence(tid)) return@run failure(GetTeamSastAlertsError.TeamNotFound)
 
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamSastAlertsError.NotTeamMember)
 

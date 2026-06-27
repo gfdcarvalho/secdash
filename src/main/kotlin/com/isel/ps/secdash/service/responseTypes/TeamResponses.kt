@@ -82,24 +82,28 @@ typealias GetTeamStatsResult = Either<GetTeamStatsError, TeamStats>
 
 sealed class GetTeamVulnerabilityHistoryError {
     data object NotTeamMember: GetTeamVulnerabilityHistoryError()
+    data object TeamNotFound: GetTeamVulnerabilityHistoryError()
 }
 
 typealias GetTeamVulnerabilityHistoryResult = Either<GetTeamVulnerabilityHistoryError, List<DailyVulnerabilityCount>>
 
 sealed class GetTeamSastHistoryError {
     data object NotTeamMember: GetTeamSastHistoryError()
+    data object TeamNotFound: GetTeamSastHistoryError()
 }
 
 typealias GetTeamSastHistoryResult = Either<GetTeamSastHistoryError, List<DailySastCount>>
 
 sealed class GetTeamVulnerabilitiesError {
     data object NotTeamMember: GetTeamVulnerabilitiesError()
+    data object TeamNotFound: GetTeamVulnerabilitiesError()
 }
 
 typealias GetTeamVulnerabilitiesResult = Either<GetTeamVulnerabilitiesError, List<TeamVulnerabilities>>
 
 sealed class GetTeamSastAlertsError {
     data object NotTeamMember: GetTeamSastAlertsError()
+    data object TeamNotFound: GetTeamSastAlertsError()
 }
 
 typealias GetTeamSastAlertsResult = Either<GetTeamSastAlertsError, List<TeamSastAlerts>>

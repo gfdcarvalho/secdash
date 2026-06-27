@@ -4,13 +4,18 @@ import com.isel.ps.secdash.SecdashApplication
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.controller.utils.ControllerTestsBase
 import com.isel.ps.secdash.controller.utils.TestJdbiConfig
+import com.isel.ps.secdash.model.repositories.DailySastCount
+import com.isel.ps.secdash.model.repositories.DailyVulnerabilityCount
+import com.isel.ps.secdash.model.sast.TeamSastAlerts
 import com.isel.ps.secdash.model.teams.SimpleTeamWithCounts
 import com.isel.ps.secdash.model.teams.SimpleTeamWithCountsListOutput
 import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamCreationInput
 import com.isel.ps.secdash.model.teams.TeamRepositoryInput
 import com.isel.ps.secdash.model.teams.TeamRoles
+import com.isel.ps.secdash.model.teams.TeamStats
 import com.isel.ps.secdash.model.teams.TeamUserInput
+import com.isel.ps.secdash.model.vulnerability.TeamVulnerabilities
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -638,15 +643,367 @@ class TeamControllerTests: ControllerTestsBase() {
 
 
     // delete remove repository from team /teams/tid/repository/repoToRemove
+    @Test
+    fun `team leader removes repository from team should return 204 no content`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val repoToRemove = 2
+
+        client().delete()
+            .uri("/teams/$teamId/repository/$repoToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isNoContent
+
+        client().get()
+            .uri("/teams/$teamId")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<Team>()
+            .value { team ->
+                assertTrue { team?.repos?.none { it.rid == repoToRemove } ?: false }
+            }
+    }
+
+    @Test
+    fun `team leader tries to remove a repository from a team that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 999
+        val repoToRemove = 2
+
+        client().delete()
+            .uri("/teams/$teamId/repository/$repoToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
+
+    @Test
+    fun `team leader tries to remove a repository that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+        val repoToRemove = 999
+
+        client().delete()
+            .uri("/teams/$teamId/repository/$repoToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.repositoryNotFound)
+    }
+
+    @Test
+    fun `team member that is not leader tries to remove a repository from team should return 403`() {
+        val token = login("testUsername2", "testpassword2")
+        val teamId = 1
+        val repoToRemove = 2
+
+        client().delete()
+            .uri("/teams/$teamId/repository/$repoToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.onlyTeamLeader)
+    }
+
+    @Test
+    fun `team leader from other team tries to remove a repository should return 403`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 1
+        val repoToRemove = 2
+
+        client().delete()
+            .uri("/teams/$teamId/repository/$repoToRemove")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.onlyTeamLeader)
+    }
 
     // get team Stats /teams/tid/stats
+    @Test
+    fun `team leader gets team Stats should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/stats")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<TeamStats>()
+    }
+
+    @Test
+    fun `team member gets team Stats should return 200`() {
+        val token = login("testUsername2", "testpassword2")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/stats")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<TeamStats>()
+    }
+
+    @Test
+    fun `user not on team tries to get team Stats should return 403`() {
+        val token = login("testUsername5", "testpassword5")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/stats")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.userNotOnTeam)
+    }
+
+    @Test
+    fun `team member from team with no stats gets team Stats should return 200 with empty stats`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 2
+
+        client().get()
+            .uri("/teams/$teamId/stats")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<TeamStats>()
+    }
+
+    @Test
+    fun `team leader from other team tries to get team Stats should return 403`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/stats")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.userNotOnTeam)
+    }
+
+    @Test
+    fun `user tries to get team Stats from team that does not exist should return 404`() {
+        val token = login("testUsername2", "testpassword2")
+        val teamId = 999
+
+        client().get()
+            .uri("/teams/$teamId/stats")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
 
     // get team Vulnerability history /teams/tid/vulnerability/history
+    @Test
+    fun `team leader gets team vulnerability history should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/vulnerability/history")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<DailyVulnerabilityCount>>()
+    }
+
+    @Test
+    fun `user that he is not a member of the team tries to get team vulnerability history should return 403`() {
+        val token = login("testUsername5", "testpassword5")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/vulnerability/history")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.userNotOnTeam)
+    }
+
+    @Test
+    fun `user from team with no vulnerability history tries to get team vulnerability history should return 200 ok with empty history`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 2
+
+        client().get()
+            .uri("/teams/$teamId/vulnerability/history")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<DailyVulnerabilityCount>>()
+            .value { list -> assertTrue { list?.isEmpty() ?: false } }
+    }
+
+    @Test
+    fun `user tries to get vulnerabilities history from team that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 999
+
+        client().get()
+            .uri("/teams/$teamId/vulnerability/history")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
 
     // get team sast History /teams/tid/sast/history
+    @Test
+    fun `team leader gets team Sast history should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/sast/history")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<DailySastCount>>()
+    }
+
+    @Test
+    fun `user that he is not a member of the team tries to get team sast history should return 403`() {
+        val token = login("testUsername5", "testpassword5")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/sast/history")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.userNotOnTeam)
+    }
+
+    @Test
+    fun `user from team with no sast history tries to get team sast history should return 200 ok with empty history`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 2
+
+        client().get()
+            .uri("/teams/$teamId/sast/history")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<DailySastCount>>()
+            .value { list -> assertTrue { list?.isEmpty() ?: false } }
+    }
+
+    @Test
+    fun `user tries to get sast history from team that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 999
+
+        client().get()
+            .uri("/teams/$teamId/sast/history")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
 
     // get team vulnerabilities /teams/tid/vulnerabilities
+    @Test
+    fun `team leader gets team vulnerabilities should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/vulnerabilities")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<TeamVulnerabilities>>()
+            .value { list -> assertTrue { list?.isNotEmpty() ?: false } }
+    }
+
+    @Test
+    fun `team member gets team vulnerabilities from team that has no vulnerabilities should return 200 with empty list`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 2
+
+        client().get()
+            .uri("/teams/$teamId/vulnerabilities")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<TeamVulnerabilities>>()
+            .value { list -> assertTrue { list?.isEmpty() ?: false } }
+    }
+
+    @Test
+    fun `user gets team vulnerabilities from team that does not exist should return 404`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 999
+
+        client().get()
+            .uri("/teams/$teamId/vulnerabilities")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
+
+    @Test
+    fun `user tries to get vulnerabilities from team that he is not a member of should return 403`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/vulnerabilities")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.userNotOnTeam)
+    }
+
+
 
     // get team sast alerts /teams/tid/sast
+    @Test
+    fun `team leader gets team sast should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/sast")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<TeamSastAlerts>>()
+            .value { list -> assertTrue { list?.isNotEmpty() ?: false } }
+    }
+
+    @Test
+    fun `team member gets team sast from team that has no sast should return 200 with empty list`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 2
+
+        client().get()
+            .uri("/teams/$teamId/sast")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<TeamSastAlerts>>()
+            .value { list -> assertTrue { list?.isEmpty() ?: false } }
+    }
+
+    @Test
+    fun `user gets team sast from team that does not exist should return 404`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 999
+
+        client().get()
+            .uri("/teams/$teamId/vulnerabilities")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.teamNotFound)
+    }
+
+    @Test
+    fun `user tries to get sast from team that he is not a member of should return 403`() {
+        val token = login("testUsername3", "testpassword3")
+        val teamId = 1
+
+        client().get()
+            .uri("/teams/$teamId/sast")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.FORBIDDEN, Problem.userNotOnTeam)
+    }
 
 }
