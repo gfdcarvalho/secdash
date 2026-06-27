@@ -531,7 +531,6 @@ class TeamControllerTests: ControllerTestsBase() {
             .expectProblem(HttpStatus.CONFLICT, Problem.userAlreadyLeader)
     }
 
-
     // post add repository to Team /teams/tid/repository
     @Test
     fun `team leader add a repository to the team should return 200 ok`() {
@@ -640,7 +639,6 @@ class TeamControllerTests: ControllerTestsBase() {
             .exchange()
             .expectProblem(HttpStatus.CONFLICT, Problem.repositoryAlreadyAdded)
     }
-
 
     // delete remove repository from team /teams/tid/repository/repoToRemove
     @Test
@@ -950,8 +948,6 @@ class TeamControllerTests: ControllerTestsBase() {
             .exchange()
             .expectProblem(HttpStatus.FORBIDDEN, Problem.userNotOnTeam)
     }
-
-
 
     // get team sast alerts /teams/tid/sast
     @Test

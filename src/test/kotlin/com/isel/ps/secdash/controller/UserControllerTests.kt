@@ -1,15 +1,21 @@
 package com.isel.ps.secdash.controller
 
 import com.isel.ps.secdash.SecdashApplication
+import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.controller.utils.ControllerTestsBase
 import com.isel.ps.secdash.controller.utils.TestJdbiConfig
 import com.isel.ps.secdash.model.users.UserCreationModel
+import com.isel.ps.secdash.model.users.UserOutputDto
+import com.isel.ps.secdash.model.users.UserProfileInformation
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.test.web.reactive.server.expectBody
+import kotlin.test.assertTrue
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // for the @AfterAll annotation
 @SpringBootTest(
@@ -53,11 +59,10 @@ class UserControllerTests : ControllerTestsBase() {
         val password    = "newtestPassword"
         val email       = "newtestEmail@test.com"
         client().post()
-        .uri("/users/register")
-        .bodyValue(UserCreationModel(username, password, email))
-        .exchange()
-        .expectStatus().isBadRequest
-        .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .uri("/users/register")
+            .bodyValue(UserCreationModel(username, password, email))
+            .exchange()
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.invalidUsername)
     }
 
     @Test
@@ -66,11 +71,10 @@ class UserControllerTests : ControllerTestsBase() {
         val password    = "newtestPassword"
         val email       = ""
         client().post()
-        .uri("/users/register")
-        .bodyValue(UserCreationModel(username, password, email))
-        .exchange()
-        .expectStatus().isBadRequest
-        .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .uri("/users/register")
+            .bodyValue(UserCreationModel(username, password, email))
+            .exchange()
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.invalidEmail)
     }
 
     @Test
@@ -79,11 +83,10 @@ class UserControllerTests : ControllerTestsBase() {
         val password    = ""
         val email       = "newtestEmail@test.com"
         client().post()
-        .uri("/users/register")
-        .bodyValue(UserCreationModel(username, password, email))
-        .exchange()
-        .expectStatus().isBadRequest
-        .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+            .uri("/users/register")
+            .bodyValue(UserCreationModel(username, password, email))
+            .exchange()
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.invalidPassword)
     }
 
     @Test
@@ -92,10 +95,36 @@ class UserControllerTests : ControllerTestsBase() {
         val password    = "testPassword1"
         val email       = "testemail@test1.com"
         client().post()
-        .uri("/users/register")
-        .bodyValue(UserCreationModel(username, password, email))
+            .uri("/users/register")
+            .bodyValue(UserCreationModel(username, password, email))
+            .exchange()
+            .expectProblem(HttpStatus.BAD_REQUEST, Problem.userAlreadyExists)
+    }
+
+    @Test
+    fun `get logged in user information should return 200`(){
+        val token = login("testUsername1", "testpassword1")
+
+        client().get()
+            .uri("/users/me")
+            .header("Authorization", "Bearer $token")
         .exchange()
-        .expectStatus().isBadRequest
-        .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
+        .expectStatus().isOk
+        .expectBody<UserProfileInformation>()
+    }
+
+    @Test
+    fun `get all users should return 200`(){
+        val token = login("testUsername1", "testpassword1")
+
+        client().get()
+            .uri("/users")
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectBody<List<UserOutputDto>>()
+            .value { list ->
+                assertTrue { list?.isNotEmpty() ?: false }
+            }
     }
 }

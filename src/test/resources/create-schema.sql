@@ -475,6 +475,47 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+create or replace function test_data_for_VulnerabilityControllerTests() returns void as $$
+BEGIN
+    INSERT INTO users (name, password_validation, email, role)
+    VALUES
+        -- password: testpassword1
+        ('testUsername1','$2a$10$pbZFnR8NSKtxZ5ERtXYqreiyZNTMFAb1efUBT0RnrKsYOn3PimMii','test1@email.com', 'ADMIN'),
+        -- password: testpassword2
+        ('testUsername2','$2a$10$iAWi2kF17dYVB.kBLzPIyugXkt6Wt5T0bpanI2HyryCyKY7qv4Vuq','test2@email.com', 'USER'),
+        -- password: testpassword3
+        ('testUsername3','$2a$10$.gAsQtGdm7JdjR/4kD9p1eT1L28cvCtAByxtqt0rpStbkq.9dqyqW','test3@email.com', 'USER'),
+        -- password: testpassword4
+        ('testUsername4','$2a$10$hXld1iw19GwU4O5NPk4GqO5a233ycPfP5Y/mMRP9g8P.blZ3L9H.u','test4@email.com', 'USER'),
+        -- password: testpassword5
+        ('testUsername5','$2a$10$3GKVyzFZdsXvdtx39y1U5eXEdSwAHNadnQXpIGnzmtWaiisrz5C7e','test5@email.com', 'USER');
+
+    insert into owners (external_id, name, url, avatar_url, platform)
+    VALUES
+        ('123', 'testOwner', 'https://github.com/tests', 'https://github.com/tests/avatar', 'GITHUB');
+
+    insert into repositories (name, external_id, platform, owner_id, html_url, description, issues_count, created_at, updated_at, forks_count, visibility)
+    VALUES
+        ('testRepo1', '12345', 'GITHUB', 1, 'https://github.com/tests/testRepo1', 'repo with a vulnerability', 0, '2026-03-23 15:31:04.000000 +00:00', '2026-03-23 16:30:55.000000 +00:00', 0, 'PUBLIC');
+
+    -- testUsername1 (uid 1) has access to the repo (rid 1)
+    insert into user_repositories (uid, rid)
+    VALUES
+        (1, 1);
+
+    -- One vulnerability (vid 1) on rid 1 to test GET /vulnerabilities/{vid}
+    insert into vulnerabilities (external_id, title, description, severity, state, cve_id, ghsa_id, package_name, package_version, vulnerable_version_range, fixed_version, manifest_path, cvss_score, cvss_vector, platform, rid, detected_at, updated_at)
+    VALUES
+        ('VULN-1', 'Prototype Pollution in lodash', 'Prototype pollution vulnerability', 'CRITICAL', 'OPEN', 'CVE-2021-23337', 'GHSA-35jh-r3h4-6jhm', 'lodash', '4.17.20', '< 4.17.21', '4.17.21', 'package.json', 7.2, 'CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H', 'GITHUB', 1, '2026-03-20 10:00:00', '2026-03-20 10:00:00');
+
+    -- References for the vulnerability above (vid 1)
+    insert into vulnerability_references (vuln_id, url)
+    VALUES
+        (1, 'https://github.com/advisories/GHSA-35jh-r3h4-6jhm'),
+        (1, 'https://nvd.nist.gov/vuln/detail/CVE-2021-23337');
+END;
+$$ LANGUAGE plpgsql;
+
 
 UPDATE users
 SET role = 'ADMIN'
