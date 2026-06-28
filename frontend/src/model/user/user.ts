@@ -11,3 +11,10 @@ export type User = {
     repositories: Array<Repository>
     teams: Array<SimpleTeamWithCount>
 }
+
+export type UserOutputDto = {
+    uid: number
+    name: string
+    email: string
+    role: AppRole
+}

@@ -58,4 +58,6 @@ interface TeamRepositoryInterface {
     fun getTeamVulnerabilities(tid: Int): List<TeamVulnerabilities>
 
     fun getTeamSastAlerts(tid: Int): List<TeamSastAlerts>
+
+    fun getAllTeams(): List<SimpleTeamWithCounts>
 }

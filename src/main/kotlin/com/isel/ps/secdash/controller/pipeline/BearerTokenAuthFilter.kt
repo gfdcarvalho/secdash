@@ -19,19 +19,21 @@ class BearerTokenAuthFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        if (SecurityContextHolder.getContext().authentication == null) {
-            val authorizationHeader = request.getHeader(AuthenticationInterceptor.NAME_AUTHORIZATION_HEADER)
-            val user = if (authorizationHeader != null) {
-                requestTokenProcessor.processAuthorizationHeaderValue(authorizationHeader)
-            } else {
-                requestTokenProcessor.processCookies(request.cookies)
-            }
-            if (user != null) {
-                val details = AuthenticatedUserDetails(user)
-                val auth = UsernamePasswordAuthenticationToken(details, null, details.authorities)
-                SecurityContextHolder.getContext().authentication = auth
-                AuthenticatedUserArgumentResolver.addUserTo(user, request)
-            }
+        val authorizationHeader = request.getHeader(AuthenticationInterceptor.NAME_AUTHORIZATION_HEADER)
+        val user = if (authorizationHeader != null) {
+            requestTokenProcessor.processAuthorizationHeaderValue(authorizationHeader)
+        } else {
+            requestTokenProcessor.processCookies(request.cookies)
+        }
+        // When a valid token/cookie is present it is the source of truth: override any
+        // SecurityContext that may have been restored from a residual HttpSession (e.g. a
+        // previous OAuth2 login), otherwise hasRole(...) would evaluate the stale identity
+        // while the AuthenticatedUser argument is resolved from the (correct) token.
+        if (user != null) {
+            val details = AuthenticatedUserDetails(user)
+            val auth = UsernamePasswordAuthenticationToken(details, null, details.authorities)
+            SecurityContextHolder.getContext().authentication = auth
+            AuthenticatedUserArgumentResolver.addUserTo(user, request)
         }
         filterChain.doFilter(request, response)
     }

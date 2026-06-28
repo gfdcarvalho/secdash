@@ -16,6 +16,7 @@ export const pt = {
             github: "GitHub",
             gitlab: "GitLab",
             profile: "Perfil",
+            admin: "Admin",
         }
     },
     login: {
@@ -79,6 +80,44 @@ export const pt = {
         forks: "Forks",
         issues: "Issues",
         deleteButton: "Eliminar repoisitório",
+    },
+    admin: {
+        title: "Admin",
+        tabs: {
+            users: "Utilizadores",
+            repositories: "Repositórios",
+            teams: "Equipas",
+        },
+        users: {
+            searchPlaceholder: "Pesquisar utilizadores por nome",
+            loading: "A carregar utilizadores...",
+            error: "Falha ao carregar utilizadores.",
+            empty: "Nenhum utilizador encontrado.",
+            promote: "Promover",
+            delete: "Eliminar",
+            promoteError: "Falha ao promover utilizador.",
+            deleteError: "Falha ao eliminar utilizador.",
+        },
+        repositories: {
+            searchPlaceholder: "Pesquisar repositórios por nome",
+            loading: "A carregar repositórios...",
+            error: "Falha ao carregar repositórios.",
+            empty: "Nenhum repositório encontrado.",
+            forks: "Forks",
+            issues: "Issues",
+            delete: "Eliminar",
+            deleteError: "Falha ao eliminar repositório.",
+        },
+        teams: {
+            searchPlaceholder: "Pesquisar equipas por nome",
+            loading: "A carregar equipas...",
+            error: "Falha ao carregar equipas.",
+            empty: "Nenhuma equipa encontrada.",
+            members: "Membros",
+            repositories: "Repositórios",
+            delete: "Eliminar",
+            deleteError: "Falha ao eliminar equipa.",
+        },
     },
     repoDetails: {
         notFound: "Repositório não encontrado.",

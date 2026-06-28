@@ -18,6 +18,7 @@ import { TeamSast } from './views/TeamSast/TeamSast'
 import { TeamVulnerabilitiesView } from './views/TeamVulnerabilities/TeamVulnerabilities';
 import { VulnerabilityDetails } from './views/VulnerabilityDetails/VulnerabilityDetails';
 import { SastDetails } from './views/SastDetails/SastDetails';
+import { Admin } from './views/AdminView/Admin';
 
 const router = createBrowserRouter ([
   {
@@ -35,6 +36,7 @@ const router = createBrowserRouter ([
       { path: '/teams/:teamId/sast', element: <TeamSast/>},
       { path: '/vulnerability/:vulnerabilityId', element: <VulnerabilityDetails/>},
       { path: '/sast/:sastId', element: <SastDetails/>},
+      { path: '/admin', element: <Admin/>},
       // { path: '/repositories', element: (...) },
     ],
   },

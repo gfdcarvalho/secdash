@@ -609,4 +609,22 @@ class RepositoriesRepository(
             .mapTo<RepositorySastHistory>()
             .list()
     }
+
+    override fun getAllRepositories(): List<Repository> {
+        return handle.createQuery(
+            """
+        SELECT
+            r.rid, r.name, r.external_id, r.platform, r.owner_id,
+            r.html_url, r.description, r.issues_count,
+            r.created_at, r.updated_at, r.forks_count, r.visibility,
+            o.oid, o.external_id AS o_external_id, o.name AS o_name,
+            o.url, o.avatar_url, o.platform AS o_platform
+        FROM repositories r
+        JOIN owners o ON r.owner_id = o.oid
+        """.trimIndent()
+        )
+            .mapTo<RepositoryWithOwnerSqlDto>()
+            .list()
+            .map { it.toDomain() }
+    }
 }

@@ -455,5 +455,24 @@ class TeamRepository(
                 )
             }
     }
+
+    override fun getAllTeams(): List<SimpleTeamWithCounts> {
+        return handle.createQuery(
+            """
+        SELECT
+            t.tid,
+            t.name,
+            t.description,
+            COUNT(DISTINCT tr.rid) AS repoCount,
+            COUNT(DISTINCT tu.uid) AS memberCount
+        FROM teams t
+        LEFT JOIN team_repos tr ON tr.tid = t.tid
+        LEFT JOIN team_users tu ON tu.tid = t.tid
+        GROUP BY t.tid, t.name, t.description
+        """
+        )
+            .mapTo<SimpleTeamWithCounts>()
+            .list()
+    }
 }
 

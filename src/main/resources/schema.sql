@@ -176,3 +176,8 @@ CREATE TABLE team_repos (
     rid     INT NOT NULL REFERENCES repositories(rid),
     PRIMARY KEY (tid, rid)
 );
+
+
+UPDATE users
+SET role = 'ADMIN'
+WHERE uid = 1

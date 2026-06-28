@@ -26,6 +26,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
@@ -67,8 +68,12 @@ class AuthController(
     }
 
     @PostMapping("/logout")
-    fun logoutUser(user: AuthenticatedUser): ResponseEntity<Unit> {
+    fun logoutUser(user: AuthenticatedUser, request: HttpServletRequest): ResponseEntity<Unit> {
         authServices.logout(user.token)
+        // Invalidate any HttpSession (e.g. left over from an OAuth2 login) so a stale
+        // SecurityContext can't keep authenticating future requests after logout.
+        request.getSession(false)?.invalidate()
+        SecurityContextHolder.clearContext()
         val deletionCookie = requestTokenProcessor.createDeletionCookie()
         return ResponseEntity.ok()
             .header(HttpHeaders.SET_COOKIE, deletionCookie.toString())

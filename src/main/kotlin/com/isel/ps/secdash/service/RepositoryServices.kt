@@ -159,4 +159,10 @@ class RepositoryServices(
             success(dailyCounts)
         }
     }
+
+    fun getAllRepositories(): List<Repository> {
+        return transactionManager.run {
+            it.repositoriesRepository.getAllRepositories()
+        }
+    }
 }

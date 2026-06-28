@@ -16,6 +16,7 @@ export const en = {
             github: "GitHub",
             gitlab: "GitLab",
             profile: "Profile",
+            admin: "Admin",
         }
     },
     login: {
@@ -79,6 +80,44 @@ export const en = {
         forks: "Forks",
         issues: "Issues",
         deleteButton: "Delete repository",
+    },
+    admin: {
+        title: "Admin",
+        tabs: {
+            users: "Users",
+            repositories: "Repositories",
+            teams: "Teams",
+        },
+        users: {
+            searchPlaceholder: "Search users by name",
+            loading: "Loading users...",
+            error: "Failed to load users.",
+            empty: "No users found.",
+            promote: "Promote",
+            delete: "Delete",
+            promoteError: "Failed to promote user.",
+            deleteError: "Failed to delete user.",
+        },
+        repositories: {
+            searchPlaceholder: "Search repositories by name",
+            loading: "Loading repositories...",
+            error: "Failed to load repositories.",
+            empty: "No repositories found.",
+            forks: "Forks",
+            issues: "Issues",
+            delete: "Delete",
+            deleteError: "Failed to delete repository.",
+        },
+        teams: {
+            searchPlaceholder: "Search teams by name",
+            loading: "Loading teams...",
+            error: "Failed to load teams.",
+            empty: "No teams found.",
+            members: "Members",
+            repositories: "Repositories",
+            delete: "Delete",
+            deleteError: "Failed to delete team.",
+        },
     },
     repoDetails: {
         notFound: "Repository not found.",

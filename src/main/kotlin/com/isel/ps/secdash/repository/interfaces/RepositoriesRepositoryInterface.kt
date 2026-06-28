@@ -63,4 +63,6 @@ interface RepositoriesRepositoryInterface {
     fun getRepoVulnerabilityHistory(rid: Int): List<RepositoryVulnerabilityHistory>
 
     fun getRepoSastHistory(rid: Int): List<RepositorySastHistory>
+
+    fun getAllRepositories(): List<Repository>
 }

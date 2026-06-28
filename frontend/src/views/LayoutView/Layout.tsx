@@ -35,6 +35,10 @@ export function Layout() {
                     <NavLink to="/repos"><Icon icon="eos-icons:repositories" width="1.5em"/>{t.layout.nav.repos}</NavLink>
 
                     <NavLink to="/profile"><Icon icon="line-md:account" width="1.5em"/>{t.layout.nav.profile}</NavLink>
+
+                    { user?.role === "ADMIN" &&
+                        <NavLink to="/admin"><Icon icon="ri:admin-line" width="1.5em"/>{t.layout.nav.admin}</NavLink>
+                    }
                 </div>
                 <div className={style.content}>
                     <Outlet />

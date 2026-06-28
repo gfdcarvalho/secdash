@@ -3,7 +3,9 @@ package com.isel.ps.secdash.service
 import com.isel.ps.secdash.model.teams.CountsBySeverity
 import com.isel.ps.secdash.model.teams.DailySastCount
 import com.isel.ps.secdash.model.teams.DailyVulnerabilityCount
+import com.isel.ps.secdash.model.teams.SimpleTeamWithCounts
 import com.isel.ps.secdash.model.teams.SimpleTeamWithCountsListOutput
+import com.isel.ps.secdash.model.teams.Team
 import com.isel.ps.secdash.model.teams.TeamStats
 import com.isel.ps.secdash.model.users.AppRole
 import java.time.ZoneOffset
@@ -334,6 +336,12 @@ class TeamServices(
             if (!teamsRepo.checkUserHasTeamAccess(tid, uid)) return@run failure(GetTeamSastAlertsError.NotTeamMember)
 
             success(teamsRepo.getTeamSastAlerts(tid))
+        }
+    }
+
+    fun getAllTeams(): SimpleTeamWithCountsListOutput {
+        return transactionManager.run {
+            SimpleTeamWithCountsListOutput(it.teamRepository.getAllTeams())
         }
     }
 }

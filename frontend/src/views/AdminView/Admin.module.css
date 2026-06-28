@@ -1,0 +1,112 @@
+.adminContent {
+    composes: content from '../../styles/shared.module.css';
+}
+
+.topSection {
+    composes: topBar from '../../styles/shared.module.css';
+}
+
+.tabBar {
+    composes: toggleBar from '../../styles/shared.module.css';
+    padding: 0 1em;
+}
+
+.tabButton {
+    composes: toggleBtn from '../../styles/shared.module.css';
+}
+
+.bottomSection {
+    composes: bottomSection from '../../styles/shared.module.css';
+}
+
+.searchBarDiv {
+    composes: searchBarDiv from '../../styles/shared.module.css';
+}
+
+.searchBar {
+    composes: searchBar from '../../styles/shared.module.css';
+}
+
+.listDiv {
+    composes: reposListDiv from '../../styles/shared.module.css';
+}
+
+.message {
+    composes: repoMessage from '../../styles/shared.module.css';
+}
+
+.card {
+    composes: repoCard from '../../styles/shared.module.css';
+}
+
+/* non-clickable variant (users) */
+.staticCard {
+    composes: repoCard from '../../styles/shared.module.css';
+    cursor: default;
+}
+
+.staticCard:hover {
+    background-color: transparent;
+}
+
+.ownerAvatar {
+    composes: ownerAvatar from '../../styles/shared.module.css';
+}
+
+.ownerAvatarFallback {
+    composes: ownerAvatarFallback from '../../styles/shared.module.css';
+}
+
+.cardInfo {
+    composes: repoCardInfo from '../../styles/shared.module.css';
+}
+
+.cardHeader {
+    composes: repoCardHeader from '../../styles/shared.module.css';
+}
+
+.cardName {
+    composes: repoName from '../../styles/shared.module.css';
+}
+
+.badge {
+    composes: repoVisibility from '../../styles/shared.module.css';
+}
+
+.cardDescription {
+    composes: repoDescription from '../../styles/shared.module.css';
+    min-height: 1.23em;
+}
+
+.cardMeta {
+    composes: repoCardMeta from '../../styles/shared.module.css';
+}
+
+.cardActions {
+    composes: repoCardActions from '../../styles/shared.module.css';
+    flex-direction: row;
+    align-items: center;
+}
+
+.promoteButton {
+    composes: addToTeamButton from '../../styles/shared.module.css';
+}
+
+.removeButton {
+    font-size: 0.78em;
+    padding: 0.35em 0.7em;
+    border-radius: 0.4em;
+    border: 1px solid color-mix(in srgb, var(--color-text) 25%, transparent);
+    background: transparent;
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.removeButton:hover {
+    background: color-mix(in srgb, #e05555 12%, transparent);
+    border-color: #e05555;
+    color: #e05555;
+}

@@ -3,6 +3,7 @@ package com.isel.ps.secdash.controller
 import com.isel.ps.secdash.controller.model.Problem
 import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.GetUserError
+import com.isel.ps.secdash.service.RepositoryServices
 import com.isel.ps.secdash.service.TeamServices
 import com.isel.ps.secdash.service.UserDeletionError
 import com.isel.ps.secdash.service.UserPromotionError
@@ -24,7 +25,8 @@ import org.springframework.web.bind.annotation.RestController
 @PreAuthorize("hasRole('ADMIN')")
 class AdminController(
     private val userServices: UserServices,
-    private val teamServices: TeamServices
+    private val teamServices: TeamServices,
+    private val repoServices: RepositoryServices,
 ) {
 
     @DeleteMapping("/delete-user/{uid}")
@@ -66,6 +68,18 @@ class AdminController(
                 UserPromotionError.UserNotFound -> Problem.response(404, Problem.UserNotFound)
             }
         }
+    }
+
+    @GetMapping("/repositories")
+    fun getAllRepositories(): ResponseEntity<*> {
+        val result = repoServices.getAllRepositories()
+        return ResponseEntity.ok().body(result)
+    }
+
+    @GetMapping("/teams")
+    fun getAllTeams(): ResponseEntity<*> {
+        val result = teamServices.getAllTeams()
+        return ResponseEntity.ok().body(result)
     }
 
     // used for the tests
