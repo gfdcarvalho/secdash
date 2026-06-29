@@ -291,7 +291,7 @@ export const en = {
     },
     gitlab: {
         title: "GitLab",
-        searchPlaceholder: "Search in your GitLab repositories",
+        searchPlaceholder: "Search in your GitLab repositories or by link",
         loading: "Loading...",
         noRepositories: "No repositories found.",
         error: "Failed to load repositories.",
@@ -303,5 +303,6 @@ export const en = {
         added: "Added",
         addError: "Error",
         repositoryAlreadyAdded: "Repository already added.",
+        searchByLink: "Search by link",
     },
 }
