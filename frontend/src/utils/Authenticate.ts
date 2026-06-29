@@ -10,7 +10,7 @@ import { api, type ApiError } from "./fetchApi";
 export async function authenticate(username: string, password: string): Promise<Either<ApiError, User>> {
     const response = await api.post<UserToken>("/auth/login", {username, password})
     if (isSuccess(response)){
-        const userResponse = await api.get<User>("users/me")
+        const userResponse = await api.get<User>("/users/me")
         if (isSuccess(userResponse)){
             return success(userResponse.value.data)
         }else {
