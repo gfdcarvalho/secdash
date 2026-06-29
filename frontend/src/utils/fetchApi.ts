@@ -29,6 +29,7 @@ function isJson(contentType: string | null): boolean {
 export async function fetchApi<T>(request: Request): Promise<Either<ApiError, Response<T>>> {
     const response = await fetch(`${BASE_URL}${request.uri}`, {
         method: request.method,
+        credentials: 'include',
         headers: {
             ...(request.body ? { 'Content-Type': 'application/json' } : {}),
             ...request.headers
