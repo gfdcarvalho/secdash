@@ -82,7 +82,8 @@ class AuthController(
 
     @GetMapping("/login/google")
     fun googleLogin(
-        @AuthenticationPrincipal principal: OidcUser
+        @AuthenticationPrincipal principal: OidcUser,
+        request: HttpServletRequest
     ): ResponseEntity<*> {
         val result = authServices.storeExternalLoginUser(
             username = principal.fullName,
@@ -90,7 +91,7 @@ class AuthController(
             externalId = principal.subject, // googleId
             authProvider = AuthProvider.GOOGLE
         )
-        return handleExternalLoginResponse(result)
+        return handleExternalLoginResponse(result, request)
     }
 
 
@@ -98,7 +99,8 @@ class AuthController(
     @GetMapping("/login/github")
     fun githubLogin(
         @AuthenticationPrincipal principal: OAuth2User,
-        @RegisteredOAuth2AuthorizedClient("github") authorizedClient: OAuth2AuthorizedClient
+        @RegisteredOAuth2AuthorizedClient("github") authorizedClient: OAuth2AuthorizedClient,
+        request: HttpServletRequest
     ): ResponseEntity<*> {
         val accessToken = authorizedClient.accessToken.tokenValue
         val githubId = principal.getAttribute<Int>("id")?.toString()
@@ -115,13 +117,14 @@ class AuthController(
             externalId = githubId,
             authProvider = AuthProvider.GITHUB
         )
-        return handleExternalLoginResponse(result)
+        return handleExternalLoginResponse(result, request)
     }
 
     @GetMapping("/login/gitlab")
     fun gitlabLogin(
         @AuthenticationPrincipal principal: OAuth2User,
         @RegisteredOAuth2AuthorizedClient("gitlab") authorizedClient: OAuth2AuthorizedClient,
+        request: HttpServletRequest
     ): ResponseEntity<*> {
         val accessToken = authorizedClient.accessToken.tokenValue
         val gitlabId = principal.getAttribute<Int>("id")?.toString()
@@ -137,13 +140,20 @@ class AuthController(
             externalId = gitlabId,
             authProvider = AuthProvider.GITLAB
         )
-        return handleExternalLoginResponse(result)
+        return handleExternalLoginResponse(result, request)
     }
 
-    private fun handleExternalLoginResponse(result: ExternalUserLoginResult): ResponseEntity<*> {
+    private fun handleExternalLoginResponse(
+        result: ExternalUserLoginResult,
+        request: HttpServletRequest
+    ): ResponseEntity<*> {
         return when (result) {
             is Success -> {
                 val responseCookie = requestTokenProcessor.createCookie(result.value)
+                // The OAuth2 login is now complete and the session token cookie is the source of
+                // truth. Drop the HttpSession that holds the OAuth2 SecurityContext so subsequent
+                // requests authenticate purely from the cookie (and logout fully clears state).
+                request.getSession(false)?.invalidate()
                 ResponseEntity.status(302)
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                     .header(HttpHeaders.LOCATION, "$frontendUrl/") // had to add this for the oauth process to work
@@ -218,6 +228,10 @@ class AuthController(
                     maxAge = 0
                 }
                 response.addCookie(clearCookie)
+                // Authorization is stored; the user keeps authenticating via the existing token
+                // cookie. Drop the OAuth2 HttpSession so it can't restore a stale SecurityContext
+                // on later requests (same reasoning as the login flow).
+                request.getSession(false)?.invalidate()
                 ResponseEntity.status(302)
                     .header(HttpHeaders.LOCATION, redirectUri)
                     .build<Unit>()

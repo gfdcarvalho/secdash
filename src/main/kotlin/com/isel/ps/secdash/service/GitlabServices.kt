@@ -10,6 +10,7 @@ import com.isel.ps.secdash.repository.interfaces.TransactionManager
 import com.isel.ps.secdash.restclient.GitLabRestClient
 import com.isel.ps.secdash.service.responseTypes.AddRepositoryError
 import com.isel.ps.secdash.service.responseTypes.AddRepositoryResult
+import com.isel.ps.secdash.service.responseTypes.GetRepoByLinkError
 import com.isel.ps.secdash.service.responseTypes.GetRepoByLinkResult
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesByOwnerError
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesByOwnerResult
@@ -172,7 +173,19 @@ class GitlabServices(
         link: String,
         uid: Int,
     ): GetRepoByLinkResult {
-        TODO()
+        val accessToken = getValidToken(uid) ?: return failure(GetRepoByLinkError.Unauthorized)
+        val path = link.trimEnd('/').removeSuffix(".git").substringAfter("gitlab.com/")
+        return try {
+            val repo = gitlabClient.getRepositoryByPath(path, accessToken)
+                ?: return failure(GetRepoByLinkError.RepositoryNotFound)
+            success(repo)
+        } catch (e: HttpClientErrorException) {
+            when (e.statusCode) {
+                HttpStatus.NOT_FOUND -> failure(GetRepoByLinkError.RepositoryNotFound)
+                HttpStatus.FORBIDDEN -> failure(GetRepoByLinkError.Unauthorized)
+                else -> failure(GetRepoByLinkError.Unauthorized)
+            }
+        }
     }
 
 }

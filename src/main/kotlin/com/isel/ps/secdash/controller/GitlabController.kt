@@ -6,6 +6,7 @@ import com.isel.ps.secdash.model.users.AuthenticatedUser
 import com.isel.ps.secdash.service.DependencyScanError
 import com.isel.ps.secdash.service.GitlabServices
 import com.isel.ps.secdash.service.responseTypes.AddRepositoryError
+import com.isel.ps.secdash.service.responseTypes.GetRepoByLinkError
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesByOwnerError
 import com.isel.ps.secdash.service.responseTypes.GetRepositoriesError
 import com.isel.ps.secdash.service.responseTypes.SastError
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -124,6 +126,22 @@ class GitlabController(
                     SastError.NotFound -> Problem.response(404, Problem.notFound)
                     SastError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
                     SastError.RepoDoesNotHaveSastFeatureEnabled -> Problem.response(403, Problem.repoDoesNotHaveSastFeatureEnabled)
+                }
+        }
+    }
+
+    @GetMapping("/repository") // GET /gitlab/repository?link={gitlabRepoUrl}
+    fun getRepoByLink(
+        user: AuthenticatedUser,
+        @RequestParam link: String,
+    ): ResponseEntity<*> {
+        val result = gitlabServices.getRepoByLink(link, user.user.uid)
+        return when (result) {
+            is Success -> ResponseEntity.status(200).body(result.value)
+            is Failure ->
+                when (result.value) {
+                    GetRepoByLinkError.RepositoryNotFound -> Problem.response(404, Problem.repositoryNotFound)
+                    GetRepoByLinkError.Unauthorized -> Problem.response(401, Problem.userAuthorizationRequired)
                 }
         }
     }

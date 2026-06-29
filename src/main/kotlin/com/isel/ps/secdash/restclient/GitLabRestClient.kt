@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Service
 class GitLabRestClient {
@@ -60,6 +62,17 @@ class GitLabRestClient {
     fun getRepositoryByExternalId(externalId: Int, accessToken: String): ExternalRepository? {
         val repo = restClient.get()
             .uri("https://gitlab.com/api/v4/projects/$externalId")
+            .header("Authorization", "Bearer $accessToken")
+            .retrieve()
+            .body<GitlabRepositoryDto>()
+
+        return repo?.toExternalRepository()
+    }
+
+    fun getRepositoryByPath(path: String, accessToken: String): ExternalRepository? {
+        val encodedPath = URLEncoder.encode(path, StandardCharsets.UTF_8)
+        val repo = restClient.get()
+            .uri("https://gitlab.com/api/v4/projects/$encodedPath")
             .header("Authorization", "Bearer $accessToken")
             .retrieve()
             .body<GitlabRepositoryDto>()

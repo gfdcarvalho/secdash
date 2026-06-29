@@ -361,4 +361,52 @@ class GitlabControllerTests: ControllerTestsBase() {
             .exchange()
             .expectProblem(HttpStatus.FORBIDDEN, Problem.repoDoesNotHaveSastFeatureEnabled)
     }
+
+    @Test
+    fun `get repo by link should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val link = "https://gitlab.com/testowner/testRepository"
+
+        whenever(gitlabRestClient.getRepositoryByPath("testowner/testRepository", "testToken"))
+            .thenReturn(
+                testExternalRepository(platform = Platform.GITLAB)
+            )
+
+        client().get()
+            .uri("/gitlab/repository?link={link}", link)
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody<ExternalRepository>()
+    }
+
+    @Test
+    fun `get repo by link that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val link = "https://gitlab.com/testowner/testRepositoryDoesNotExist"
+
+        whenever(gitlabRestClient.getRepositoryByPath("testowner/testRepositoryDoesNotExist", "testToken"))
+            .thenReturn(
+                null
+            )
+
+        client().get()
+            .uri("/gitlab/repository?link={link}", link)
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.repositoryNotFound)
+    }
+
+    @Test
+    fun `get repo by link without user authorization should return 401`() {
+        val token = login("testUsername2", "testpassword2")
+        val link = "https://gitlab.com/testowner/testRepository"
+
+        client().get()
+            .uri("/gitlab/repository?link={link}", link)
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.UNAUTHORIZED, Problem.userAuthorizationRequired)
+    }
 }

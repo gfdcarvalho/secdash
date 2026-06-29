@@ -351,4 +351,52 @@ class GithubControllerTests : ControllerTestsBase() {
             .exchange()
             .expectProblem(HttpStatus.FORBIDDEN, Problem.repoDoesNotHaveSastFeatureEnabled)
     }
+
+    @Test
+    fun `get repo by link should return 200`() {
+        val token = login("testUsername1", "testpassword1")
+        val link = "https://github.com/testowner/testRepository"
+
+        whenever(githubRestClient.getRepositoryByName("testowner/testRepository", "testToken"))
+            .thenReturn(
+                testExternalRepository(platform = Platform.GITHUB)
+            )
+
+        client().get()
+            .uri("/github/repository?link={link}", link)
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody<ExternalRepository>()
+    }
+
+    @Test
+    fun `get repo by link that does not exist should return 404`() {
+        val token = login("testUsername1", "testpassword1")
+        val link = "https://github.com/testowner/testRepositoryDoesNotExist"
+
+        whenever(githubRestClient.getRepositoryByName("testowner/testRepositoryDoesNotExist", "testToken"))
+            .thenReturn(
+                null
+            )
+
+        client().get()
+            .uri("/github/repository?link={link}", link)
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.NOT_FOUND, Problem.repositoryNotFound)
+    }
+
+    @Test
+    fun `get repo by link without user authorization should return 401`() {
+        val token = login("testUsername2", "testpassword2")
+        val link = "https://github.com/testowner/testRepository"
+
+        client().get()
+            .uri("/github/repository?link={link}", link)
+            .header("Authorization", "Bearer $token")
+            .exchange()
+            .expectProblem(HttpStatus.UNAUTHORIZED, Problem.userAuthorizationRequired)
+    }
 }

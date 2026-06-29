@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
@@ -29,7 +30,13 @@ class BearerTokenAuthFilter(
         // SecurityContext that may have been restored from a residual HttpSession (e.g. a
         // previous OAuth2 login), otherwise hasRole(...) would evaluate the stale identity
         // while the AuthenticatedUser argument is resolved from the (correct) token.
-        if (user != null) {
+        //
+        // Exception: an in-progress OAuth2 login (the /auth/login/** and /auth/authorize/**
+        // callbacks) must keep its OAuth2AuthenticationToken so the controller can resolve
+        // @AuthenticationPrincipal OAuth2User / @RegisteredOAuth2AuthorizedClient. A leftover
+        // token cookie carried into that redirect must not clobber the OAuth2 principal.
+        val currentAuth = SecurityContextHolder.getContext().authentication
+        if (user != null && currentAuth !is OAuth2AuthenticationToken) {
             val details = AuthenticatedUserDetails(user)
             val auth = UsernamePasswordAuthenticationToken(details, null, details.authorities)
             SecurityContextHolder.getContext().authentication = auth
