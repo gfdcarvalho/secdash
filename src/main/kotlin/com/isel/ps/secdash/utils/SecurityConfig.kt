@@ -37,6 +37,15 @@ class SecurityConfig(
                 auth
 //                    .anyRequest().permitAll()
                     .requestMatchers("/auth/**", "/users/register", "/error").permitAll()
+                    // Swagger UI / OpenAPI docs. These paths only serve content when the
+                    // springdoc beans are enabled (dev profile); in deploy they 404.
+                    .requestMatchers(
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs.yaml",
+                    ).permitAll()
                     .anyRequest().authenticated()
             }
             .exceptionHandling { ex ->

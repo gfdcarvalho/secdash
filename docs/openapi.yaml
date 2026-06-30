@@ -1,0 +1,1249 @@
+openapi: 3.1.0
+info:
+  title: Secdash API
+  description: Dashboard de vulnerabilidades de segurança multi-repositório que agrega
+    resultados de análise estática (SAST) e dependency scanning de repositórios alojados
+    no GitHub e no GitLab.
+  contact:
+    name: "Rodrigo Vitorino (nº 49448), Gonçalo Carvalho (nº 49219)"
+    url: https://github.com/gfdcarvalho/secdash
+  version: 0.0.1
+externalDocs:
+  description: Repositório do projeto
+  url: https://github.com/gfdcarvalho/secdash
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /users/register:
+    post:
+      tags:
+      - user-controller
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreationModel"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams:
+    get:
+      tags:
+      - team-controller
+      operationId: getUserTeams
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    post:
+      tags:
+      - team-controller
+      operationId: createTeam
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamCreationInput"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/users:
+    post:
+      tags:
+      - team-controller
+      operationId: addUserToTeam
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamUserInput"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/repository:
+    post:
+      tags:
+      - team-controller
+      operationId: addRepositoryToTeam
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamRepositoryInput"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /gitlab/repositories:
+    post:
+      tags:
+      - gitlab-controller
+      operationId: addRepository
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RepositoryCreationDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /github/repositories:
+    post:
+      tags:
+      - github-controller
+      operationId: addRepository_1
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RepositoryCreationDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /auth/logout:
+    post:
+      tags:
+      - auth-controller
+      operationId: logoutUser
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content: {}
+  /auth/login:
+    post:
+      tags:
+      - auth-controller
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLoginDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /admin/promote-user/{userId}:
+    post:
+      tags:
+      - admin-controller
+      operationId: promoteUser
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/users/{uidToPromote}:
+    patch:
+      tags:
+      - team-controller
+      operationId: makeUserTeamLeader
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: uidToPromote
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /vulnerabilities/{vid}:
+    get:
+      tags:
+      - vulnerability-controller
+      operationId: getVulnerability
+      parameters:
+      - name: vid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /users:
+    get:
+      tags:
+      - user-controller
+      operationId: getAllUsers
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /users/me:
+    get:
+      tags:
+      - user-controller
+      operationId: me
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/vulnerability/history:
+    get:
+      tags:
+      - team-controller
+      operationId: getTeamVulnerabilityHistory
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/vulnerabilities:
+    get:
+      tags:
+      - team-controller
+      operationId: getTeamVulnerabilities
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/stats:
+    get:
+      tags:
+      - team-controller
+      operationId: getTeamStats
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/sast:
+    get:
+      tags:
+      - team-controller
+      operationId: getTeamSastAlerts
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/sast/history:
+    get:
+      tags:
+      - team-controller
+      operationId: getTeamSastHistory
+      parameters:
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{teamId}:
+    get:
+      tags:
+      - team-controller
+      operationId: getTeam
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    delete:
+      tags:
+      - team-controller
+      operationId: deleteTeam
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /sast/{sid}:
+    get:
+      tags:
+      - sast-controller
+      operationId: getSastAlert
+      parameters:
+      - name: sid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /repos:
+    get:
+      tags:
+      - repo-controller
+      operationId: getRepos
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /repos/{repoId}:
+    get:
+      tags:
+      - repo-controller
+      operationId: getRepo
+      parameters:
+      - name: repoId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    delete:
+      tags:
+      - repo-controller
+      operationId: deleteRepo
+      parameters:
+      - name: repoId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /repos/{repoId}/vulnerability/history:
+    get:
+      tags:
+      - repo-controller
+      operationId: getRepoVulnerabilityHistory
+      parameters:
+      - name: repoId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /repos/{repoId}/stats:
+    get:
+      tags:
+      - repo-controller
+      operationId: getRepoStats
+      parameters:
+      - name: repoId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /repos/{repoId}/sast/history:
+    get:
+      tags:
+      - repo-controller
+      operationId: getRepoSastHistory
+      parameters:
+      - name: repoId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /gitlab/repository:
+    get:
+      tags:
+      - gitlab-controller
+      operationId: getRepoByLink
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: link
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /gitlab/repositories/{rid}/sast:
+    get:
+      tags:
+      - gitlab-controller
+      operationId: getSast
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: rid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /gitlab/repositories/{rid}/dependency-scanning:
+    get:
+      tags:
+      - gitlab-controller
+      operationId: getVulnerabilities
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: rid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /gitlab/repos:
+    get:
+      tags:
+      - gitlab-controller
+      operationId: getRepositories
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /gitlab/repos/{owner}:
+    get:
+      tags:
+      - gitlab-controller
+      operationId: getRepositoriesByOwner
+      parameters:
+      - name: owner
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /github/repository:
+    get:
+      tags:
+      - github-controller
+      operationId: getRepoByLink_1
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: link
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /github/repositories/{rid}/sast:
+    get:
+      tags:
+      - github-controller
+      operationId: getSast_1
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: rid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /github/repositories/{rid}/dependabot:
+    get:
+      tags:
+      - github-controller
+      operationId: getDependabot
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: rid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /github/repos:
+    get:
+      tags:
+      - github-controller
+      operationId: getRepositories_1
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /github/repos/{owner}:
+    get:
+      tags:
+      - github-controller
+      operationId: getRepositoriesByOwner_1
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: owner
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /auth/login/google:
+    get:
+      tags:
+      - auth-controller
+      operationId: googleLogin
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /auth/login/gitlab:
+    get:
+      tags:
+      - auth-controller
+      operationId: gitlabLogin
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /auth/login/github:
+    get:
+      tags:
+      - auth-controller
+      operationId: githubLogin
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /auth/authorize/gitlab:
+    get:
+      tags:
+      - auth-controller
+      operationId: gitlabAuthorize
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /auth/authorize/github:
+    get:
+      tags:
+      - auth-controller
+      operationId: githubAuthorize
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /admin/users/{userId}:
+    get:
+      tags:
+      - admin-controller
+      operationId: getUser
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /admin/teams:
+    get:
+      tags:
+      - admin-controller
+      operationId: getAllTeams
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /admin/repositories:
+    get:
+      tags:
+      - admin-controller
+      operationId: getAllRepositories
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/users/{uidToRemove}:
+    delete:
+      tags:
+      - team-controller
+      operationId: removeUserFromTeam
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: uidToRemove
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /teams/{tid}/repository/{repoToRemove}:
+    delete:
+      tags:
+      - team-controller
+      operationId: removeRepositoryFromTeam
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: tid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: repoToRemove
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /admin/delete-user/{uid}:
+    delete:
+      tags:
+      - admin-controller
+      operationId: deleteUser
+      parameters:
+      - name: uid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /admin/delete-team/{teamId}:
+    delete:
+      tags:
+      - admin-controller
+      operationId: deleteTeam_1
+      parameters:
+      - name: user
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/AuthenticatedUser"
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+components:
+  schemas:
+    UserCreationModel:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+      required:
+      - email
+      - password
+      - username
+    AuthenticatedUser:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+      required:
+      - token
+      - user
+    User:
+      type: object
+      properties:
+        uid:
+          type: integer
+          format: int32
+        name:
+          type: string
+        email:
+          type: string
+        passwordValidation:
+          type:
+          - string
+          - "null"
+        role:
+          type: string
+          enum:
+          - ADMIN
+          - USER
+      required:
+      - email
+      - name
+      - role
+      - uid
+    TeamCreationInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - "null"
+      required:
+      - name
+    TeamUserInput:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+      required:
+      - userId
+    TeamRepositoryInput:
+      type: object
+      properties:
+        repositoryId:
+          type: integer
+          format: int32
+      required:
+      - repositoryId
+    ExternalOwner:
+      type: object
+      properties:
+        externalId:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+        avatarUrl:
+          type:
+          - string
+          - "null"
+        platform:
+          type: string
+          enum:
+          - GITHUB
+          - GITLAB
+      required:
+      - externalId
+      - name
+      - platform
+      - url
+    RepositoryCreationDto:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - "null"
+        externalId:
+          type:
+          - string
+          - "null"
+        externalOwner:
+          oneOf:
+          - $ref: "#/components/schemas/ExternalOwner"
+          - type: "null"
+        htmlUrl:
+          type:
+          - string
+          - "null"
+        description:
+          type:
+          - string
+          - "null"
+        issuesCount:
+          type:
+          - integer
+          - "null"
+          format: int32
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        forksCount:
+          type:
+          - integer
+          - "null"
+          format: int32
+        visibility:
+          type:
+          - string
+          - "null"
+          enum:
+          - PUBLIC
+          - PRIVATE
+          - INTERNAL
+        isComplete:
+          type: boolean
+      required:
+      - createdAt
+      - isComplete
+      - updatedAt
+    UserLoginDto:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+      - password
+      - username

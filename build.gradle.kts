@@ -45,6 +45,10 @@ dependencies {
 //	implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
 //	implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
+
+	// OpenAPI / Swagger UI (v3.x line targets Spring Boot 4); enabled only in the dev profile
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
+
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("tools.jackson.module:jackson-module-kotlin")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -75,4 +79,10 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+// Local runs via `./gradlew bootRun` activate the dev profile (Swagger UI on).
+// The packaged jar (docker compose up -> java -jar app.jar) runs with no profile -> Swagger off.
+tasks.bootRun {
+	systemProperty("spring.profiles.active", "dev")
 }
