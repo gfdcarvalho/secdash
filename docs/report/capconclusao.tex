@@ -7,31 +7,8 @@ O desenvolvimento do \textbf{SecDash} foi um desafio recompensante que nos permi
 Um dos aspetos mais positivos do projeto foi a escolha da \textit{stack} adotada. A escolha de React, Spring Boot e PostgreSQL, pela suas funcionalidades bem como pela nossa experiência com estas, facilitou o desenvolvimento do projeto, garantindo um bom ritmo de trabalho sem bloqueios significativos ao longo da implementação. Não obstante, deparámo-nos com alguns desafios, de entre os quais:
 
 \begin{itemize}
-	\item \textbf{Desenho e Evolução do Modelo de Dados:} Uma das maiores dificuldades sentidas prendeu-se pelo desenho inicial do modelo de base de dados. Algumas funcionalidades, tal como a necessidade de armazenar o histórico de vulnerabilidades ao longo do tempo, não foram devidamente ponderada durante a fase de planeamento inicial do projeto. Isto resultou num esforço considerável de refatoração, exigindo que a base de dados fosse reconstruída e migrada múltiplas vezes. Uma modelação de dados mais robusta e focada no eixo temporal desde o dia zero teria poupado tempo valioso de desenvolvimento.
+	\item \textbf{Desenho e Evolução do Modelo de Dados:} Uma das maiores dificuldades sentidas prendeu-se pelo desenho inicial do modelo da base de dados. Algumas funcionalidades, tal como a necessidade de armazenar o histórico de vulnerabilidades ao longo do tempo, não foram devidamente ponderada durante a fase de planeamento inicial do projeto. Isto resultou na refatoração do modelo de dados por várias vezes, tendo como consequência uma considerável perda de tempo que talvez podesse ter sido evitada caso o modelo de dados tivesse sido planeado de forma mais refletida desde o início.
 	
-	\item \textbf{Gestão de Autenticação e Segurança:} Para a gestão de sessões, optou-se por desenhar um sistema próprio de validação e processamento de \textit{tokens}. Em retrospetiva, esta decisão introduziu uma complexidade desnecessária. Teria sido mais profícuo explorar em profundidade o ecossistema do \textbf{Spring Security} e delegar toda a gestão de autenticação, autorização e persistência de sessões nos mecanismos nativos e amplamente testados desta \textit{framework}.
+	\item \textbf{Gestão de Autenticação e Segurança:} Para a gestão de sessões, optou-se por desenhar um sistema próprio de validação e gestão de \textit{tokens}. Em retrospetiva, esta decisão introduziu uma complexidade desnecessária que talvez pudesse ter sido evitada ao explorar em maior profundidade o ecossistema do \textbf{Spring Security} e delegando-lhe toda a gestão de autenticação.
 \end{itemize}
 
-\section{Conhecimento de Domínio e Interface}
-
-O desenvolvimento de uma ferramenta na área da cibersegurança exige uma forte familiaridade com conceitos específicos do domínio. 
-
-\begin{itemize}
-	\item \textbf{Análise e Exposição de Vulnerabilidades (CVEs):} Ao longo do projeto, o conhecimento em torno da taxonomia das vulnerabilidades, nomeadamente do ecossistema de \textit{Common Vulnerabilities and Exposures} (CVE), manteve-se algo abstrato. Uma investigação mais aprofundada sobre a natureza destas métricas na fase de levantamento de requisitos teria permitido desenhar painéis informativos mais ricos. Com um domínio mais profundo sobre o tema, a plataforma poderia exibir metadados adicionais, correlações de risco mais precisas ou conselhos de remediação mais acionáveis para as equipas de desenvolvimento.
-	
-	\item \textbf{Desenvolvimento de Interface e Estilização:} No que diz respeito ao \textit{frontend}, a abordagem inicial passou por escrever as folhas de estilo (CSS) de forma manual, com o intuito pedagógico de consolidar conhecimentos. Contudo, à medida que a complexidade da interface cresceu, esta decisão revelou-se insustentável em termos de produtividade, culminando numa forte dependência de assistentes baseados em Inteligência Artificial para finalizar as vistas. A adoção precoce de uma \textit{framework} de componentes visuais (como o Bootstrap ou o Tailwind CSS) teria garantido um desenvolvimento mais célere, uniforme e sustentável.
-	
-	\item \textbf{Ausência de Design Responsivo:} O \textbf{SecDash} foi projetado e otimizado exclusivamente para ecrãs de computador (\textit{desktop-first}). Consequentemente, as páginas e as visualizações gráficas não se encontram otimizadas para dispositivos móveis, o que limita a acessibilidade e a usabilidade da plataforma em telemóveis ou \textit{tablets}.
-\end{itemize}
-
-\section{Trabalho Futuro}
-
-Tendo em conta as limitações identificadas, perspetivam-se as seguintes melhorias para iterações futuras do projeto:
-
-\begin{itemize}
-	\item \textbf{Refatoração do Módulo de Segurança:} Migrar o sistema customizado de \textit{tokens} para uma implementação puramente baseada no \textbf{Spring Security}.
-	
-	\item \textbf{Enriquecimento de Dados de Segurança:} Integrar APIs externas de bases de dados de vulnerabilidades (como a NVD - \textit{National Vulnerability Database}) para injetar contexto detalhado e descrições aprofundadas sobre cada CVE reportado no \textit{dashboard}.
-	
-	\item \textbf{Otimização de Interface (Mobile):} Reescrever a camada de apresentação com recurso a sistemas de grelhas responsivas, garantindo uma navegação e leitura de métricas adequadas em dispositivos móveis.
-\end{itemize}
