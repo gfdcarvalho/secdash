@@ -111,7 +111,7 @@ A lógica de implementação desta funcionalidade está centrada no componente \
 A principal característica do \textbf{SecDash}, para além da agregação dos relatórios de segurança oriundos de repositórios de código externos, é exibição de gráficos no \textit{frontend} que proporcionam uma visão rápida do estado de segurança de cada repositório individual ou conjunto de repositórios de uma equipa. Cada uma destas duas vistas apresenta dois tipos de gráficos para relatórios de \textit{Dependabot} e alertas SAST, para um total de quatro gráficos disponíveis em cada página:
 
 \begin{itemize}
-	\item \textbf{Gráficos Circulares}: \\
+	\item \textbf{Estado de segurança atual} \\
 	Na aba de "Visão geral" o \textit{dashboard} apresenta gráficos circulares onde é possível verificar a distribuição de vulnerabilidades de dependências e de alertas SAST por vulnerabilidade, codificada por cores: Crítico em vermelho, Alto em laranja, Médio em amarelo e Baixo em verde).
 	Neste painel é também exibida a contagem de vulnerabilidades em aberto, resolvidas e ignoradas.
 	Ao clicar num dos setores do gráfico o utilizador navega para a página onde estas vulnerabilidades são listadas, automaticamente filtrada para exibir apenas as vulnerabilidades com a severidade correspondente ao setor onde o utilizador clicou. \\
@@ -120,12 +120,18 @@ A principal característica do \textbf{SecDash}, para além da agregação dos r
 		\centering
 		\includegraphics[width=0.95\linewidth]{./figures/donutchart.png}
 		\caption{Gráfico circular para vulnerabilidades de dependências}
+	\end{figure} 
+
+	\item \textbf{Evolução do estado de segurança:} \\
+	Ao alternar para a aba "Histórico" o utilizador pode consultar a evolução do número de vulnerabilidades na equipa ou repositório ao longo do tempo, representada visualmente através de um gráfico de linhas. \\
+	Ao clicar nas severidades as linhas correspondentes são ocultadas ou exibidas dinâmicamente. \\
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.95\linewidth]{./figures/linechart.png}
+		\caption{Vulnerabilidades ao longo do tempo}
 	\end{figure}
 	
 	\item \textbf{Painéis de Ordenação de Risco (\textit{Rankings})}: \\
 	A metade inferior expõe cartões de \textit{Maior risco}, encarregues de listar ordenadamente os projetos ou componentes mais críticos (como \texttt{web-app} ou \texttt{payment-api}). Esta hierarquia é calculada dinamicamente com base no volume e severidade das falhas detetadas, permitindo que as equipas identifiquem rapidamente quais os repositórios que necessitam de intervenção prioritária.
 \end{itemize}
-
-O grande diferencial operacional da interface reside no mecanismo de \textbf{Navegação Contextual Integrada}. Os gráficos e listagens não funcionam como elementos meramente estáticos; em vez disso, atuam como gatilhos de filtragem interativos. 
-
-Ao clicar num segmento específico do gráfico circular (por exemplo, na fatia correspondente ao nível \texttt{Crítico}) ou numa linha de maior risco, a SPA interceta o evento e efetua uma transição programática para a listagem detalhada de vulnerabilidades. Durante este redirecionamento, os identificadores do contexto selecionado (como o estado do alerta e o nível de severidade) são injetados como parâmetros de estado na rota da aplicação. Isto faz com que a página de destino seja carregada automaticamente com os devidos filtros aplicados, poupando passos repetitivos ao utilizador e agilizando o processo de triagem e remediação de falhas de segurança.
