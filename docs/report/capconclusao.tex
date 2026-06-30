@@ -18,3 +18,14 @@ Um dos aspetos mais positivos do projeto foi a escolha da \textit{stack} adotada
 	\item \textbf{Design Responsivo:} O \textbf{SecDash} foi projetado com um foco em ecrãs de computador (\textit{desktop-first}). Consequentemente, as páginas web e as visualizações gráficas não se encontram otimizadas para dispositivos móveis, o que limita a acessibilidade e a usabilidade da plataforma em telemóveis ou \textit{tablets}.
 \end{itemize}
 
+\section{Trabalho Futuro}
+
+Tendo em conta as limitações com que nos deparámos ao longo do desenvolvimento, consideramos que faria sentido explorar as seguintes melhorias em iterações futuras do projeto:
+
+\begin{itemize}
+	\item \textbf{Refatoração da gestão de \textit{tokens}:} Substituir o sistema de \textit{tokens} implementado por nós e delegar toda a parte de autenticação e gestão de sessões puramente ao \textbf{Spring Security}, simplificando assim a arquitetura do nosso \textit{backend}.
+	
+	\item \textbf{Known Exploited Vulnerabilities:} A possibilidade de cruzar os relatórios de segurança da plataforma com o catálogo KEV (\textit{Known Exploited Vulnerabilities}) permitiria colocar em destaque no \textit{dashboard} quais as vulnerabilidades que estão ativamente a ser exploradas em ataques no mundo real, ajudando a priorizar as vulnerabilidades de forma muito mais pragmática.
+	
+	\item \textbf{Otimização de Interface Mobile:} Adaptar o CSS do \textit{frontend} e reestruturar alguns dos componentes gráficos para os tornar responsivos, de modo a garantir que a plataforma tenha uma experiência de utilização e acessibilidade em telemóveis e \textit{tablets} comparável à da sua utilização num computador.
+\end{itemize}
