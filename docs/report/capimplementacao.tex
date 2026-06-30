@@ -108,10 +108,10 @@ A lógica de implementação desta funcionalidade está centrada no componente \
 
 \subsection{\textit{Dashboard}}
 
-A principal característica do \textbf{SecDash}, para além da agregação dos relatórios de segurança oriundos de repositórios de código externos, é exibição de gráficos no \textit{frontend} que proporcionam uma visão rápida do estado de segurança de cada repositório individual ou conjunto de repositórios de uma equipa. Cada uma destas duas vistas apresenta dois tipos de gráficos para relatórios de \textit{Dependabot} e alertas SAST, para um total de quatro gráficos disponíveis em cada página:
+A principal característica do \textbf{SecDash}, para além da agregação dos relatórios de segurança oriundos de repositórios de código externos, é exibição de gráficos no \textit{frontend} que proporcionam uma visão rápida do estado de segurança de cada repositório individual ou conjunto de repositórios de uma equipa. Cada uma destas duas vistas apresenta dois tipos de gráficos para relatórios de \textit{Dependabot} e alertas SAST, para um total de quatro gráficos disponíveis em cada página. Para além destes gráficos, o cliente web disponibiliza também as vistas padrão para este tipo de frontend, com vistas onde são listadas todas as vulnerabilidades de um repositório ou os membros de cada equipa, entre outros.
 
-\begin{itemize}
-	\item \textbf{Estado de segurança atual} \\
+
+	\subsubsection{Estado de segurança atual}
 	Na aba de "Visão geral" o \textit{dashboard} apresenta gráficos circulares onde é possível verificar a distribuição de vulnerabilidades de dependências e de alertas SAST por vulnerabilidade, codificada por cores: Crítico em vermelho, Alto em laranja, Médio em amarelo e Baixo em verde).
 	Neste painel é também exibida a contagem de vulnerabilidades em aberto, resolvidas e ignoradas.
 	Ao clicar num dos setores do gráfico o utilizador navega para a página onde estas vulnerabilidades são listadas, automaticamente filtrada para exibir apenas as vulnerabilidades com a severidade correspondente ao setor onde o utilizador clicou. \\
@@ -122,7 +122,7 @@ A principal característica do \textbf{SecDash}, para além da agregação dos r
 		\caption{Gráfico circular para vulnerabilidades de dependências}
 	\end{figure} 
 
-	\item \textbf{Evolução do estado de segurança:} \\
+	\subsubsection{Evolução do estado de segurança:}
 	Ao alternar para a aba "Histórico" o utilizador pode consultar a evolução do número de vulnerabilidades na equipa ou repositório ao longo do tempo, representada visualmente através de um gráfico de linhas. \\
 	Ao clicar nas severidades as linhas correspondentes são ocultadas ou exibidas dinâmicamente. \\
 	
@@ -132,6 +132,12 @@ A principal característica do \textbf{SecDash}, para além da agregação dos r
 		\caption{Vulnerabilidades ao longo do tempo}
 	\end{figure}
 	
-	\item \textbf{Painéis de Ordenação de Risco (\textit{Rankings})}: \\
-	A metade inferior expõe cartões de \textit{Maior risco}, encarregues de listar ordenadamente os projetos ou componentes mais críticos (como \texttt{web-app} ou \texttt{payment-api}). Esta hierarquia é calculada dinamicamente com base no volume e severidade das falhas detetadas, permitindo que as equipas identifiquem rapidamente quais os repositórios que necessitam de intervenção prioritária.
-\end{itemize}
+	\subsubsection {Painéis de ordenação de risco:}
+	Na vista de equipas, por baixo dos cartões com os gráficos, o dashboard exibe outros dois cartões onde são listados, por ordem decrescente, os repositórios com maior número de vulnerabilidades de dependências e alertas SAST. Desta forma é possível verificar rapidamente quais os repositórios mais críticos entre cada equipa e navegar rapidamente para estes. \\
+	
+		\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.95\linewidth]{./figures/maiorrisco.png}
+		\caption{Repositórios com maior número de vulnerabilidades para uma equipa de exemplo}
+		
+	\end{figure}

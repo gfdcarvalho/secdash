@@ -45,6 +45,9 @@
 \contentsline {subsubsection}{ThemeProvider}{25}{}%
 \contentsline {subsection}{\numberline {4.2.1}\textit {Internationalization} (i18n)}{25}{}%
 \contentsline {subsection}{\numberline {4.2.2}\textit {Dashboard}}{26}{}%
+\contentsline {subsubsection}{Estado de segurança atual}{26}{}%
+\contentsline {subsubsection}{Evolução do estado de segurança:}{26}{}%
+\contentsline {subsubsection}{Painéis de ordenação de risco:}{27}{}%
 \contentsline {chapter}{\numberline {5}Conclusão}{29}{}%
 \contentsline {chapter}{Refer\^{e}ncias}{33}{}%
 \contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{35}{}%
