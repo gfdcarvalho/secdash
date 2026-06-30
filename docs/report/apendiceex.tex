@@ -118,16 +118,17 @@
 \chapter{Script SQL para a criação da base de dados} \label{ap:schema}
 \begin{lstlisting}[language=SQL, basicstyle=\ttfamily\small, breaklines=true, frame=single, showstringspaces=false, commentstyle=\color{green!50!black}]
 
+
 	CREATE TYPE platform AS ENUM ('GITHUB', 'GITLAB');
 	CREATE TYPE visibility AS ENUM ('PUBLIC', 'PRIVATE', 'INTERNAL');
 	CREATE TYPE vulnerability_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN');
 	CREATE TYPE vulnerability_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
-	CREATE TYPE sast_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW');
+	CREATE TYPE sast_severity AS ENUM ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN');
 	CREATE TYPE sast_state AS ENUM ('OPEN', 'FIXED', 'DISMISSED');
 	CREATE TYPE auth_provider AS ENUM ('GOOGLE', 'GITHUB', 'GITLAB');
 	CREATE TYPE app_roles as ENUM ('ADMIN', 'USER');
 	CREATE TYPE team_roles as ENUM ('LEADER', 'COLLABORATOR');
-	
+
 	CREATE TABLE users (
 	uid                     INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	name                    VARCHAR(255) NOT NULL,
@@ -147,10 +148,12 @@
 	
 
 	CREATE TABLE user_authorization (
-	user_id      INT           NOT NULL REFERENCES users(uid),
-	provider     auth_provider NOT NULL,
-	access_token TEXT          NOT NULL,
-	PRIMARY KEY  (user_id, provider)
+	user_id       INT           NOT NULL REFERENCES users(uid),
+	provider      auth_provider NOT NULL,
+	access_token  TEXT          NOT NULL,
+	refresh_token TEXT,
+	expires_at    TIMESTAMPTZ,
+	PRIMARY KEY   (user_id, provider)
 	);
 	
 
@@ -209,7 +212,21 @@
 	platform                 platform               NOT NULL,
 	rid                      INT                    NOT NULL REFERENCES repositories(rid),
 	detected_at              TIMESTAMP              NOT NULL,
-	updated_at               TIMESTAMP              NOT NULL
+	updated_at               TIMESTAMP              NOT NULL,
+	UNIQUE (external_id, platform, rid)
+	);
+	
+
+	CREATE TABLE repo_vulnerability_scans (
+	scan_id             INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	rid                 INT         NOT NULL REFERENCES repositories(rid),
+	scanned_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+	vulnerability_count INT         NOT NULL,
+	critical_count      INT         NOT NULL DEFAULT 0,
+	high_count          INT         NOT NULL DEFAULT 0,
+	medium_count        INT         NOT NULL DEFAULT 0,
+	low_count           INT         NOT NULL DEFAULT 0,
+	unknown_count       INT         NOT NULL DEFAULT 0
 	);
 	
 
@@ -228,19 +245,43 @@
 	
 
 	CREATE TABLE sast_alerts (
-	sid        INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	rid        INT           NOT NULL REFERENCES repositories(rid),
-	state      sast_state    NOT NULL,
-	severity   sast_severity NOT NULL,
-	scanner    VARCHAR(255)  NOT NULL,
-	file       VARCHAR(255)  NOT NULL,
-	line       VARCHAR(50)   NOT NULL
+	sid              INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	rid              INT           NOT NULL REFERENCES repositories(rid),
+	external_id      VARCHAR(255)  NOT NULL,
+	state            sast_state    NOT NULL,
+	severity         sast_severity NOT NULL,
+	rule_id          VARCHAR(255)  NOT NULL,
+	rule_description TEXT          NOT NULL,
+	tool_name        VARCHAR(255)  NOT NULL,
+	file_path        VARCHAR(255),
+	start_line       INT,
+	end_line         INT,
+	message          TEXT,
+	html_url         VARCHAR(255)  NOT NULL,
+	platform         platform      NOT NULL,
+	detected_at      TIMESTAMPTZ,
+	updated_at       TIMESTAMPTZ,
+	UNIQUE (external_id, platform, rid)
+	);
+	
+
+	CREATE TABLE repo_sast_scans (
+	scan_id       INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	rid           INT         NOT NULL REFERENCES repositories(rid),
+	scanned_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+	alert_count   INT         NOT NULL,
+	critical_count INT        NOT NULL DEFAULT 0,
+	high_count     INT        NOT NULL DEFAULT 0,
+	medium_count   INT        NOT NULL DEFAULT 0,
+	low_count      INT        NOT NULL DEFAULT 0,
+	unknown_count  INT        NOT NULL DEFAULT 0
 	);
 	
 	CREATE TABLE teams (
-	tid         INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name        VARCHAR(255) NOT NULL,
-	description TEXT
+	tid          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	name         VARCHAR(255) NOT NULL,
+	description  TEXT,
+	last_scan_at TIMESTAMPTZ
 	);
 	
 	CREATE TABLE team_users (

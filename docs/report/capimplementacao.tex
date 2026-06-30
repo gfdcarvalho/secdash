@@ -19,7 +19,7 @@ Os detalhes e especifidades da implementação e desenvolvimeto de cada uma dest
 O \textit{backend} do \textbf{SecDash} encontra-se estruturado com o padrão de desenho \textbf{Controller-Service-Repository (CSR)}. Pretende-se deste modo isolar o tratamento de pedidos HTTP, a lógica de negócio e operações de base de dados em componentes independentes. Organizar a aplicação desta forma tem o intuito de facilitar o seu desenvolvimento e manutenção. \\
 
 \subsection{Controllers}
-A camada dos \textit{controllers} tem como principal objetivo receber pedidos HTTP para consequentemente devolver respostas HTTP. A camada conta com oito controllers distintos, cada um com endpoints próprios para cada operação suportada pela aplicação: 
+A camada dos \textit{controllers} tem como principal objetivo receber pedidos HTTP para consequentemente devolver respostas HTTP. A camada conta com nove controllers distintos, cada um com endpoints próprios para cada operação suportada pela aplicação: 
 \begin{itemize}
 	\item \textbf{Auth Controller:} Responsável por receber pedidos HTTP relacionados com autorização externa , tais como pedidos de \textit{login} através de OAuth 2.0 na aplicação ou conceder acesso aos repositórios de um utilizador de uma das plataformas externas;
 	
@@ -36,6 +36,8 @@ A camada dos \textit{controllers} tem como principal objetivo receber pedidos HT
 	\item \textbf{Vulnerability Controller:} Responsável por obter as vulnerabilidades já registadas no domínio da aplicação;
 	
 	\item \textbf{Sast Controller:} Responsável por obter os alertas Sast já registados no domínio da aplicação;
+	
+	\item \textbf{Admin Controller:} Responsável por receber e atender pedidos referentes a tarefas de administração da aplicação. Os endpoints deste controller apenas são acessíveis a utilizadores com a role de ADMIN;
 	
 \end{itemize}
 
@@ -103,3 +105,27 @@ O tema atual é disponibilizado a todo o frontend através do \textbf{ThemeConte
 O frontend do \textbf{SecDash} foi implementado tendo em vista a possibilidade de exibir uma interface com várias línguas distintas. \\
 
 A lógica de implementação desta funcionalidade está centrada no componente \textbf{I18nProvider}, que recorre à \textit{Context API} do React para armazenar o idioma ativo (\textit{Locale}) e expor o seu dicionário de traduções. \\
+
+\subsection{\textit{Dashboard}}
+
+A principal característica do \textbf{SecDash}, para além da agregação dos relatórios de segurança oriundos de repositórios de código externos, é exibição de gráficos no \textit{frontend} que proporcionam uma visão rápida do estado de segurança de cada repositório individual ou conjunto de repositórios de uma equipa. Cada uma destas duas vistas apresenta dois tipos de gráficos para relatórios de \textit{Dependabot} e alertas SAST, para um total de quatro gráficos disponíveis em cada página:
+
+\begin{itemize}
+	\item \textbf{Gráficos Circulares}: \\
+	Na aba de "Visão geral" o \textit{dashboard} apresenta gráficos circulares onde é possível verificar a distribuição de vulnerabilidades de dependências e de alertas SAST por vulnerabilidade, codificada por cores: Crítico em vermelho, Alto em laranja, Médio em amarelo e Baixo em verde).
+	Neste painel é também exibida a contagem de vulnerabilidades em aberto, resolvidas e ignoradas.
+	Ao clicar num dos setores do gráfico o utilizador navega para a página onde estas vulnerabilidades são listadas, automaticamente filtrada para exibir apenas as vulnerabilidades com a severidade correspondente ao setor onde o utilizador clicou. \\
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.95\linewidth]{./figures/donutchart.png}
+		\caption{Gráfico circular para vulnerabilidades de dependências}
+	\end{figure}
+	
+	\item \textbf{Painéis de Ordenação de Risco (\textit{Rankings})}: \\
+	A metade inferior expõe cartões de \textit{Maior risco}, encarregues de listar ordenadamente os projetos ou componentes mais críticos (como \texttt{web-app} ou \texttt{payment-api}). Esta hierarquia é calculada dinamicamente com base no volume e severidade das falhas detetadas, permitindo que as equipas identifiquem rapidamente quais os repositórios que necessitam de intervenção prioritária.
+\end{itemize}
+
+O grande diferencial operacional da interface reside no mecanismo de \textbf{Navegação Contextual Integrada}. Os gráficos e listagens não funcionam como elementos meramente estáticos; em vez disso, atuam como gatilhos de filtragem interativos. 
+
+Ao clicar num segmento específico do gráfico circular (por exemplo, na fatia correspondente ao nível \texttt{Crítico}) ou numa linha de maior risco, a SPA interceta o evento e efetua uma transição programática para a listagem detalhada de vulnerabilidades. Durante este redirecionamento, os identificadores do contexto selecionado (como o estado do alerta e o nível de severidade) são injetados como parâmetros de estado na rota da aplicação. Isto faz com que a página de destino seja carregada automaticamente com os devidos filtros aplicados, poupando passos repetitivos ao utilizador e agilizando o processo de triagem e remediação de falhas de segurança.
