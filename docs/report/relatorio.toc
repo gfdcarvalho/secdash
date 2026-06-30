@@ -49,7 +49,7 @@
 \contentsline {subsubsection}{Evolução do estado de segurança:}{26}{}%
 \contentsline {subsubsection}{Painéis de ordenação de risco:}{27}{}%
 \contentsline {chapter}{\numberline {5}Conclusão}{29}{}%
-\contentsline {section}{\numberline {5.1}Avaliação Técnica}{29}{}%
+\contentsline {section}{\numberline {5.1}Reflexão sobre o desenvolvimento}{29}{}%
 \contentsline {chapter}{Refer\^{e}ncias}{33}{}%
 \contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{35}{}%
 \contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{39}{}%
