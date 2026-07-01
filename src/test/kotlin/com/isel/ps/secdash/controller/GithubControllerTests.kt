@@ -357,7 +357,7 @@ class GithubControllerTests : ControllerTestsBase() {
         val token = login("testUsername1", "testpassword1")
         val link = "https://github.com/testowner/testRepository"
 
-        whenever(githubRestClient.getRepositoryByName("testowner/testRepository", "testToken"))
+        whenever(githubRestClient.getRepositoryByPath("testowner/testRepository"))
             .thenReturn(
                 testExternalRepository(platform = Platform.GITHUB)
             )
@@ -376,7 +376,7 @@ class GithubControllerTests : ControllerTestsBase() {
         val token = login("testUsername1", "testpassword1")
         val link = "https://github.com/testowner/testRepositoryDoesNotExist"
 
-        whenever(githubRestClient.getRepositoryByName("testowner/testRepositoryDoesNotExist", "testToken"))
+        whenever(githubRestClient.getRepositoryByPath("testowner/testRepositoryDoesNotExist"))
             .thenReturn(
                 null
             )
@@ -389,14 +389,21 @@ class GithubControllerTests : ControllerTestsBase() {
     }
 
     @Test
-    fun `get repo by link without user authorization should return 401`() {
+    fun `get repo by link without user authorization should return 200`() {
         val token = login("testUsername2", "testpassword2")
         val link = "https://github.com/testowner/testRepository"
+
+        whenever(githubRestClient.getRepositoryByPath("testowner/testRepository"))
+            .thenReturn(
+                testExternalRepository(platform = Platform.GITHUB)
+            )
 
         client().get()
             .uri("/github/repository?link={link}", link)
             .header("Authorization", "Bearer $token")
             .exchange()
-            .expectProblem(HttpStatus.UNAUTHORIZED, Problem.userAuthorizationRequired)
+            .expectStatus().isOk
+            .expectHeader().contentType(MediaType.APPLICATION_JSON)
+            .expectBody<ExternalRepository>()
     }
 }
