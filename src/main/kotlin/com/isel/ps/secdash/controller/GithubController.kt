@@ -137,7 +137,7 @@ class GithubController(
         user: AuthenticatedUser,
         @RequestParam link: String,
     ): ResponseEntity<*> {
-        val result = githubServices.getRepoByLink(link, user.user.uid)
+        val result = githubServices.getRepoByLink(link)
         return when (result) {
             is Success -> ResponseEntity.status(200).body(result.value)
             is Failure ->

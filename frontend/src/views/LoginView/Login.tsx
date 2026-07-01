@@ -9,6 +9,7 @@ import style from './Login.module.css'
 import { useReducer } from 'react'
 import { authenticate, authenticateWithProvider, registerAndAuthenticate } from '../../utils/Authenticate'
 import { isSuccess } from '../../utils/Either'
+import { ProblemTypes } from '../../utils/ProblemTypes'
 import { useAuthentication } from '../../utils/Authentication'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -104,9 +105,15 @@ export function Login() {
         if (isSuccess(response)){
             setUser(response.value)
             navigate(location.state?.source || "/", { replace: true })
-        }else { // we only have one error response type for this request
+        } else {
             dispatch(setLoadingAction(false))
-        
+            switch (response.value.type) {
+                case ProblemTypes.invalidCredentials:
+                    dispatch(setLoginError("password", "invalidCredentials"))
+                    break
+                default:
+                    dispatch(setLoginError("password", "unexpected"))
+            }
         }
     }
 
@@ -125,7 +132,25 @@ export function Login() {
             navigate(location.state?.source || "/", { replace: true })
         } else {
             dispatch(setLoadingAction(false))
-            // handle register erros ...
+            switch (response.value.type) {
+                case ProblemTypes.userAlreadyExists:
+                    dispatch(setRegisterError("username", "userAlreadyExists"))
+                    break
+                case ProblemTypes.invalidUsername:
+                    dispatch(setRegisterError("username", "invalidUsername"))
+                    break
+                case ProblemTypes.invalidEmail:
+                    dispatch(setRegisterError("email", "invalidEmail"))
+                    break
+                case ProblemTypes.invalidPassword:
+                    dispatch(setRegisterError("password", "invalidPassword"))
+                    break
+                case ProblemTypes.invalidCredentials:
+                    dispatch(setRegisterError("password", "invalidCredentials"))
+                    break
+                default:
+                    dispatch(setRegisterError("password", "unexpected"))
+            }
         }
 
     }

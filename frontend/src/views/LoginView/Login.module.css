@@ -40,12 +40,16 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    /* Fixed width so a long error message wraps inside the card instead of
+       stretching the inputs and buttons wider. */
+    width: 15rem;
 }
 
 .loginCard{
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 15rem;
 }
 
 .providerLoginButtons{

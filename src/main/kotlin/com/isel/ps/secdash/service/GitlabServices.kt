@@ -171,12 +171,10 @@ class GitlabServices(
 
     fun getRepoByLink(
         link: String,
-        uid: Int,
     ): GetRepoByLinkResult {
-        val accessToken = getValidToken(uid) ?: return failure(GetRepoByLinkError.Unauthorized)
         val path = link.trimEnd('/').removeSuffix(".git").substringAfter("gitlab.com/")
         return try {
-            val repo = gitlabClient.getRepositoryByPath(path, accessToken)
+            val repo = gitlabClient.getRepositoryByPath(path)
                 ?: return failure(GetRepoByLinkError.RepositoryNotFound)
             success(repo)
         } catch (e: HttpClientErrorException) {

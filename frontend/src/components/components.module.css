@@ -1,7 +1,17 @@
+.inputWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .error {
     color: var(--color-error);
     margin: 0;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
+    /* Always reserve room for one error line so showing/hiding it
+       doesn't shift the inputs below. */
+    min-height: 1.3rem;
+    /* Wrap long messages within the input width instead of widening the card. */
+    overflow-wrap: anywhere;
 }
 
 .flagButton {

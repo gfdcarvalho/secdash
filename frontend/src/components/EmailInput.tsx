@@ -11,7 +11,7 @@ interface EmailInputProps {
 export function EmailInput({ className, value, onChange, error }: EmailInputProps) {
     const { t } = useTranslation()
     return (
-        <div>
+        <div className={style.inputWrapper}>
             <input
                 className={className}
                 type="email"
@@ -19,7 +19,7 @@ export function EmailInput({ className, value, onChange, error }: EmailInputProp
                 value={value}
                 onChange={e => onChange(e.target.value)}
             />
-            {error && <p className={style.error}>{error}</p>}
+            <p className={style.error}>{error}</p>
         </div>
     )
 }

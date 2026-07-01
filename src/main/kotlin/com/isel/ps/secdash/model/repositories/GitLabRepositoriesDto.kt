@@ -9,7 +9,8 @@ data class GitlabRepositoryDto(
     @JsonProperty("name_with_namespace") val name: String,
     @JsonProperty("web_url") val htmlUrl: String,
     val description: String?,
-    @JsonProperty("open_issues_count") val openIssuesCount: Int,
+    // Absent in anonymous (unauthenticated) responses — GitLab only exposes issue stats to members.
+    @JsonProperty("open_issues_count") val openIssuesCount: Int = 0,
     @JsonProperty("created_at") val createdAt: String,
     @JsonProperty("last_activity_at") val updatedAt: String,
     @JsonProperty("forks_count") val forksCount: Int,
