@@ -34,6 +34,8 @@ Para isso deverá existir suporte à autenticação através do protocolo OAuth2
 
 Após autenticação bem sucedida, o utilizador deverá poder consultar os seus repositórios previamente guardados sem necessidade de repetir o processo de autorização às plataformas externas. \\
 
+Adicionalmente, o registo e autenticação no \textbf{SecDash} pode também ser feito através de e-mail e password. \\
+
 \subsection{Controlo de acesso com base em papéis}
 
 O sistema deverá implementar um mecanismo de controlo de acesso baseados em papéis (\textbf{Role-Based Access Control} ou \textbf{RBAC}), permitindo restringir funcionalidades de acordo com o tipo de utilizador. Pretende-se assim que os responsáveis pela manutenção do serviço possam ter total controlo pela gestão da aplicação. \\
@@ -94,7 +96,7 @@ Pretende-se acrescentar fonte de dados adicional para além das plataformas GitH
 \subsection{Deployment em contentores}
 De forma a validar a viabilidade operacional da plataforma, pretende-se realizar o \textit{deployment} do \textbf{SecDash} alojando-o num servidor pessoal. \\
 
-Este processo envolveria a configuração e gestão de redes para exposição controlada do serviço e a orquestração via Docker. O objetivo é que a aplicação possa ser demonstrada num ambiente que mais se assemelharia a um ambiente real e não apenas no ambiente de desenvolvimento local, passando a aplicação a estar acessível de forma remota. \\
+Este processo envolveu a configuração e gestão de redes para exposição controlada do serviço e a orquestração via Docker. O objetivo é que a aplicação seja demonstrada num ambiente que mais se assemelha a um ambiente real e não apenas no ambiente de desenvolvimento local, passando a aplicação a estar acessível de forma remota. \\
 
 Pretende-se deste modo alargar o âmbito do projeto para lá de apenas desenvolvimento de software, passando pela gestão de regras de \textit{firewall} e exposição segura de serviços para acesso remoto. \\
 
@@ -109,7 +111,7 @@ O projeto encontra-se dividido em dois blocos principais, \textit{frontend} e \t
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\linewidth]{./figures/diagrama.png}
-	\caption{diagrama da arquitetura}
+	\caption{Diagrama da arquitetura mostrando a separação das diferentes camadas da aplicação}
 \end{figure}
 
 O \textit{backend} é o principal responsável pela lógica de negócio da aplicação, tendo a responsabilidade de comunicar com as APIs externas às quais a aplicação necessita de recorrer e de normalizar a informação recebida destas. É também sua responsabilidade toda a lógica de registo e autorização dos utilizadores e a persistências dos dados numa base de dados. O \textit{backend} atua também como uma \textbf{API REST}, expondo os dados necessários de forma estruturada via pedidos \textbf{HTTP}. \\
@@ -127,7 +129,7 @@ Estes dois últimos provedores de identidade cumprem um papel duplo, pois para a
 \section{Tecnologias e linguagens} \label{arquitetura:tecnologias}
 \subsection{Backend} \label{arquitetura:tecnologias:backend}
 \subsubsection{Kotlin}
-A decisão de escolher Kotlin como linguagem utilizada para o desenvolvimento do \textit{backend} foi tomada, em parte, devido à proficiência nela adquirida ao longo do percurso da licenciatura. Uma vez que foi a linguagem com maior exposição e utilização prática em mais unidades curriculares ao longo do percurso académico deste ciclo de estudos, esta escolha permitiu reduzir a curva de aprendizagem necessária à elaboração do projeto, acelarando assim o seu desenvolvimento. \\
+A decisão de escolher Kotlin como linguagem utilizada para o desenvolvimento do \textit{backend} foi tomada, em parte, devido à proficiência nela adquirida ao longo do percurso da licenciatura. Uma vez que foi a linguagem com maior exposição e utilização prática em mais unidades curriculares ao longo do percurso académico deste ciclo de estudos, esta escolha permitiu reduzir a curva de aprendizagem necessária à elaboração do projeto, acelerando assim o seu desenvolvimento. \\
 
 Para além disso, a linguagem Kotlin possui uma série de características que auxiliam o desenvolvimento e fortalecem a robustez da aplicação, de entre as quais se destacam duas:
 
@@ -154,10 +156,10 @@ O Spring Boot é particularmente útil pelos seguintes pontos:
 \subsubsection{JDBI}
 Para a camada de interação com a base de dados, optou-se pela utilização da biblioteca \textbf{Jdbi}. Esta biblioteca segue uma filosofia \textit{"SQL-centric"}, conferindo algumas vantagens de conveniência quando comparada com a biblioteca (\textit{Java Database Connectivity (JDBC)}) sobre a qual esta assenta. \\
 
-Esta apresenta duas grandes vantagens sobre o nosso ponto de vista:
+Esta apresenta quatro grandes vantagens sobre o nosso ponto de vista:
 
 \begin{itemize}
-	\item \textbf{Controlo total sobre o SQL:} A JDBI permite escrever maualmente as consultas SQL a serem executadas. Este controlo garante o desempenho e a correção de consultas complexas;
+	\item \textbf{Controlo total sobre o SQL:} A JDBI permite escrever manualmente as consultas SQL a serem executadas. Este controlo garante o desempenho e a correção de consultas complexas;
 	
 	\item \textbf{Mapeamento Nativo para \textit{Data Classes}:} A integração com o Kotlin permite que os resultados das consultas SQL sejam mapeados automaticamente para \textit{Data Classes}. 
 	
@@ -172,16 +174,14 @@ Para persistência de dados decidiu-se utilizar uma base de dados relacional, um
 \subsubsection{OAuth 2.0}
 A utilização do protocolo \textbf{OAuth 2.0} no \textbf{SecDash} cumpre um propósito duplo. \\
 
-Um destes propósitos é a delegação da gestão de identidades a entidades externas confiáveis, não sendo assim necessário que um utilizador se registe diretamente no \textbf{SecDash}. Os utilizadores podem assim criar conta e aceder à plataforma com apenas um clique, utilizando contas já existentes em outras plataformas, o que pode melhorar significativamente a experiência de utilização. As plataformas suportadas como provedores de identidade sãp Google, GitHub e GitLab. \\
+Um destes propósitos é a delegação da gestão de identidades a entidades externas confiáveis, não sendo assim necessário que um utilizador se registe diretamente no \textbf{SecDash}. Os utilizadores podem assim criar conta e aceder à plataforma com apenas um clique, utilizando contas já existentes em outras plataformas, o que pode melhorar significativamente a experiência de utilização. As plataformas suportadas como provedores de identidade são Google, GitHub e GitLab. \\
 
 Para além disso, a funcionalidade principal da aplicação está dependente deste protocolo: sendo o \textbf{SecDash} um agregador de vulnerabilidades, a aplicação necessita de consultar dados privados guardados no GitHub e GitLab, sendo o Oauth2.0 a forma como o acesso a estes é concedido. \\
 
 \subsection{Frontend} \label{arquitetura:tecnologias:frontend}
 
 \subsubsection{Typescript}
-A linguagem escolhida para o \textit{frontend} foi \textbf{Typescript}. \\
-
-A escolha desta em detrimento de Javascript puro deveu-se ao facto de Typescript possuir tipagem estática. Não só isto facilita a transposição dos modelos de dados utilizados no \textit{backend} para a lógica do frontend como também garante que qualquer erro de correspondência de dados possa ser detetado imediatamente em tempo de compilação, e não em tempo de execução no navegador do utilizador. \\
+A linguagem escolhida para o \textit{frontend} foi \textbf{Typescript}. A escolha desta em detrimento de Javascript puro deveu-se ao facto de Typescript possuir tipagem estática. Não só isto facilita a transposição dos modelos de dados utilizados no \textit{backend} para a lógica do frontend como também garante que qualquer erro de correspondência de dados possa ser detetado imediatamente em tempo de compilação, e não em tempo de execução no navegador do utilizador. \\
 
 \subsubsection{React}
 Como biblioteca principal para a construção da interface do utilizador, adotou-se \textbf{React}. \\
@@ -202,14 +202,14 @@ A elaboração de um modelo Entidade-Associação é indispensável para a estru
 
 O modelo de dados serve também de ponte entre os requisitos de negócio da plataforma e a sua implementação física na base de dados. Este mapeamento garante que a existência uma visão clara de como os utilizadores, repositórios e vulnerabilidades se relacionam entre si, permitindo orientar a implementação lógica do sistema prevenindo assim o aparecimento de inconsistências estruturais que pudessem pôr em causa a robustez da aplicação ou atrasar o seu desenvolvimento. \\
 
-Como referido no capítulo anterior, os dados obtidos das APIs externas do GitHub e GitLab são altamente estruturados e com dependências e relações claras entre si. Assim sendo, a elaboração de um modelo Entidade-Associação, indispensável para a estruturação lógica do projeto, torna-se relativamente trivial. \\
+Como referido no capítulo anterior, os dados obtidos das APIs externas do GitHub e GitLab são altamente estruturados e com dependências e relações claras entre si. Assim sendo, a elaboração de um modelo Entidade-Associação torna-se relativamente trivial. \\
 
 O diagrama do modelo obtido encontra-se apresentado na Figura 3.2. É importante salientar que, de forma a facilitar a apresentação e visualização do modelo no presente documento, os atributos das entidades, bem como a cardinalidade das suas relações, foram omitidos do diagrama. O script SQL utilizado para criar todo o esquema da base de dados, onde se pode consultar todos os atributos, encontra-se no Apêndice \ref{ap:schema}. \\
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.95\linewidth]{./figures/secdash-ea.drawio.png}
-	\caption{diagrama do modelo de dados}
+	\caption{Diagrama do modelo de dados ilustrando sucintamente as ligações entre cada uma das entidades que o constituem}
 \end{figure}
 
 \begin{itemize}

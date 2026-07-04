@@ -104,34 +104,6 @@ R.~Lerman and C.~Zakrzewski. (2021) The {Log4j} vulnerability has the internet
   \url{https://docs.gitlab.com/user/application_security/sast/}
 \BIBentrySTDinterwordspacing
 
-\bibitem{github_dependabot_quickstart}
-\BIBentryALTinterwordspacing
-{GitHub}. (2026) Dependabot quickstart guide. Acedido em: 24 de Maio de 2026.
-  [Online]. Available:
-  \url{https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart-guide}
-\BIBentrySTDinterwordspacing
-
-\bibitem{gitlab_dependency_scanning_sbom}
-\BIBentryALTinterwordspacing
-{GitLab}. (2026) Dependency {Scanning} using {SBOM} documentation. Acedido em:
-  24 de Maio de 2026. [Online]. Available:
-  \url{https://docs.gitlab.com/user/application_security/dependency_scanning/dependency_scanning_sbom/}
-\BIBentrySTDinterwordspacing
-
-\bibitem{gitlab_continuous_dependency_scanning}
-\BIBentryALTinterwordspacing
-------. (2026) Continuous {Dependency} {Scanning} documentation. Acedido em: 24
-  de Maio de 2026. [Online]. Available:
-  \url{https://docs.gitlab.com/user/application_security/dependency_scanning/continuous_dependency_scanning/}
-\BIBentrySTDinterwordspacing
-
-\bibitem{gitlab_legacy_dependency_scanning}
-\BIBentryALTinterwordspacing
-------. (2026) Legacy {Dependency} {Scanning} documentation. Acedido em: 24 de
-  Maio de 2026. [Online]. Available:
-  \url{https://docs.gitlab.com/user/application_security/dependency_scanning/legacy_dependency_scanning/}
-\BIBentrySTDinterwordspacing
-
 \bibitem{defectdojo}
 \BIBentryALTinterwordspacing
 {DefectDojo}, ``Defectdojo -- devsecops and vulnerability management
@@ -169,9 +141,9 @@ R.~Lerman and C.~Zakrzewski. (2021) The {Log4j} vulnerability has the internet
 
 \bibitem{coc}
 \BIBentryALTinterwordspacing
-S.~Square, ``Spring boot benefits: Convention over configuration,'' 2025,
-  acedido em: 14 de maio de 2026. [Online]. Available:
-  \url{https://www.youtube.com/watch?v=KRzVqIRaCtk}
+{Spring Framework Contributors}. (2026) Spring framework overview. Broadcom /
+  Spring. [Online]. Available:
+  \url{https://docs.spring.io/spring-framework/reference/overview.html}
 \BIBentrySTDinterwordspacing
 
 \end{thebibliography}

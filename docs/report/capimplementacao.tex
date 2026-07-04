@@ -1,6 +1,6 @@
 \chapter{Implementação} \label{cap:implementacao}
 
-Para facilitar a manutenção e implementação do sistema, bem como a sua compreesão,o \textbf{SecDash} encontra-se decomposto em camadas, seguindo um padrão de desenho \textit{multi-tier} ou \textit{layered}. \\
+Para facilitar a manutenção e implementação do sistema, bem como a sua compreensão,o \textbf{SecDash} encontra-se decomposto em camadas, seguindo um padrão de desenho \textit{multi-tier} ou \textit{layered}. \\
 
 A aplicação encontra-se dividida em três níveis, numa estrutura hierárquica, sendo estes a \textbf{camada de apresentação}, a \textbf{camada lógica} e a \textbf{camada de dados}. \\
 
@@ -12,7 +12,7 @@ A aplicação encontra-se dividida em três níveis, numa estrutura hierárquica
 	\item A \textbf{camada de dados} persiste os dados a serem armazenados permanentemente, estando esta implementada como uma base de dados PostgreSQL; 
 \end{itemize}
 
-Os detalhes e especifidades da implementação e desenvolvimeto de cada uma destas camadas serão explorados ao longo deste capítulo. \\
+Os detalhes e especifidades da implementação e desenvolvimento de cada uma destas camadas serão explorados ao longo deste capítulo. \\
 
 
 \section{Backend} \label{implementacao:backend}
@@ -41,7 +41,7 @@ A camada dos \textit{controllers} tem como principal objetivo receber pedidos HT
 	
 \end{itemize}
 
-Para manter o isolamento das camadas, nenhuma lógica de negócio ou processamento de dados é executado nesta camada. Esse tipo de tarefas é delegado para a camada dos serviços, que será detalhada na subseção seguinte. Não obstante, para efeitos de organização do código, optou-se por colocar alguns componentes necessários para uma utilização mais eficiente da \textit{framerwork} Spring e evitar repetição de código numa subpackage entitulada \textit{pipeline} na \textit{package} dos controllers. Estes componentes encontram-se explicitados na Tabela \ref{tab:pipeline_components}. \\
+Para manter o isolamento das camadas, nenhuma lógica de negócio ou processamento de dados é executado nesta camada. Esse tipo de tarefas é delegado para a camada dos serviços, que será detalhada na subseção seguinte. Não obstante, para efeitos de organização do código, optou-se por colocar alguns componentes necessários para uma utilização mais eficiente da \textit{framework} Spring e evitar repetição de código numa subpackage intitulada \textit{pipeline} na \textit{package} dos controllers. Estes componentes encontram-se explicitados na Tabela \ref{tab:pipeline_components}. \\
 
 \begin{table}[htbp] 
 	\centering
@@ -60,9 +60,9 @@ Para manter o isolamento das camadas, nenhuma lógica de negócio ou processamen
 \end{table}
 
 \subsection{Services}
-A camada dos serviços é onde se processa a lógica de negócio da aplicação. Esta camada está organizada de forma semelhante à camada de \textit{controllers} já descrita, com a separação em cinco serviços distintos. \\
+A camada dos serviços é onde se processa a lógica de negócio da aplicação. Esta camada está organizada de forma semelhante à camada de \textit{controllers} já descrita, com a separação em oito serviços distintos. Estes serviços correspondem a cada um dos controllers, com exceção da ausência de um serviço para as operações invocadas pelo \textit{Admin controller}. Neste caso, a lógica de negócio é delegada ao serviço apropriado de \textit{User}, \textit{Team} ou \textit{Repo}, consoante o âmbito da operação invocada. \\
 
-Um dos detalhes que vale a pena realçar é o uso que cada um dos serviços faz de uma classe que lhe é injetada com o nome de \textbf{transactionManager}. Trata-se de uma classe implementada com o nome \textbf{JdbiTransactionManager} e tem o propósito de gerir a execução de operações à base de dados dentro de transações na camada de serviços, utilizando a biblioteca JDBI, para que não seja esta camada a ter de liderar diretamente com a abertura, commit ou rollback de transações. \\
+Um dos detalhes que vale a pena realçar é o uso que cada um dos serviços faz de uma classe que lhe é injetada com o nome de \textbf{transactionManager}. Trata-se de uma classe implementada com o nome \textbf{JdbiTransactionManager} e tem o propósito de gerir a execução de operações à base de dados dentro de transações na camada de serviços, utilizando a biblioteca JDBI, para que não seja esta camada a ter de lidar diretamente com a abertura, commit ou rollback de transações. \\
 
 Tal é feito através do método \textit{inTransaction} da JDBI, que recebe um bloco de código e executa-a dentro de uma transação controlada por essa biblioteca. Se a execução do bloco for bem-sucedida a transação é confirmada automaticamente. Caso contrário, é feito o \textit{rollback} também automaticamente. \\
 
@@ -71,7 +71,7 @@ Nesta camada é onde se processa o acesso à base de dados e a APIs externas. \\
 
 A package \textbf{restclient} contém as classes \textbf{GitHubRestClient} e \textbf{GitLabRestClient} onde, através do RestClient nativo do Spring, fazemos as chamadas a estas APIs. A \textit{package} \textbf{repository} contém as classes onde é acedida a base de dados através de transações JDBI. \\
 
-Devido à hetereogeneidade dos dados, em muitas transações é necessário mapear o \textit{Result Set} obtido através do uso de \textit{Data Transfer Objects} (DTOs) por nós implementados. Estes encontram-se na \textit{pacakage} \textbf{model}, junto às respetivas classes de destino. \\
+Devido à hetereogeneidade dos dados, em muitas transações é necessário mapear o \textit{Result Set} obtido através do uso de \textit{Data Transfer Objects} (DTOs) por nós implementados. Estes encontram-se na \textit{package} \textbf{model}, junto às respetivas classes de destino. \\
 
 \subsection{Security Config}
 A classe \textbf{SecurityConfig} é responsável pela configuração global da segurança da aplicação através do \textbf{Spring Security}. É através desta classe que são definidos como os pedidos HTTP são autenticados, que endpoints são de acesso público ou protegidos e a integração de mecanismos de autenticação. \\
@@ -84,7 +84,7 @@ Os métodos anotados com \textbf{@Bean} são registados no contexto do Spring co
 \section{Frontend} \label{implementacao:frontend}
 A arquitetura do cliente web foi desenvolvida recorrendo à biblioteca \textbf{React}, com um foco na modularidade e reatividade da interface de utilizador. \\
 
-O cliente segue uma estrutura \textit{Single Page Application} (SPA) onde inicialmente é carregada uma única página base cujo conteúdo é atualizado dinamicamente em resposta às ações do utilizador. É assim garantida uma experiência de utilização fluida e desacoplada, com o browser do navegador a comunicar de forma assíncrona com a API do \textit{backend} através de pedidos HTTP. \\
+O cliente segue uma estrutura \textit{Single Page Application} (SPA) onde inicialmente é carregada uma única página base cujo conteúdo é atualizado dinamicamente em resposta às ações do utilizador. É assim garantida uma experiência de utilização fluida e desacoplada, com o browser a comunicar de forma assíncrona com a API do \textit{backend} através de pedidos HTTP. \\
 
 As subsecções seguintes abordam alguns elementos do cliente Web que julgamos merecerem algum em destaque. \\
 
@@ -96,7 +96,7 @@ O componente \textbf{RequireAuthentication} tem como responsabilidade intercetar
 
 O \textbf{ThemeProvider} é o componente responsável por gerir e persistir o esquema de cores da aplicação, contanto com dois temas: escuro e claro. \\
 
-É garantida uma experiência visual consistente ao longo de toda a \textit{Single Page Application}. Para evitar o efeito visual desagradável de possivelmente carregar inicialmente o tema claro e só depois ser carregado o escuro que um utilizador tenha ativado ao mudar de página, o estado inicial do tema é determinado através de uma função de iniciação \textit{lazy} no \textbf{useState}, que verifica qual o tema selecionado pelo utilizador, armazenado no \textit{localStorage}. \\
+É garantida uma experiência visual consistente ao longo de toda a \textit{Single Page Application}. Para evitar o efeito visual desagradável de possivelmente carregar inicialmente o tema claro e só depois ser carregado o escuro que um utilizador tenha ativado ao mudar de página, o estado inicial do tema é determinado através de uma função de inicialização \textit{lazy} no \textbf{useState}, que verifica qual o tema selecionado pelo utilizador, armazenado no \textit{localStorage}. \\
 
 O tema atual é disponibilizado a todo o frontend através do \textbf{ThemeContext}. \\
 
@@ -108,12 +108,13 @@ A lógica de implementação desta funcionalidade está centrada no componente \
 
 \subsection{\textit{Dashboard}}
 
-A principal característica do \textbf{SecDash}, para além da agregação dos relatórios de segurança oriundos de repositórios de código externos, é exibição de gráficos no \textit{frontend} que proporcionam uma visão rápida do estado de segurança de cada repositório individual ou conjunto de repositórios de uma equipa. Cada uma destas duas vistas apresenta dois tipos de gráficos para relatórios de \textit{Dependabot} e alertas SAST, para um total de quatro gráficos disponíveis em cada página. Para além destes gráficos, o cliente web disponibiliza também as vistas padrão para este tipo de frontend, com vistas onde são listadas todas as vulnerabilidades de um repositório ou os membros de cada equipa, entre outros.
+A principal característica do \textbf{SecDash}, para além da agregação dos relatórios de segurança oriundos de repositórios de código externos, é a exibição de gráficos no \textit{frontend} que proporcionam uma visão rápida do estado de segurança de cada repositório individual ou conjunto de repositórios de uma equipa. Cada uma destas duas vistas apresenta dois tipos de gráficos para relatórios de \textit{Dependabot} e alertas SAST, para um total de quatro gráficos disponíveis em cada página. Para além destes gráficos, o cliente web disponibiliza também as vistas padrão para este tipo de frontend, com vistas onde são listadas todas as vulnerabilidades de um repositório ou os membros de cada equipa, entre outros.
 
 
 	\subsubsection{Estado de segurança atual}
-	Na aba de "Visão geral" o \textit{dashboard} apresenta gráficos circulares onde é possível verificar a distribuição de vulnerabilidades de dependências e de alertas SAST por vulnerabilidade, codificada por cores: Crítico em vermelho, Alto em laranja, Médio em amarelo e Baixo em verde).
-	Neste painel é também exibida a contagem de vulnerabilidades em aberto, resolvidas e ignoradas.
+	Na aba de "Visão geral" o \textit{dashboard} apresenta gráficos circulares onde é possível verificar a distribuição de vulnerabilidades de dependências e de alertas SAST por vulnerabilidade, codificada por cores: Crítico em vermelho, Alto em laranja, Médio em amarelo e Baixo em verde). \\
+	
+	Neste painel, ilustrado na figura exibida abaixo, é também exibida a contagem de vulnerabilidades em aberto, resolvidas e ignoradas.
 	Ao clicar num dos setores do gráfico o utilizador navega para a página onde estas vulnerabilidades são listadas, automaticamente filtrada para exibir apenas as vulnerabilidades com a severidade correspondente ao setor onde o utilizador clicou. \\
 	
 	\begin{figure}[h]
@@ -123,17 +124,20 @@ A principal característica do \textbf{SecDash}, para além da agregação dos r
 	\end{figure} 
 
 	\subsubsection{Evolução do estado de segurança:}
-	Ao alternar para a aba "Histórico" o utilizador pode consultar a evolução do número de vulnerabilidades na equipa ou repositório ao longo do tempo, representada visualmente através de um gráfico de linhas. \\
-	Ao clicar nas severidades as linhas correspondentes são ocultadas ou exibidas dinâmicamente. \\
+	Ao alternar para a aba "Histórico" o utilizador pode consultar a evolução do número de vulnerabilidades na equipa ou repositório ao longo do tempo, representada visualmente através de um gráfico de linhas. Deste modo, é possível obter de relance as vulnerabilidades que têm vindo a ser descobertas e corrigidas num repositório ou conjunto de repositórios ao longo do tempo. \\
+	
+	Este gráfico de linhas encontra-se ilustrado na Figura 4.2, exibida abaixo. Ao clicar nas severidades as linhas correspondentes são ocultadas ou exibidas dinâmicamente. \\
 	
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.95\linewidth]{./figures/linechart.png}
-		\caption{Vulnerabilidades ao longo do tempo}
+		\caption{Gráfico de linhas com vulnerabilidades ao longo do tempo de um repositório}
 	\end{figure}
 	
 	\subsubsection {Painéis de ordenação de risco:}
-	Na vista de equipas, por baixo dos cartões com os gráficos, o dashboard exibe outros dois cartões onde são listados, por ordem decrescente, os repositórios com maior número de vulnerabilidades de dependências e alertas SAST. Desta forma é possível verificar rapidamente quais os repositórios mais críticos entre cada equipa e navegar rapidamente para estes. \\
+	Na vista de equipas, por baixo dos cartões com os gráficos, o dashboard exibe outros dois cartões onde são listados, por ordem decrescente, os repositórios com maior número de vulnerabilidades de dependências e alertas SAST. Desta forma é possível verificar rapidamente quais os repositórios mais críticos entre cada equipa e navegar rapidamente para estes. A ordenação é ponderada, com uma vulnerabilidade mais severa a ter um peso maior que uma vulnerabilidade menos crítica. \\
+	
+	Na Figura 4.3, exibida abaixo, é possível ver um exemplo deste painel. Ao clicar no nome de um dos repostórios da lista, o utilizador navega para a página correspondente a este. \\
 	
 		\begin{figure}[h]
 		\centering

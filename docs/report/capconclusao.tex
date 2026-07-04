@@ -1,13 +1,13 @@
 \chapter{Conclusão} \label{cap:conclusao}
 
-O desenvolvimento do \textbf{SecDash} foi um desafio recompensante que nos permitiu colocar em prática grande parte dos conhecimentos adquiridos ao longo da licenciatura. O seu desenvolvimento foi em si um processo de aprendizagem, colocando-nos em contacto com conceitos com os quais não estávamos tão familiarizados antes, ou com os quais não tinhamos mesmo tido qualquer contacto. \\
+O desenvolvimento do \textbf{SecDash} foi um desafio recompensante que nos permitiu colocar em prática grande parte dos conhecimentos adquiridos ao longo da licenciatura. O seu desenvolvimento foi em si um processo de aprendizagem, colocando-nos em contacto com conceitos com os quais não estávamos tão familiarizados antes, ou com os quais não tínhamos mesmo tido qualquer contacto. \\
 
 \section{Reflexão sobre o desenvolvimento}
 
-Um dos aspetos mais positivos do projeto foi a escolha da \textit{stack} adotada. A escolha de React, Spring Boot e PostgreSQL, pela suas funcionalidades bem como pela nossa experiência com estas, facilitou o desenvolvimento do projeto, garantindo um bom ritmo de trabalho sem bloqueios significativos ao longo da implementação. Não obstante, deparámo-nos com alguns desafios, de entre os quais:
+Um dos aspetos mais positivos do projeto foi a escolha da \textit{stack} adotada. A escolha de React, Spring Boot e PostgreSQL, pelas suas funcionalidades bem como pela nossa experiência com estas, facilitou o desenvolvimento do projeto, garantindo um bom ritmo de trabalho sem bloqueios significativos ao longo da implementação. Não obstante, deparámo-nos com alguns desafios, de entre os quais:
 
 \begin{itemize}
-	\item \textbf{Desenho e Evolução do Modelo de Dados:} Uma das maiores dificuldades sentidas prendeu-se pelo desenho inicial do modelo da base de dados. Algumas funcionalidades, tal como a necessidade de armazenar o histórico de vulnerabilidades ao longo do tempo, não foram devidamente ponderada durante a fase de planeamento inicial do projeto. Isto resultou na refatoração do modelo de dados por várias vezes, tendo como consequência uma considerável perda de tempo que talvez podesse ter sido evitada caso o modelo de dados tivesse sido planeado de forma mais refletida desde o início.
+	\item \textbf{Desenho e Evolução do Modelo de Dados:} Uma das maiores dificuldades sentidas prendeu-se pelo desenho inicial do modelo da base de dados. Algumas funcionalidades, tal como a necessidade de armazenar o histórico de vulnerabilidades ao longo do tempo, não foram devidamente ponderadas durante a fase de planeamento inicial do projeto. Isto resultou na refatoração do modelo de dados por várias vezes, tendo como consequência uma considerável perda de tempo que talvez pudesse ter sido evitada caso o modelo de dados tivesse sido planeado de forma mais refletida desde o início.
 	
 	\item \textbf{Gestão de Autenticação e Segurança:} Para a gestão de sessões, optou-se por desenhar um sistema próprio de validação e gestão de \textit{tokens}. Em retrospetiva, esta decisão introduziu uma complexidade desnecessária que talvez pudesse ter sido evitada ao explorar em maior profundidade o ecossistema do \textbf{Spring Security} e delegando-lhe toda a gestão de autenticação.
 

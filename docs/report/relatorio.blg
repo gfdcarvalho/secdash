@@ -5,7 +5,6 @@ A level-1 auxiliary file: introducao.aux
 A level-1 auxiliary file: capenquadramento.aux
 A level-1 auxiliary file: caparquitetura.aux
 A level-1 auxiliary file: capimplementacao.aux
-A level-1 auxiliary file: capdeployment.aux
 A level-1 auxiliary file: capdificuldades.aux
 A level-1 auxiliary file: capconclusao.aux
 The style file: IEEEtran.bst
@@ -21,44 +20,44 @@ Database file #1: referencias.bib
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
 
 Done.
-You've used 21 entries,
+You've used 17 entries,
             4087 wiz_defined-function locations,
-            942 strings with 11464 characters,
-and the built_in function-call counts, 9086 in all, are:
-= -- 791
-> -- 110
+            927 strings with 10740 characters,
+and the built_in function-call counts, 7478 in all, are:
+= -- 649
+> -- 94
 < -- 9
-+ -- 56
-- -- 25
-* -- 314
-:= -- 1738
-add.period$ -- 58
-call.type$ -- 21
-change.case$ -- 37
++ -- 48
+- -- 21
+* -- 264
+:= -- 1428
+add.period$ -- 47
+call.type$ -- 17
+change.case$ -- 28
 chr.to.int$ -- 24
-cite$ -- 21
-duplicate$ -- 677
-empty$ -- 790
-format.name$ -- 27
-if$ -- 1981
+cite$ -- 17
+duplicate$ -- 552
+empty$ -- 648
+format.name$ -- 23
+if$ -- 1629
 int.to.chr$ -- 0
-int.to.str$ -- 21
-missing$ -- 171
-newline$ -- 128
-num.names$ -- 21
-pop$ -- 463
+int.to.str$ -- 17
+missing$ -- 138
+newline$ -- 108
+num.names$ -- 17
+pop$ -- 373
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 718
+skip$ -- 589
 stack$ -- 0
-substring$ -- 93
-swap$ -- 458
+substring$ -- 82
+swap$ -- 378
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 21
+type$ -- 17
 warning$ -- 0
-while$ -- 25
-width$ -- 23
-write$ -- 256
+while$ -- 21
+width$ -- 19
+write$ -- 212
