@@ -11,7 +11,7 @@ interface PasswordInputProps {
 export function PasswordInput({ className, value, onChange, error }: PasswordInputProps) {
     const { t } = useTranslation()
     return (
-        <div>
+        <div className={style.inputWrapper}>
             <input
                 className={className}
                 type="password"
@@ -19,7 +19,7 @@ export function PasswordInput({ className, value, onChange, error }: PasswordInp
                 value={value}
                 onChange={e => onChange(e.target.value)}
             />
-            {error && <p className={style.error}>{error}</p>}
+            <p className={style.error}>{error}</p>
         </div>
     )
 }

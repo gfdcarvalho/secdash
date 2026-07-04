@@ -76,6 +76,16 @@ class GithubRestClient {
         return repo?.toExternalGithubRepository()
     }
 
+    // Fetches a public repository without a user access token. GitHub's GET /repos/{owner}/{repo}
+    fun getRepositoryByPath(path: String): ExternalRepository? {
+        val repo = restClient.get()
+            .uri("https://api.github.com/repos/$path")
+            .header("Accept", "application/vnd.github+json")
+            .retrieve()
+            .body<GithubRepositoryDto>()
+        return repo?.toExternalGithubRepository()
+    }
+
     fun getDependabot(
         fullName: String,
         accessToken: String,

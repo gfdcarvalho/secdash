@@ -25,6 +25,8 @@ export const pt = {
         errors: {
             blankUsername: "utilizador é obrigatório",
             blankPassword: "password é obrigatória",
+            invalidCredentials: "Utilizador ou password inválidos",
+            unexpected: "Ocorreu um erro. Por favor tenta novamente",
         }
     },
     register: {
@@ -33,6 +35,12 @@ export const pt = {
             blankUsername: "utilizador é obrigatório",
             blankPassword: "password é obrigatória",
             blankEmail: "email é obrigatório",
+            userAlreadyExists: "Já existe um utilizador com este nome",
+            invalidUsername: "Utilizador inválido",
+            invalidEmail: "Email inválido",
+            invalidPassword: "Password inválida",
+            invalidCredentials: "Utilizador ou password inválidos",
+            unexpected: "Ocorreu um erro. Por favor tenta novamente",
         }
     },
     teams: {

@@ -135,7 +135,7 @@ class GitlabController(
         user: AuthenticatedUser,
         @RequestParam link: String,
     ): ResponseEntity<*> {
-        val result = gitlabServices.getRepoByLink(link, user.user.uid)
+        val result = gitlabServices.getRepoByLink(link)
         return when (result) {
             is Success -> ResponseEntity.status(200).body(result.value)
             is Failure ->

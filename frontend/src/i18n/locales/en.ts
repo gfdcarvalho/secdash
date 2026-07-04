@@ -25,6 +25,8 @@ export const en = {
         errors: {
             blankUsername: "username is Required",
             blankPassword: "password is Required",
+            invalidCredentials: "Invalid username or password",
+            unexpected: "Something went wrong. Please try again",
         }
     },
     register: {
@@ -33,6 +35,12 @@ export const en = {
             blankUsername: "username is required",
             blankPassword: "password is required",
             blankEmail: "email is required",
+            userAlreadyExists: "A user with this username already exists",
+            invalidUsername: "Username is invalid",
+            invalidEmail: "Email is invalid",
+            invalidPassword: "Password is invalid",
+            invalidCredentials: "Username or password is invalid",
+            unexpected: "Something went wrong. Please try again",
         }
     },
     teams: {

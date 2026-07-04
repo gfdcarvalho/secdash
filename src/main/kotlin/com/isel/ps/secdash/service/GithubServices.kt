@@ -148,14 +148,10 @@ class GithubServices(
 
     fun getRepoByLink(
         link: String,
-        uid: Int,
     ): GetRepoByLinkResult {
-        val accessToken: String = transactionManager.run {
-            it.usersRepository.getAccessToken(uid, AuthProvider.GITHUB)
-        } ?: return failure(GetRepoByLinkError.Unauthorized)
         val fullName = link.trimEnd('/').removeSuffix(".git").substringAfter("github.com/")
         return try {
-            val repo = githubClient.getRepositoryByName(fullName, accessToken)
+            val repo = githubClient.getRepositoryByPath(fullName)
                 ?: return failure(GetRepoByLinkError.RepositoryNotFound)
             success(repo)
         } catch (e: HttpClientErrorException) {

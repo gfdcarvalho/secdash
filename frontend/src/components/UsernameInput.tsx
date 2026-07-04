@@ -11,7 +11,7 @@ interface UsernameInputProps {
 export function UsernameInput({ className, value, onChange, error }: UsernameInputProps) {
     const { t } = useTranslation()
     return (
-        <div>
+        <div className={style.inputWrapper}>
             <input
                 className={className}
                 type="text"
@@ -19,7 +19,7 @@ export function UsernameInput({ className, value, onChange, error }: UsernameInp
                 value={value}
                 onChange={e => onChange(e.target.value)}
             />
-            {error && <p className={style.error}>{error}</p>}
+            <p className={style.error}>{error}</p>
         </div>
     )
 }
