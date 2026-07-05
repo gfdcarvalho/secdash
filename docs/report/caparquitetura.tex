@@ -218,16 +218,17 @@ de navegação lateral. \\
 A Figura \ref{fig:arvore-componentes} apresenta, de forma simplificada, a
 organização hierárquica dos principais componentes da aplicação.
 
-\begin{figure}[h]
-	\centering
+\begin{center}
 	\begin{forest}
 		for tree={
-			font=\ttfamily\small,
+			font=\ttfamily\footnotesize,
 			grow'=0,
 			child anchor=west,
 			parent anchor=south,
 			anchor=west,
 			calign=first,
+			inner ysep=1pt,
+			s sep=1pt,
 			edge path={
 				\noexpand\path [draw, \forestoption{edge}]
 				(!u.south west) +(7.5pt,0) |- (.child anchor)\forestoption{edge label};
@@ -238,7 +239,7 @@ organização hierárquica dos principais componentes da aplicação.
 				{}
 			},
 			fit=band,
-			before computing xy={l=15pt},
+			before computing xy={l=10pt},
 		}
 		[App
 		[ThemeProvider]
@@ -277,11 +278,13 @@ organização hierárquica dos principais componentes da aplicação.
 		]
 		]
 	\end{forest}
-	\caption{Árvore de componentes simplificada do \textit{frontend}, ilustrando
-		a hierarquia entre \textit{providers}, o \textit{layout} comum, as
+
+	\vspace{1ex}
+	\refstepcounter{figure}\label{fig:arvore-componentes}
+	{\small Figura \thefigure: Árvore de componentes simplificada do \textit{frontend},
+		ilustrando a hierarquia entre \textit{providers}, o \textit{layout} comum, as
 		\textit{views} de cada rota e os componentes reutilizáveis.}
-	\label{fig:arvore-componentes}
-\end{figure}
+\end{center}
 
 \section{Modelo de dados} \label{implementacao:modelo}
 A elaboração de um modelo Entidade-Associação é indispensável para a estruturação lógica do projeto. Com efeito, é a existência de um modelo entidade-associação que permite estruturar de forma concreta as entidades do domínio da aplicação e as suas relações entre si. \\
