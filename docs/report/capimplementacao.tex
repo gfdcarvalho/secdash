@@ -80,11 +80,20 @@ A anotação \textbf{@EnableWebSecurity} ativa o suporte ao \textbf{Spring Secur
 
 Os métodos anotados com \textbf{@Bean} são registados no contexto do Spring como beans por ele geridos, permitindo assim que componentes como o \textbf{SecurityFilterChain} e o \textbf{AuthenticationSuccessHandler} sejam instanciados e geridos automaticamente pela framework e injetados onde necessário. Sem esse registo no \textit{startup} da aplicação não seria possível integrar a lógica de autenticação por nós desenvolvida com recurso ao \textbf{BearerTokenAuthFilter} e ao \textbf{OAuthRedirectFilter} anteriormente discutidos no presente capítulo. \\
 
+\subsection{Normalização dos dados provenientes das APIs externas}
+Devido à forma distinta como as APIs do GitHub e GitLab organizam e disponibilizam as informações pertinentes ao âmbito do \textbf{SecDash} foi necessário tomar alguns cuidados para os normalizar de forma a serem agregados no domínio único da aplicação. \\
+
+O primeiro passo deste processo passou por comparar as informações retornadas por cada uma das APIs e selecionar as informações relevantes para o propósito do projeto. Verificou-se que, apesar de ambas as APIs dizerem respeito a áreas semelhantes, estas não respondiam com as mesmas informações. Para resolver este problema, em primeiro lugar procedeu-se à identificação dos campos equivalentes de cada uma das APIs de cada plataforma. \\
+
+Após isso foram criados \textit{Data Transfer Objects} específicos para cada um dos recursos com anotações para identificar corretamente os campos equivalentes. Estes DTOs são então mapeados para as classes do domínio do \textbf{SecDash}. \\
+
+Este processo teve de ser repetido para todos os recursos obtids das APIs externas, nomeadamente repositórios, vulnerabilidades, alertas SAST e utilizadores das plataformas externas. \\
+
 % FALTAM PRINTS
 \section{Frontend} \label{implementacao:frontend}
 A arquitetura do cliente web foi desenvolvida recorrendo à biblioteca \textbf{React}, com um foco na modularidade e reatividade da interface de utilizador. \\
 
-O cliente segue uma estrutura \textit{Single Page Application} (SPA) onde inicialmente é carregada uma única página base cujo conteúdo é atualizado dinamicamente em resposta às ações do utilizador. É assim garantida uma experiência de utilização fluida e desacoplada, com o browser a comunicar de forma assíncrona com a API do \textit{backend} através de pedidos HTTP. \\
+O cliente segue uma estrutura \textit{Single Page Application} (SPA) onde inicialmente é carregada uma única página base cujo conteúdo é atualizado dinamicamente em resposta às ações do utilizador. É assim garantida uma experiência de utilização fluida e desacoplada, com o browser a comunicar de forma assíncrona com a API do \textit{backend} através de pedidos HTTP realizados através da função \textit{fetch}. Quando é necessário a gestão de estado na navegação entre páginas, esta é feita através do recurso ao parâmetro do \textit{State} do \textit{useNavigate} do React. \\
 
 As subsecções seguintes abordam alguns elementos do cliente Web que julgamos merecerem algum em destaque. \\
 
@@ -108,11 +117,14 @@ A lógica de implementação desta funcionalidade está centrada no componente \
 
 \subsection{\textit{Dashboard}}
 
-A principal característica do \textbf{SecDash}, para além da agregação dos relatórios de segurança oriundos de repositórios de código externos, é a exibição de gráficos no \textit{frontend} que proporcionam uma visão rápida do estado de segurança de cada repositório individual ou conjunto de repositórios de uma equipa. Cada uma destas duas vistas apresenta dois tipos de gráficos para relatórios de \textit{Dependabot} e alertas SAST, para um total de quatro gráficos disponíveis em cada página. Para além destes gráficos, o cliente web disponibiliza também as vistas padrão para este tipo de frontend, com vistas onde são listadas todas as vulnerabilidades de um repositório ou os membros de cada equipa, entre outros.
+A principal característica do \textbf{SecDash}, para além da agregação dos relatórios de segurança oriundos de repositórios de código externos, é a exibição de gráficos no \textit{frontend} que proporcionam uma visão rápida do estado de segurança de cada repositório individual ou conjunto de repositórios de uma equipa. Este gráficos são gerados com recurso à biblioteca \textbf{\textit{Recharts}} \cite{Recharts}. Cada uma destas duas vistas apresenta dois tipos de gráficos para relatórios de \textit{Dependabot} e alertas SAST, para um total de quatro gráficos disponíveis em cada página. \\
+
+Para além destes gráficos, o cliente web disponibiliza também as vistas padrão para este tipo de frontend, com vistas onde são listadas todas as vulnerabilidades de um repositório ou os membros de cada equipa, entre outros. \\
+
 
 
 	\subsubsection{Estado de segurança atual}
-	Na aba de "Visão geral" o \textit{dashboard} apresenta gráficos circulares onde é possível verificar a distribuição de vulnerabilidades de dependências e de alertas SAST por vulnerabilidade, codificada por cores: Crítico em vermelho, Alto em laranja, Médio em amarelo e Baixo em verde). \\
+	Na aba de "Visão geral" o \textit{dashboard} apresenta gráficos circulares onde é possível verificar a distribuição de vulnerabilidades de dependências e de alertas SAST por vulnerabilidade, codificada por cores: Crítico em vermelho, Alto em laranja, Médio em amarelo e Baixo em verde). Este agrupamento por severidades é realizado pelo \textit{backend}. \\
 	
 	Neste painel, ilustrado na figura exibida abaixo, é também exibida a contagem de vulnerabilidades em aberto, resolvidas e ignoradas.
 	Ao clicar num dos setores do gráfico o utilizador navega para a página onde estas vulnerabilidades são listadas, automaticamente filtrada para exibir apenas as vulnerabilidades com a severidade correspondente ao setor onde o utilizador clicou. \\

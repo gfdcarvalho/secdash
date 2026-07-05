@@ -25,32 +25,34 @@
 \contentsline {section}{\numberline {3.5}Tecnologias e linguagens}{14}{}%
 \contentsline {subsection}{\numberline {3.5.1}Backend}{14}{}%
 \contentsline {subsubsection}{Kotlin}{14}{}%
-\contentsline {subsubsection}{Spring Boot}{14}{}%
+\contentsline {subsubsection}{Spring Boot}{15}{}%
 \contentsline {subsubsection}{JDBI}{15}{}%
 \contentsline {subsubsection}{PostgreSQL}{16}{}%
 \contentsline {subsubsection}{OAuth 2.0}{16}{}%
-\contentsline {subsection}{\numberline {3.5.2}Frontend}{16}{}%
-\contentsline {subsubsection}{Typescript}{16}{}%
+\contentsline {subsection}{\numberline {3.5.2}Frontend}{17}{}%
+\contentsline {subsubsection}{Typescript}{17}{}%
 \contentsline {subsubsection}{React}{17}{}%
 \contentsline {subsubsection}{Vite}{17}{}%
-\contentsline {section}{\numberline {3.6}Modelo de dados}{17}{}%
-\contentsline {chapter}{\numberline {4}Implementação}{21}{}%
-\contentsline {section}{\numberline {4.1}Backend}{21}{}%
-\contentsline {subsection}{\numberline {4.1.1}Controllers}{22}{}%
-\contentsline {subsection}{\numberline {4.1.2}Services}{23}{}%
-\contentsline {subsection}{\numberline {4.1.3}Repositories e REST Clients}{24}{}%
-\contentsline {subsection}{\numberline {4.1.4}Security Config}{24}{}%
-\contentsline {section}{\numberline {4.2}Frontend}{24}{}%
-\contentsline {subsubsection}{RequireAuthentication}{25}{}%
-\contentsline {subsubsection}{ThemeProvider}{25}{}%
-\contentsline {subsection}{\numberline {4.2.1}\textit {Internationalization} (i18n)}{25}{}%
-\contentsline {subsection}{\numberline {4.2.2}\textit {Dashboard}}{26}{}%
-\contentsline {subsubsection}{Estado de segurança atual}{26}{}%
-\contentsline {subsubsection}{Evolução do estado de segurança:}{26}{}%
-\contentsline {subsubsection}{Painéis de ordenação de risco:}{27}{}%
-\contentsline {chapter}{\numberline {5}Conclusão}{29}{}%
-\contentsline {section}{\numberline {5.1}Reflexão sobre o desenvolvimento}{29}{}%
-\contentsline {section}{\numberline {5.2}Trabalho Futuro}{30}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{32}{}%
-\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{33}{}%
-\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{37}{}%
+\contentsline {subsubsection}{Organização dos componentes}{17}{}%
+\contentsline {section}{\numberline {3.6}Modelo de dados}{18}{}%
+\contentsline {chapter}{\numberline {4}Implementação}{23}{}%
+\contentsline {section}{\numberline {4.1}Backend}{23}{}%
+\contentsline {subsection}{\numberline {4.1.1}Controllers}{24}{}%
+\contentsline {subsection}{\numberline {4.1.2}Services}{25}{}%
+\contentsline {subsection}{\numberline {4.1.3}Repositories e REST Clients}{26}{}%
+\contentsline {subsection}{\numberline {4.1.4}Security Config}{26}{}%
+\contentsline {subsection}{\numberline {4.1.5}Normalização dos dados provenientes das APIs externas}{26}{}%
+\contentsline {section}{\numberline {4.2}Frontend}{27}{}%
+\contentsline {subsubsection}{RequireAuthentication}{27}{}%
+\contentsline {subsubsection}{ThemeProvider}{28}{}%
+\contentsline {subsection}{\numberline {4.2.1}\textit {Internationalization} (i18n)}{28}{}%
+\contentsline {subsection}{\numberline {4.2.2}\textit {Dashboard}}{28}{}%
+\contentsline {subsubsection}{Estado de segurança atual}{28}{}%
+\contentsline {subsubsection}{Evolução do estado de segurança:}{29}{}%
+\contentsline {subsubsection}{Painéis de ordenação de risco:}{29}{}%
+\contentsline {chapter}{\numberline {5}Conclusão}{31}{}%
+\contentsline {section}{\numberline {5.1}Reflexão sobre o desenvolvimento}{31}{}%
+\contentsline {section}{\numberline {5.2}Trabalho Futuro}{32}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{34}{}%
+\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{35}{}%
+\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{39}{}%

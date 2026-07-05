@@ -47,6 +47,8 @@ Deverão ser suportados os seguintes papéis:
 	\item \textbf{USER}: Utilizador comum da aplicação.
 \end{itemize}
 
+Para além destes roles, geridos pelo Spring Security, dentro de cada equipa um utilizador irá ter também um de dois papéis: \textbf{Leader} ou \textbf{Collaborator}. No entanto, este controlo é feito apenas ao nível dos serviços. \\
+
 \subsection{Agregação de vulnerabilidades}
 
 Uma das funcionalidades mais importantes do SecDash deverá ser a capacidade de recolher e consolidar vulnerabilidades provenientes das análises feitas pelo GitHub Dependabot, GitLab Dependency Scanning e relatórios SAST de ambas as plataformas.\\
@@ -196,6 +198,90 @@ Os fatores que motivaram esta escolha foram os seguintes:
 
 \subsubsection{Vite}
 Como \textit{module bundler} optou-se pela utilização de \textbf{Vite} em alternativa a Webpack, por ser o standard \textit{de facto} para projetos em React. O Vite utiliza \textit{ES Modules} nativos do browser ao correr o servidor de desenvolvimento em vez de fazer bundle de todo o código, tornando o seu arranque e \textit{hot reloading} mais rápido. \\
+
+\subsubsection{Organização dos componentes}
+Sendo o \textit{frontend} construído com React, toda a interface é composta
+por \textbf{componentes} organizados de forma hierárquica, formando aquilo a
+que se chama uma \textbf{árvore de componentes}. Nesta árvore, cada componente
+pode conter (renderizar) outros componentes, existindo um componente raiz
+(\texttt{App}) a partir do qual toda a interface é derivada. \\
+
+A aplicação encontra-se estruturada em três grandes grupos: os
+\textbf{\textit{providers}}, que envolvem toda a aplicação e disponibilizam
+estado global (tema visual, autenticação, traduções e navegação); as
+\textbf{\textit{views}}, correspondentes às páginas associadas a cada rota; e os
+\textbf{componentes reutilizáveis}, peças de menor dimensão partilhadas por
+várias \textit{views}. Todas as páginas autenticadas são renderizadas dentro
+de um componente \texttt{Layout} comum, que fornece a barra de topo e o menu
+de navegação lateral. \\
+
+A Figura \ref{fig:arvore-componentes} apresenta, de forma simplificada, a
+organização hierárquica dos principais componentes da aplicação.
+
+\begin{figure}[h]
+	\centering
+	\begin{forest}
+		for tree={
+			font=\ttfamily\small,
+			grow'=0,
+			child anchor=west,
+			parent anchor=south,
+			anchor=west,
+			calign=first,
+			edge path={
+				\noexpand\path [draw, \forestoption{edge}]
+				(!u.south west) +(7.5pt,0) |- (.child anchor)\forestoption{edge label};
+			},
+			before typesetting nodes={
+				if n=1
+				{insert before={[,phantom]}}
+				{}
+			},
+			fit=band,
+			before computing xy={l=15pt},
+		}
+		[App
+		[ThemeProvider]
+		[AuthenticationProvider]
+		[RouterProvider
+		[Login
+		[UsernameInput]
+		[PasswordInput]
+		[EmailInput]
+		[ProviderLoginButtons]
+		]
+		[Layout \textnormal{(páginas autenticadas)}
+		[Home]
+		[Profile]
+		[Repos
+		[AddFromGithubModal]
+		[AddFromGitlabModal]
+		]
+		[RepoDetails
+		[RepoStatsSection]
+		]
+		[RepoVulnerabilities]
+		[RepoSast]
+		[Teams]
+		[TeamDetails
+		[AddRepoModal]
+		[AddMemberModal]
+		[TeamStatsSection]
+		[TopProblemRepos]
+		]
+		[TeamVulnerabilities]
+		[TeamSast]
+		[Admin]
+		[\ldots]
+		]
+		]
+		]
+	\end{forest}
+	\caption{Árvore de componentes simplificada do \textit{frontend}, ilustrando
+		a hierarquia entre \textit{providers}, o \textit{layout} comum, as
+		\textit{views} de cada rota e os componentes reutilizáveis.}
+	\label{fig:arvore-componentes}
+\end{figure}
 
 \section{Modelo de dados} \label{implementacao:modelo}
 A elaboração de um modelo Entidade-Associação é indispensável para a estruturação lógica do projeto. Com efeito, é a existência de um modelo entidade-associação que permite estruturar de forma concreta as entidades do domínio da aplicação e as suas relações entre si. \\

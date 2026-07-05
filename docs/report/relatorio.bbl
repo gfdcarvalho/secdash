@@ -146,4 +146,11 @@ R.~Lerman and C.~Zakrzewski. (2021) The {Log4j} vulnerability has the internet
   \url{https://docs.spring.io/spring-framework/reference/overview.html}
 \BIBentrySTDinterwordspacing
 
+\bibitem{Recharts}
+\BIBentryALTinterwordspacing
+{Recharts Group}, ``Recharts: A composable charting library built on react
+  components,'' 2026, acedido a: 5 de julho de 2026. [Online]. Available:
+  \url{https://recharts.github.io/}
+\BIBentrySTDinterwordspacing
+
 \end{thebibliography}
