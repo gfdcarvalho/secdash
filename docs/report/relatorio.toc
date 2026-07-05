@@ -42,17 +42,18 @@
 \contentsline {subsection}{\numberline {4.1.3}Repositories e REST Clients}{24}{}%
 \contentsline {subsection}{\numberline {4.1.4}Security Config}{24}{}%
 \contentsline {subsection}{\numberline {4.1.5}Normalização dos dados provenientes das APIs externas}{24}{}%
-\contentsline {section}{\numberline {4.2}Frontend}{25}{}%
-\contentsline {subsubsection}{RequireAuthentication}{25}{}%
+\contentsline {subsection}{\numberline {4.1.6}Pedido e \textit {scheduling} de \textit {scans}}{25}{}%
+\contentsline {section}{\numberline {4.2}Frontend}{26}{}%
+\contentsline {subsubsection}{RequireAuthentication}{26}{}%
 \contentsline {subsubsection}{ThemeProvider}{26}{}%
-\contentsline {subsection}{\numberline {4.2.1}\textit {Internationalization} (i18n)}{26}{}%
-\contentsline {subsection}{\numberline {4.2.2}\textit {Dashboard}}{26}{}%
-\contentsline {subsubsection}{Estado de segurança atual}{26}{}%
+\contentsline {subsection}{\numberline {4.2.1}\textit {Internationalization} (i18n)}{27}{}%
+\contentsline {subsection}{\numberline {4.2.2}\textit {Dashboard}}{27}{}%
+\contentsline {subsubsection}{Estado de segurança atual}{27}{}%
 \contentsline {subsubsection}{Evolução do estado de segurança:}{27}{}%
-\contentsline {subsubsection}{Painéis de ordenação de risco:}{27}{}%
-\contentsline {chapter}{\numberline {5}Conclusão}{29}{}%
-\contentsline {section}{\numberline {5.1}Reflexão sobre o desenvolvimento}{29}{}%
-\contentsline {section}{\numberline {5.2}Trabalho Futuro}{30}{}%
-\contentsline {chapter}{Refer\^{e}ncias}{32}{}%
-\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{33}{}%
-\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{37}{}%
+\contentsline {subsubsection}{Painéis de ordenação de risco:}{28}{}%
+\contentsline {chapter}{\numberline {5}Conclusão}{31}{}%
+\contentsline {section}{\numberline {5.1}Reflexão sobre o desenvolvimento}{31}{}%
+\contentsline {section}{\numberline {5.2}Trabalho Futuro}{32}{}%
+\contentsline {chapter}{Refer\^{e}ncias}{34}{}%
+\contentsline {chapter}{\numberline {A}Exemplo do formato de resposta JSON de um repositório GitHub}{35}{}%
+\contentsline {chapter}{\numberline {B}Script SQL para a criação da base de dados}{39}{}%
