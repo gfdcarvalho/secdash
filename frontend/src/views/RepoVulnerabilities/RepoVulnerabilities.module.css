@@ -23,6 +23,16 @@
     background: color-mix(in srgb, var(--color-text) 10%, transparent);
 }
 
+.exportButton {
+    composes: backButton;
+    margin-left: auto;
+}
+
+.exportButton:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
 .count {
     font-size: 0.78em;
     padding: 0.15em 0.5em;

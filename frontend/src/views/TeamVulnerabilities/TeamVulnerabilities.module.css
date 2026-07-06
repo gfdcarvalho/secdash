@@ -1,6 +1,7 @@
 .content { composes: content from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .topSection { composes: topSection from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .backButton { composes: backButton from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
+.exportButton { composes: exportButton from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .count { composes: count from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .filterSection { composes: filterSection from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }
 .searchBar { composes: searchBar from '../RepoVulnerabilities/RepoVulnerabilities.module.css'; }

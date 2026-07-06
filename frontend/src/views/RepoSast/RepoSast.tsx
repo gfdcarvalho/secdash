@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import type { SastAlert, RepositorySast, SastSeverity } from '../../model/sast/sast'
+import type { Repository } from '../../model/repository/repository'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
+import { buildCsvReport, downloadCsv, sanitizeFilename, currentDateStamp } from '../../utils/exportCsv'
 import Style from './RepoSast.module.css'
 import Markdown from 'react-markdown'
 
@@ -27,6 +29,7 @@ export function RepoSast() {
     const [alerts, setAlerts] = useState<SastAlert[] | null>(
         location.state?.sastAlerts?.sastAlerts ?? null
     )
+    const [repo, setRepo] = useState<Repository | null>(null)
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
 
@@ -51,11 +54,51 @@ export function RepoSast() {
         }
     }
 
+    // vai buscar a informação do repositório para incluir no relatório CSV exportado
+    const fetchRepo = async () => {
+        const response = await api.get<Repository>(`/repos/${repoId}`)
+        if (isSuccess(response)) {
+            setRepo(response.value.data)
+        }
+    }
+
     useEffect(() => {
         if (!alerts) {
             fetchAlerts()
         }
+        fetchRepo()
     }, [repoId, platform])
+
+    const exportCsv = () => {
+        const severityCounts = ALL_SEVERITIES.map(sev =>
+            [sev, filtered.filter(alert => alert.severity === sev).length] as [string, number]
+        )
+        const content = buildCsvReport({
+            title: t.csvExport.sastReportTitle,
+            metadata: [
+                [t.csvExport.repository, repo?.name ?? repoId],
+                [t.csvExport.platform, platform?.toUpperCase()],
+                [t.csvExport.owner, repo?.owner.name],
+                [t.csvExport.url, repo?.htmlUrl],
+                [t.csvExport.generatedAt, new Date().toLocaleString()],
+            ],
+            summaryTitle: t.csvExport.summary,
+            summary: [[t.csvExport.total, filtered.length], ...severityCounts],
+            headers: [
+                t.csvExport.colRuleId, t.csvExport.colRuleDescription, t.csvExport.colSeverity,
+                t.csvExport.colState, t.csvExport.colTool, t.csvExport.colFile,
+                t.csvExport.colStartLine, t.csvExport.colEndLine, t.csvExport.colDetectedAt,
+            ],
+            rows: filtered.map(alert => [
+                alert.ruleId, alert.ruleDescription, alert.severity,
+                alert.state, alert.toolName, alert.filePath,
+                alert.startLine, alert.endLine,
+                alert.detectedAt ? new Date(alert.detectedAt).toLocaleDateString() : null,
+            ]),
+        })
+        const name = sanitizeFilename(repo?.name ?? `repo-${repoId}`)
+        downloadCsv(`secdash-sast-${name}-${currentDateStamp()}.csv`, content)
+    }
 
     const toggleSeverity = (severity: SastSeverity) => {
         setSelectedSeverities(currentSev => {
@@ -139,6 +182,9 @@ export function RepoSast() {
                     {t.repoSast.backButton}
                 </button>
                 <span className={Style.count}>{filtered.length}</span>
+                <button className={Style.exportButton} onClick={exportCsv} disabled={filtered.length === 0}>
+                    {t.csvExport.button}
+                </button>
             </div>
 
             <div className={Style.filterSection}>

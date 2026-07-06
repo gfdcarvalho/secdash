@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import type { SastAlert, TeamSastAlerts, SastSeverity } from '../../model/sast/sast'
+import type { Team } from '../../model/teams/teams'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
+import { buildCsvReport, downloadCsv, sanitizeFilename, currentDateStamp } from '../../utils/exportCsv'
 import Style from './TeamSast.module.css'
 import Markdown from 'react-markdown'
 
@@ -26,6 +28,7 @@ export function TeamSast() {
     const { teamId } = useParams<{ teamId: string }>()
 
     const [alerts, setAlerts] = useState<AlertWithRepo[] | null>(null)
+    const [team, setTeam] = useState<Team | null>(null)
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
 
@@ -51,7 +54,15 @@ export function TeamSast() {
                 setError(true)
             }
         }
+        // vai buscar a informação da equipa para incluir no relatório CSV exportado
+        const fetchTeam = async () => {
+            const response = await api.get<Team>(`/teams/${teamId}`)
+            if (isSuccess(response)) {
+                setTeam(response.value.data)
+            }
+        }
         fetch()
+        fetchTeam()
     }, [teamId])
 
     const toggleSeverity = (severity: SastSeverity) => {
@@ -104,6 +115,39 @@ export function TeamSast() {
         return t.repoSast.filterDate90
     }
 
+    const exportCsv = () => {
+        const severityCounts = ALL_SEVERITIES.map(sev =>
+            [sev, filtered.filter(alert => alert.severity === sev).length] as [string, number]
+        )
+        const analyzedRepos = team
+            ? team.repos.map(repo => repo.name)
+            : [...new Set(filtered.map(alert => alert.repoName))]
+        const content = buildCsvReport({
+            title: t.csvExport.sastReportTitle,
+            metadata: [
+                [t.csvExport.team, team?.name ?? teamId],
+                [t.csvExport.repositories, analyzedRepos.join(', ')],
+                [t.csvExport.generatedAt, new Date().toLocaleString()],
+            ],
+            summaryTitle: t.csvExport.summary,
+            summary: [[t.csvExport.total, filtered.length], ...severityCounts],
+            headers: [
+                t.csvExport.repository, t.csvExport.colRuleId, t.csvExport.colRuleDescription,
+                t.csvExport.colSeverity, t.csvExport.colState, t.csvExport.colTool,
+                t.csvExport.colFile, t.csvExport.colStartLine, t.csvExport.colEndLine,
+                t.csvExport.colDetectedAt,
+            ],
+            rows: filtered.map(alert => [
+                alert.repoName, alert.ruleId, alert.ruleDescription,
+                alert.severity, alert.state, alert.toolName,
+                alert.filePath, alert.startLine, alert.endLine,
+                alert.detectedAt ? new Date(alert.detectedAt).toLocaleDateString() : null,
+            ]),
+        })
+        const name = sanitizeFilename(team?.name ?? `team-${teamId}`)
+        downloadCsv(`secdash-team-sast-${name}-${currentDateStamp()}.csv`, content)
+    }
+
     if (error) {
         return (
             <div className={Style.content}>
@@ -132,6 +176,9 @@ export function TeamSast() {
                     {t.repoSast.backButton}
                 </button>
                 <span className={Style.count}>{filtered.length}</span>
+                <button className={Style.exportButton} onClick={exportCsv} disabled={filtered.length === 0}>
+                    {t.csvExport.button}
+                </button>
             </div>
 
             <div className={Style.filterSection}>

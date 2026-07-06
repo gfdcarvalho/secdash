@@ -1,6 +1,7 @@
 .content { composes: content from '../RepoSast/RepoSast.module.css'; }
 .topSection { composes: topSection from '../RepoSast/RepoSast.module.css'; }
 .backButton { composes: backButton from '../RepoSast/RepoSast.module.css'; }
+.exportButton { composes: exportButton from '../RepoSast/RepoSast.module.css'; }
 .count { composes: count from '../RepoSast/RepoSast.module.css'; }
 .filterSection { composes: filterSection from '../RepoSast/RepoSast.module.css'; }
 .searchBar { composes: searchBar from '../RepoSast/RepoSast.module.css'; }

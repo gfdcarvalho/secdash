@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { useTranslation } from '../../i18n/I18nProvider'
 import type { Vulnerability, TeamVulnerabilities, VulnerabilitySeverity } from '../../model/vulnerabilities/vulnerabilities'
+import type { Team } from '../../model/teams/teams'
 import { api } from '../../utils/fetchApi'
 import { isSuccess } from '../../utils/Either'
+import { buildCsvReport, downloadCsv, sanitizeFilename, currentDateStamp } from '../../utils/exportCsv'
 import Style from './TeamVulnerabilities.module.css'
 import { useLocation } from 'react-router'
 import Markdown from 'react-markdown'
@@ -28,6 +30,7 @@ export function TeamVulnerabilitiesView() {
     const { teamId } = useParams<{ teamId: string }>()
 
     const [vulnerabilities, setVulnerabilities] = useState<VulnerabilityWithRepo[] | null>(null)
+    const [team, setTeam] = useState<Team | null>(null)
     const [error, setError] = useState(false)
     const [search, setSearch] = useState('')
 
@@ -59,8 +62,50 @@ export function TeamVulnerabilitiesView() {
                 setError(true)
             }
         }
+        // vai buscar a informação da equipa para incluir no relatório CSV exportado
+        const fetchTeam = async () => {
+            const response = await api.get<Team>(`/teams/${teamId}`)
+            if (isSuccess(response)) {
+                setTeam(response.value.data)
+            }
+        }
         fetch()
+        fetchTeam()
     }, [teamId])
+
+    const exportCsv = () => {
+        const severityCounts = ALL_SEVERITIES.map(sev =>
+            [sev, filtered.filter(vuln => vuln.severity === sev).length] as [string, number]
+        )
+        const analyzedRepos = team
+            ? team.repos.map(repo => repo.name)
+            : [...new Set(filtered.map(vuln => vuln.repoName))]
+        const content = buildCsvReport({
+            title: t.csvExport.vulnReportTitle,
+            metadata: [
+                [t.csvExport.team, team?.name ?? teamId],
+                [t.csvExport.repositories, analyzedRepos.join(', ')],
+                [t.csvExport.generatedAt, new Date().toLocaleString()],
+            ],
+            summaryTitle: t.csvExport.summary,
+            summary: [[t.csvExport.total, filtered.length], ...severityCounts],
+            headers: [
+                t.csvExport.repository, t.csvExport.colTitle, t.csvExport.colSeverity,
+                t.csvExport.colState, t.csvExport.colPackage, t.csvExport.colVersion,
+                t.csvExport.colFixedVersion, t.csvExport.colCvssScore, t.csvExport.colCve,
+                t.csvExport.colManifestPath, t.csvExport.colDetectedAt,
+            ],
+            rows: filtered.map(vuln => [
+                vuln.repoName, vuln.title, vuln.severity,
+                vuln.state, vuln.packageName, vuln.packageVersion,
+                vuln.fixedVersion, vuln.cvssScore, vuln.cveId,
+                vuln.manifestPath,
+                vuln.detectedAt ? new Date(vuln.detectedAt).toLocaleDateString() : null,
+            ]),
+        })
+        const name = sanitizeFilename(team?.name ?? `team-${teamId}`)
+        downloadCsv(`secdash-team-vulnerabilities-${name}-${currentDateStamp()}.csv`, content)
+    }
 
     const toggleSeverity = (severity: VulnerabilitySeverity) => {
         setSelectedSeverities(prev => {
@@ -128,6 +173,9 @@ export function TeamVulnerabilitiesView() {
                     {t.repoVulnerabilities.backButton}
                 </button>
                 <span className={Style.count}>{filtered.length}</span>
+                <button className={Style.exportButton} onClick={exportCsv} disabled={filtered.length === 0}>
+                    {t.csvExport.button}
+                </button>
             </div>
 
             <div className={Style.filterSection}>

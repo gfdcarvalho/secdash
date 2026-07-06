@@ -16,7 +16,7 @@ class ScanScheduler(
 ) {
     private val log = LoggerFactory.getLogger(ScanScheduler::class.java)
 
-    @Scheduled(fixedDelay = 5 * 60 * 1000) // corre de 5 em 5 minutos
+    @Scheduled(fixedDelay = 5 * 60 * 1000) // corre a cada 5 minutos
     fun scanTeams() {
         log.info("Scanning teams...")
         val teams = transactionManager.run {
