@@ -175,10 +175,10 @@ export function TeamSast() {
                 <button className={Style.backButton} onClick={() => navigate(-1)}>
                     {t.repoSast.backButton}
                 </button>
-                <span className={Style.count}>{filtered.length}</span>
                 <button className={Style.exportButton} onClick={exportCsv} disabled={filtered.length === 0}>
                     {t.csvExport.button}
                 </button>
+                <span className={Style.count}>{filtered.length}</span>
             </div>
 
             <div className={Style.filterSection}>
