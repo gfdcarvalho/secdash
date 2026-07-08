@@ -87,7 +87,7 @@ O primeiro passo deste processo passou por comparar as informações retornadas 
 
 Após isso foram criados \textit{Data Transfer Objects} específicos para cada um dos recursos com anotações para identificar corretamente os campos equivalentes. Estes DTOs são então mapeados para as classes do domínio do \textbf{SecDash}. \\
 
-Este processo teve de ser repetido para todos os recursos obtids das APIs externas, nomeadamente repositórios, vulnerabilidades, alertas SAST e utilizadores das plataformas externas. \\
+Este processo teve de ser repetido para todos os recursos obtidos das APIs externas, nomeadamente repositórios, vulnerabilidades, alertas SAST e utilizadores das plataformas externas. \\
 
 \subsection{Pedido e \textit{scheduling} de \textit{scans}}
 As listas de vulnerabilidades podem ser obtidas pelos utilizadores sempre que estes as requisitarem através da página do repositório no \textit{frontend}. Nesta, os utilizadores têm a possibilidade de requisitar um relatório à plataforma onde o repositório monitorizado se encontra hospedado. \\
@@ -158,7 +158,7 @@ Para além destes gráficos, o cliente web disponibiliza também as vistas padr�
 	\subsubsection {Painéis de ordenação de risco:}
 	Na vista de equipas, por baixo dos cartões com os gráficos, o dashboard exibe outros dois cartões onde são listados, por ordem decrescente, os repositórios com maior número de vulnerabilidades de dependências e alertas SAST. Desta forma é possível verificar rapidamente quais os repositórios mais críticos entre cada equipa e navegar rapidamente para estes. A ordenação é ponderada, com uma vulnerabilidade mais severa a ter um peso maior que uma vulnerabilidade menos crítica. \\
 	
-	Na Figura 4.3, exibida abaixo, é possível ver um exemplo deste painel. Ao clicar no nome de um dos repostórios da lista, o utilizador navega para a página correspondente a este. \\
+	Na Figura 4.3, exibida abaixo, é possível ver um exemplo deste painel. Ao clicar no nome de um dos repositórios da lista, o utilizador navega para a página correspondente a este. \\
 	
 		\begin{figure}[h]
 		\centering

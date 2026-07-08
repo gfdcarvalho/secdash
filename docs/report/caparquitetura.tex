@@ -293,7 +293,7 @@ O modelo de dados serve também de ponte entre os requisitos de negócio da plat
 
 Como referido no capítulo anterior, os dados obtidos das APIs externas do GitHub e GitLab são altamente estruturados e com dependências e relações claras entre si. Assim sendo, a elaboração de um modelo Entidade-Associação torna-se relativamente trivial. \\
 
-O diagrama do modelo obtido encontra-se apresentado na Figura 3.2. É importante salientar que, de forma a facilitar a apresentação e visualização do modelo no presente documento, os atributos das entidades, bem como a cardinalidade das suas relações, foram omitidos do diagrama. O script SQL utilizado para criar todo o esquema da base de dados, onde se pode consultar todos os atributos, encontra-se no Apêndice \ref{ap:schema}. \\
+O diagrama do modelo obtido encontra-se apresentado na Figura 3.3. É importante salientar que, de forma a facilitar a apresentação e visualização do modelo no presente documento, os atributos das entidades, bem como a cardinalidade das suas relações, foram omitidos do diagrama. O script SQL utilizado para criar todo o esquema da base de dados, onde se pode consultar todos os atributos, encontra-se no Apêndice \ref{ap:schema}. \\
 
 \begin{figure}[h]
 	\centering
@@ -308,7 +308,7 @@ O diagrama do modelo obtido encontra-se apresentado na Figura 3.2. É importante
 	
 	As informações de autenticação são guardadas na tabela \textbf{USER\_AUTHENTICATION}, que irá conter os IDs de cada utilizador, o provedor de autenticação OAuth 2.0  (Google, GitHub ou GitLab) e o ID do utilizador nessa plataforma. \\
 	
-	Os \textit{access tokens} de cada utilizador ficam armazenados na tabela \textbf{USER\_AUTHORIZATION}. Os \textit{tokens} internos gerados e usados pelo próprio \textbf{SecDash}, por sua vez, são armazedados na tabela \textbf{TOKENS}. \\
+	Os \textit{access tokens} de cada utilizador ficam armazenados na tabela \textbf{USER\_AUTHORIZATION}. Os \textit{tokens} internos gerados e usados pelo próprio \textbf{SecDash}, por sua vez, são armazenados na tabela \textbf{TOKENS}. \\
 	
 	\item Cada repositório vigiado pela aplicação é armazenado na tabela \textbf{REPOSITORIES}. A tabela \textbf{OWNERS} armazena algumas informações referentes aos proprietários dos repositórios nas plataformas de origem, seja ela GitHub ou GitLab. Para fazer a ligação entre os repositórios armazenados e os utilizadores que os vigiam existe a tabela \textbf{USER\_REPOSITORIES}. \\ 
 	
@@ -317,4 +317,4 @@ O diagrama do modelo obtido encontra-se apresentado na Figura 3.2. É importante
 	\item Finalmente, as informações de cada equipa criada no âmbito da aplicação são armazenadas da tabela \textbf{TEAMS}. Os repositórios e utilizadores ligados a cada uma são armazenados nas tabelas \textbf{TEAM\_REPOS} e \textbf{TEAM\_USERS} respetivamente. \\
 \end{itemize}
 
-É importante indicar que ao obter os dados das APIs externas, sejam estes referentes a repositórios ou vulnerabilidades, a informação devolvida contém inúmeros campos que não consideramos relevantes de armazenar ou exibir aos utilizadores para os propósitos do \textbf{SecDash}. A título de exemplo, o objeto JSON referente a um repoisitório GitHub devolvido pela sua API contém mais de 80 campos, sendo vários deles objetos que por sua vez contém também múltiplos campos. Um exemplo deste formato pode ser consultado no Apêndice \ref{ap:repogithub}. Como tal, optou-se por filtrar muitos destes campos, sendo apenas armazenados aqueles que considerámos relevantes para o propósito da aplicação. \\
+É importante indicar que ao obter os dados das APIs externas, sejam estes referentes a repositórios ou vulnerabilidades, a informação devolvida contém inúmeros campos que não consideramos relevantes de armazenar ou exibir aos utilizadores para os propósitos do \textbf{SecDash}. A título de exemplo, o objeto JSON referente a um repositório GitHub devolvido pela sua API contém mais de 80 campos, sendo vários deles objetos que por sua vez contém também múltiplos campos. Um exemplo deste formato pode ser consultado no Apêndice \ref{ap:repogithub}. Como tal, optou-se por filtrar muitos destes campos, sendo apenas armazenados aqueles que considerámos relevantes para o propósito da aplicação. \\
