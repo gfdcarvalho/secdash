@@ -1,6 +1,5 @@
 \babel@toc {portuguese}{}\relax 
 \contentsline {chapter}{\numberline {1}Introdução}{1}{}%
-\contentsline {section}{\numberline {1.1}Contextualização do problema}{1}{}%
 \contentsline {chapter}{\numberline {2}Enquadramento e estado da arte}{5}{}%
 \contentsline {section}{\numberline {2.1}Static Application Security Testing e análise de dependências}{5}{}%
 \contentsline {subsection}{\numberline {2.1.1}Static Application Security Testing (SAST)}{6}{}%
